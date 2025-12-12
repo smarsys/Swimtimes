@@ -1,14 +1,14 @@
 {
   "_metadata": {
-    "generated": "2025-12-12T13:55:47.174587Z",
+    "generated": "2025-12-12T17:33:41.845249Z",
     "source": "swimrankings.net",
     "count": 6
   },
   "swimmers": {
     "5332548": {
       "fullName": "Swimrankings - HEHLEN, Ava",
-      "club": "",
-      "nation": "",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
       "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
@@ -154,14 +154,14 @@
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2025-12-12T13:55:45.775665Z",
+      "lastUpdated": "2025-12-12T17:33:39.475524Z",
       "firstName": "Swimrankings",
       "lastName": "- HEHLEN, Ava"
     },
     "5284006": {
       "fullName": "Swimrankings - ROCHAT, Leane",
-      "club": "",
-      "nation": "",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
       "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
@@ -321,14 +321,14 @@
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2025-12-12T13:55:46.071080Z",
+      "lastUpdated": "2025-12-12T17:33:39.940140Z",
       "firstName": "Swimrankings",
       "lastName": "- ROCHAT, Leane"
     },
     "5264608": {
       "fullName": "Swimrankings - BOUKARI, Kenza",
-      "club": "",
-      "nation": "",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
       "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
@@ -481,14 +481,14 @@
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2025-12-12T13:55:46.305207Z",
+      "lastUpdated": "2025-12-12T17:33:40.455546Z",
       "firstName": "Swimrankings",
       "lastName": "- BOUKARI, Kenza"
     },
     "5338998": {
       "fullName": "Swimrankings - GUEGUEN, Eloa",
-      "club": "",
-      "nation": "",
+      "club": "Lausanne Aquatique - Switzerland",
+      "nation": "FRA",
       "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
@@ -648,14 +648,14 @@
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2025-12-12T13:55:46.592191Z",
+      "lastUpdated": "2025-12-12T17:33:40.950783Z",
       "firstName": "Swimrankings",
       "lastName": "- GUEGUEN, Eloa"
     },
     "5316657": {
       "fullName": "Swimrankings - PENNEL, Alice Mei",
-      "club": "",
-      "nation": "",
+      "club": "Lausanne Aquatique - Switzerland",
+      "nation": "GBR",
       "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
@@ -808,16 +808,16 @@
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2025-12-12T13:55:46.886148Z",
+      "lastUpdated": "2025-12-12T17:33:41.442175Z",
       "firstName": "Swimrankings",
       "lastName": "- PENNEL, Alice Mei"
     },
     "5316667": {
       "fullName": "Swimrankings - PENNEL, Jamie Alexander",
-      "club": "",
-      "nation": "",
+      "club": "Lausanne Aquatique - Switzerland",
+      "nation": "GBR",
       "yearOfBirth": 2008,
-      "gender": "Female",
+      "gender": "Male",
       "personalBests": [
         {
           "stroke": "Freestyle",
@@ -947,7 +947,7 @@
         }
       ],
       "id": "5316667",
-      "lastUpdated": "2025-12-12T13:55:47.174543Z",
+      "lastUpdated": "2025-12-12T17:33:41.845224Z",
       "firstName": "Swimrankings",
       "lastName": "- PENNEL, Jamie Alexander"
     }
