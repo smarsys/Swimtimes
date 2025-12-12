@@ -2,6 +2,10 @@
 // SwimTimes App - app.js
 // =============================================================================
 
+// ⚠️ CONFIGURATION - Remplace cette URL par ton Cloudflare Worker
+const SWIMRANKINGS_PROXY_URL = 'https://swimrankings-proxy.TONCOMPTE.workers.dev';
+// Exemple: 'https://swimrankings-proxy.cristobal.workers.dev'
+
 let swimmer = null;
 let TIME_STANDARDS = null;
 let CATEGORIES = null;
@@ -56,120 +60,29 @@ function formatDiff(diffMs) {
 }
 
 // =============================================================================
-// SWIMRANKINGS FETCH
+// SWIMRANKINGS FETCH (via Cloudflare Worker)
 // =============================================================================
 async function fetchSwimmerData(athleteId) {
-    const proxyUrl = 'https://api.allorigins.win/raw?url=';
-    const targetUrl = `https://www.swimrankings.net/index.php?page=athleteDetail&athleteId=${athleteId}`;
+    // Utilise le Cloudflare Worker comme proxy
+    const url = `${SWIMRANKINGS_PROXY_URL}?athleteId=${athleteId}`;
     
-    const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
-    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
+    const response = await fetch(url);
     
-    const html = await response.text();
-    return parseSwimRankingsHTML(html, athleteId);
-}
-
-function parseSwimRankingsHTML(html, athleteId) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    
-    let fullName = 'Nageur';
-    const nameElem = doc.querySelector('td.name') || doc.querySelector('h1');
-    if (nameElem) fullName = nameElem.textContent.trim();
-    else {
-        const title = doc.querySelector('title');
-        if (title) fullName = title.textContent.replace('SwimRankings.net -', '').trim();
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
     }
     
-    let club = '', nation = '', yearOfBirth = null, gender = '';
+    const data = await response.json();
     
-    doc.querySelectorAll('table tr').forEach(row => {
-        const cells = row.querySelectorAll('td');
-        if (cells.length >= 2) {
-            const label = cells[0].textContent.toLowerCase();
-            const value = cells[1].textContent.trim();
-            if (label.includes('club')) club = value;
-            if (label.includes('nation') || label.includes('country')) nation = value;
-            if (label.includes('birth') || label.includes('born')) {
-                const m = value.match(/\d{4}/);
-                if (m) yearOfBirth = parseInt(m[0]);
-            }
-        }
-    });
+    if (data.error) {
+        throw new Error(data.error);
+    }
     
-    const pageText = html.toLowerCase();
-    gender = (pageText.includes('women') || pageText.includes('female') || pageText.includes('damen')) ? 'Female' : 'Male';
-    
-    const personalBests = [];
-    let currentPoolLength = 50;
-    
-    doc.querySelectorAll('table').forEach(table => {
-        const text = table.textContent.toLowerCase();
-        if (text.includes('short course') || text.includes('25m')) currentPoolLength = 25;
-        else if (text.includes('long course') || text.includes('50m')) currentPoolLength = 50;
-        
-        let currentStroke = null;
-        
-        table.querySelectorAll('tr').forEach(row => {
-            const th = row.querySelector('th');
-            if (th) {
-                const t = th.textContent.toLowerCase();
-                if (t.includes('free')) currentStroke = 'Freestyle';
-                else if (t.includes('back') || t.includes('dos')) currentStroke = 'Backstroke';
-                else if (t.includes('breast') || t.includes('brasse')) currentStroke = 'Breaststroke';
-                else if (t.includes('fly') || t.includes('pap')) currentStroke = 'Butterfly';
-                else if (t.includes('medley') || t.includes('4 n') || t.includes('lagen')) currentStroke = 'Medley';
-                return;
-            }
-            
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 2) {
-                const first = cells[0].textContent.trim();
-                const match = first.match(/^(\d+)/);
-                
-                if (match) {
-                    const distance = parseInt(match[1]);
-                    let stroke = currentStroke;
-                    
-                    const firstLower = first.toLowerCase();
-                    if (firstLower.includes('free')) stroke = 'Freestyle';
-                    else if (firstLower.includes('back') || firstLower.includes('dos')) stroke = 'Backstroke';
-                    else if (firstLower.includes('breast') || firstLower.includes('brasse')) stroke = 'Breaststroke';
-                    else if (firstLower.includes('fly') || firstLower.includes('pap')) stroke = 'Butterfly';
-                    else if (firstLower.includes('medley') || firstLower.includes('4 n')) stroke = 'Medley';
-                    
-                    if (!stroke) return;
-                    
-                    for (let i = 1; i < cells.length; i++) {
-                        const cellText = cells[i].textContent.trim();
-                        if (/^\d{1,2}:\d{2}\.\d{2}$/.test(cellText) || /^\d{2}\.\d{2}$/.test(cellText)) {
-                            const timeMs = timeToMs(cellText);
-                            if (timeMs > 0) {
-                                const exists = personalBests.find(pb => 
-                                    pb.stroke === stroke && pb.distance === distance && pb.poolLength === currentPoolLength
-                                );
-                                if (!exists) {
-                                    personalBests.push({ stroke, distance, poolLength: currentPoolLength, timeMs, timeDisplay: cellText });
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    });
-    
-    const nameParts = fullName.split(' ');
-    
-    return {
-        id: athleteId,
-        firstName: nameParts[0] || '',
-        lastName: nameParts.slice(1).join(' ') || '',
-        fullName, gender, club, nation, yearOfBirth, personalBests,
-        lastUpdated: new Date().toISOString()
-    };
+    return data;
 }
+
+// Note: Le parsing HTML est fait côté Cloudflare Worker
 
 // =============================================================================
 // UI FUNCTIONS
