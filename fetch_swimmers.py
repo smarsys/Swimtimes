@@ -42,6 +42,33 @@ class SwimRankingsParser(HTMLParser):
         # Detect gender
         if "women" in self.raw_html or "female" in self.raw_html or "damen" in self.raw_html:
             self.data["gender"] = "Female"
+        
+        # Try to extract year of birth directly from HTML with regex
+        # Pattern 1: "Born: 2010" or "Born 2010"
+        birth_match = re.search(r'born[:\s]*(\d{4})', self.raw_html)
+        if birth_match:
+            self.data["yearOfBirth"] = int(birth_match.group(1))
+        
+        # Pattern 2: "Jahrgang: 2010" (German)
+        if not self.data["yearOfBirth"]:
+            birth_match = re.search(r'jahrgang[:\s]*(\d{4})', self.raw_html)
+            if birth_match:
+                self.data["yearOfBirth"] = int(birth_match.group(1))
+        
+        # Pattern 3: "Year of birth" or similar
+        if not self.data["yearOfBirth"]:
+            birth_match = re.search(r'year\s*of\s*birth[:\s]*(\d{4})', self.raw_html)
+            if birth_match:
+                self.data["yearOfBirth"] = int(birth_match.group(1))
+        
+        # Pattern 4: Look for (2010) after name - common pattern
+        if not self.data["yearOfBirth"]:
+            birth_match = re.search(r'\((\d{4})\)', data)
+            if birth_match:
+                year = int(birth_match.group(1))
+                if 1950 < year < 2025:  # Sanity check
+                    self.data["yearOfBirth"] = year
+        
         super().feed(data)
     
     def handle_starttag(self, tag, attrs):
