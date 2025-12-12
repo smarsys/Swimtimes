@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#dc2626">
-    <title>SwimTimes - Temps Limites Natation Suisse</title>
+    <meta name="theme-color" content="#00A4B4">
+    <title>SwimTimes - Lausanne Aquatique</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏊</text></svg>">
     <link rel="manifest" href="manifest.json">
     <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--red-600:#dc2626;--red-700:#b91c1c;--red-900:#7f1d1d;--green-400:#4ade80;--yellow-400:#facc15}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--red-600),var(--red-700),var(--red-900));min-height:100vh;color:#fff;line-height:1.5}
+:root{
+    --primary:#00A4B4;
+    --primary-dark:#008A99;
+    --primary-darker:#006D7A;
+    --green-400:#4ade80;
+    --yellow-400:#facc15;
+    --accent:#E6F7F9;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--primary),var(--primary-dark),var(--primary-darker));min-height:100vh;color:#fff;line-height:1.5}
 .header{background:rgba(0,0,0,.2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
 .header-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px}
+.header-logo img{height:32px}
 .header-user{font-size:14px;opacity:.8}
 .nav{display:flex;border-bottom:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.1)}
 .nav-tab{flex:1;padding:14px 8px;text-align:center;background:0 0;border:none;color:#fff;font-size:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.7}
@@ -30,10 +38,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .form-input,.form-select{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:16px}
 .form-input:focus,.form-select:focus{outline:0;border-color:rgba(255,255,255,.5)}
 .form-input::placeholder{color:rgba(255,255,255,.5)}
-.form-select option{background:#333;color:#fff}
+.form-select option{background:#006D7A;color:#fff}
 .form-hint{font-size:12px;opacity:.6;margin-top:6px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:12px;border:none;font-size:16px;font-weight:600;cursor:pointer;width:100%}
-.btn-primary{background:#fff;color:var(--red-600)}
+.btn-primary{background:#fff;color:var(--primary-dark)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 .btn-secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
 .btn-icon{padding:10px;border-radius:10px;background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer}
@@ -48,6 +56,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .help-box li{margin-bottom:8px}
 .help-box a{color:#fff}
 .error-box{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.5);border-radius:12px;padding:14px;margin-bottom:16px;font-size:14px}
+.swimmer-info-bar{background:rgba(255,255,255,.15);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.swimmer-info-avatar{width:40px;height:40px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.swimmer-info-details{flex:1}
+.swimmer-info-name{font-weight:600}
+.swimmer-info-meta{font-size:12px;opacity:.7}
 .selectors-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .pb-display{background:rgba(255,255,255,.15);border-radius:12px;padding:16px;margin-bottom:16px}
 .pb-display.empty{background:rgba(255,255,255,.05)}
@@ -78,6 +91,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .objective-event{font-weight:600}
 .objective-current{font-size:13px;opacity:.7}
 .objective-gap{color:var(--yellow-400);font-weight:700}
+.objective-fina{font-size:11px;opacity:.6}
 .objective-target{font-size:11px;opacity:.6}
 .progress-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-top:8px}
 .progress-bar-fill{height:100%;background:var(--yellow-400);border-radius:3px}
@@ -119,6 +133,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
     <main class="main">
         <div id="tab-profile" class="tab-content active"></div>
         <div id="tab-times" class="tab-content">
+            <div id="swimmer-info-bar"></div>
             <div class="selectors-grid">
                 <select id="select-gender" class="form-select" onchange="updateTimesDisplay()"><option value="Female">👩 Femme</option><option value="Male">👨 Homme</option></select>
                 <select id="select-pool" class="form-select" onchange="updateTimesDisplay()"><option value="50m">🏊 50m (GB)</option><option value="25m">🏊 25m (PB)</option></select>
@@ -131,7 +146,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
         </div>
         <div id="tab-progress" class="tab-content"><div id="progress-content"></div></div>
     </main>
-    <footer class="footer">Données SwimRankings.net • Temps limites Swiss Swimming 2025-2028</footer>
+    <footer class="footer">Lausanne Aquatique • Données SwimRankings.net • Temps limites Swiss Swimming 2025-2028</footer>
     <script src="app.js"></script>
 </body>
 </html>
