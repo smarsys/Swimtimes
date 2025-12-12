@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "generated": "2025-12-12T13:47:24.617257Z",
+    "generated": "2025-12-12T13:55:47.174587Z",
     "source": "swimrankings.net",
     "count": 6
   },
@@ -9,7 +9,7 @@
       "fullName": "Swimrankings - HEHLEN, Ava",
       "club": "",
       "nation": "",
-      "yearOfBirth": null,
+      "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
         {
@@ -154,7 +154,7 @@
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2025-12-12T13:47:22.189035Z",
+      "lastUpdated": "2025-12-12T13:55:45.775665Z",
       "firstName": "Swimrankings",
       "lastName": "- HEHLEN, Ava"
     },
@@ -162,7 +162,7 @@
       "fullName": "Swimrankings - ROCHAT, Leane",
       "club": "",
       "nation": "",
-      "yearOfBirth": null,
+      "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
         {
@@ -321,7 +321,7 @@
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2025-12-12T13:47:22.905745Z",
+      "lastUpdated": "2025-12-12T13:55:46.071080Z",
       "firstName": "Swimrankings",
       "lastName": "- ROCHAT, Leane"
     },
@@ -329,7 +329,7 @@
       "fullName": "Swimrankings - BOUKARI, Kenza",
       "club": "",
       "nation": "",
-      "yearOfBirth": null,
+      "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
         {
@@ -481,7 +481,7 @@
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2025-12-12T13:47:23.429491Z",
+      "lastUpdated": "2025-12-12T13:55:46.305207Z",
       "firstName": "Swimrankings",
       "lastName": "- BOUKARI, Kenza"
     },
@@ -489,7 +489,7 @@
       "fullName": "Swimrankings - GUEGUEN, Eloa",
       "club": "",
       "nation": "",
-      "yearOfBirth": null,
+      "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
         {
@@ -648,7 +648,7 @@
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2025-12-12T13:47:23.798299Z",
+      "lastUpdated": "2025-12-12T13:55:46.592191Z",
       "firstName": "Swimrankings",
       "lastName": "- GUEGUEN, Eloa"
     },
@@ -656,7 +656,7 @@
       "fullName": "Swimrankings - PENNEL, Alice Mei",
       "club": "",
       "nation": "",
-      "yearOfBirth": null,
+      "yearOfBirth": 2010,
       "gender": "Female",
       "personalBests": [
         {
@@ -808,7 +808,7 @@
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2025-12-12T13:47:24.299367Z",
+      "lastUpdated": "2025-12-12T13:55:46.886148Z",
       "firstName": "Swimrankings",
       "lastName": "- PENNEL, Alice Mei"
     },
@@ -816,7 +816,7 @@
       "fullName": "Swimrankings - PENNEL, Jamie Alexander",
       "club": "",
       "nation": "",
-      "yearOfBirth": null,
+      "yearOfBirth": 2008,
       "gender": "Female",
       "personalBests": [
         {
@@ -947,7 +947,7 @@
         }
       ],
       "id": "5316667",
-      "lastUpdated": "2025-12-12T13:47:24.617210Z",
+      "lastUpdated": "2025-12-12T13:55:47.174543Z",
       "firstName": "Swimrankings",
       "lastName": "- PENNEL, Jamie Alexander"
     }
