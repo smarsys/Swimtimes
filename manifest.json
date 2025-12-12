@@ -4,8 +4,8 @@
     "description": "Compare tes temps de natation avec les temps limites Swiss Swimming",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#dc2626",
-    "theme_color": "#dc2626",
+    "background_color": "#E31E24",
+    "theme_color": "#E31E24",
     "orientation": "portrait-primary",
     "icons": [
         {

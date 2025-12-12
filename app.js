@@ -3,9 +3,6 @@
 // Lausanne Aquatique
 // =============================================================================
 
-// Les données des nageurs sont chargées depuis swimmers-data.json
-// (généré automatiquement par GitHub Actions)
-
 let swimmer = null;
 let swimmersData = null;
 let TIME_STANDARDS = null;
@@ -14,90 +11,90 @@ let STROKES = null;
 let DISTANCES = null;
 
 // =============================================================================
-// FINA POINTS 2025 - Base times (en secondes)
-// Source: World Aquatics Points Table 2025
+// FINA 2025 BASE TIMES (from official World Aquatics table)
+// Format: seconds (converted from mm:ss.cc)
 // =============================================================================
 const FINA_BASE_TIMES = {
-    Female: {
-        "50m": {
-            "50_Freestyle": 23.04,
-            "100_Freestyle": 50.25,
-            "200_Freestyle": 110.31,
-            "400_Freestyle": 231.32,
-            "800_Freestyle": 476.46,
-            "1500_Freestyle": 912.56,
-            "50_Backstroke": 26.01,
-            "100_Backstroke": 55.75,
-            "200_Backstroke": 120.90,
-            "50_Breaststroke": 28.56,
-            "100_Breaststroke": 62.36,
-            "200_Breaststroke": 134.57,
-            "50_Butterfly": 24.38,
-            "100_Butterfly": 54.08,
-            "200_Butterfly": 120.43,
-            "200_Medley": 124.40,
-            "400_Medley": 263.16
-        },
-        "25m": {
-            "50_Freestyle": 22.67,
-            "100_Freestyle": 49.46,
-            "200_Freestyle": 109.34,
-            "400_Freestyle": 230.30,
-            "800_Freestyle": 474.30,
-            "1500_Freestyle": 918.01,
-            "50_Backstroke": 25.25,
-            "100_Backstroke": 54.08,
-            "200_Backstroke": 118.37,
-            "50_Breaststroke": 28.04,
-            "100_Breaststroke": 61.55,
-            "200_Breaststroke": 133.32,
-            "50_Butterfly": 24.02,
-            "100_Butterfly": 53.36,
-            "200_Butterfly": 118.94,
-            "100_Medley": 56.51,
-            "200_Medley": 122.98,
-            "400_Medley": 261.68
-        }
-    },
     Male: {
-        "50m": {
-            "50_Freestyle": 20.42,
+        "25m": {
+            "50_Freestyle": 19.90,
             "100_Freestyle": 44.84,
-            "200_Freestyle": 100.22,
-            "400_Freestyle": 217.13,
-            "800_Freestyle": 452.12,
-            "1500_Freestyle": 870.36,
-            "50_Backstroke": 23.22,
-            "100_Backstroke": 50.34,
-            "200_Backstroke": 110.05,
-            "50_Breaststroke": 25.60,
+            "200_Freestyle": 98.61,
+            "400_Freestyle": 212.25,
+            "800_Freestyle": 440.46,
+            "1500_Freestyle": 846.88,
+            "50_Backstroke": 22.11,
+            "100_Backstroke": 48.33,
+            "200_Backstroke": 105.63,
+            "50_Breaststroke": 24.95,
             "100_Breaststroke": 55.28,
             "200_Breaststroke": 120.16,
-            "50_Butterfly": 21.93,
-            "100_Butterfly": 48.24,
-            "200_Butterfly": 108.21,
-            "200_Medley": 113.13,
-            "400_Medley": 241.42
+            "50_Butterfly": 21.32,
+            "100_Butterfly": 47.71,
+            "200_Butterfly": 106.85,
+            "100_Medley": 49.28,
+            "200_Medley": 108.88,
+            "400_Medley": 234.81
         },
+        "50m": {
+            "50_Freestyle": 20.91,
+            "100_Freestyle": 46.40,
+            "200_Freestyle": 102.00,
+            "400_Freestyle": 220.07,
+            "800_Freestyle": 452.12,
+            "1500_Freestyle": 870.67,
+            "50_Backstroke": 23.55,
+            "100_Backstroke": 51.60,
+            "200_Backstroke": 111.92,
+            "50_Breaststroke": 25.95,
+            "100_Breaststroke": 56.88,
+            "200_Breaststroke": 125.48,
+            "50_Butterfly": 22.27,
+            "100_Butterfly": 49.45,
+            "200_Butterfly": 110.34,
+            "200_Medley": 114.00,
+            "400_Medley": 242.50
+        }
+    },
+    Female: {
         "25m": {
-            "50_Freestyle": 20.08,
-            "100_Freestyle": 44.07,
-            "200_Freestyle": 98.63,
-            "400_Freestyle": 214.64,
-            "800_Freestyle": 449.76,
-            "1500_Freestyle": 858.24,
-            "50_Backstroke": 22.43,
-            "100_Backstroke": 48.48,
-            "200_Backstroke": 107.16,
-            "50_Breaststroke": 24.88,
-            "100_Breaststroke": 54.56,
-            "200_Breaststroke": 119.11,
-            "50_Butterfly": 21.42,
-            "100_Butterfly": 47.34,
-            "200_Butterfly": 107.00,
-            "100_Medley": 50.20,
-            "200_Medley": 111.23,
-            "400_Medley": 239.85
+            "50_Freestyle": 22.83,
+            "100_Freestyle": 50.25,
+            "200_Freestyle": 110.31,
+            "400_Freestyle": 230.25,
+            "800_Freestyle": 477.42,
+            "1500_Freestyle": 908.24,
+            "50_Backstroke": 25.23,
+            "100_Backstroke": 54.02,
+            "200_Backstroke": 118.04,
+            "50_Breaststroke": 28.37,
+            "100_Breaststroke": 62.36,
+            "200_Breaststroke": 132.50,
+            "50_Butterfly": 23.94,
+            "100_Butterfly": 52.71,
+            "200_Butterfly": 119.32,
+            "100_Medley": 55.11,
+            "200_Medley": 121.63,
+            "400_Medley": 255.48
+        },
+        "50m": {
+            "50_Freestyle": 23.61,
+            "100_Freestyle": 51.71,
+            "200_Freestyle": 112.23,
+            "400_Freestyle": 235.38,
+            "800_Freestyle": 484.79,
+            "1500_Freestyle": 920.48,
+            "50_Backstroke": 26.86,
+            "100_Backstroke": 57.13,
+            "200_Backstroke": 123.14,
+            "50_Breaststroke": 29.16,
+            "100_Breaststroke": 64.13,
+            "200_Breaststroke": 137.55,
+            "50_Butterfly": 24.43,
+            "100_Butterfly": 55.18,
+            "200_Butterfly": 121.81,
+            "200_Medley": 126.12,
+            "400_Medley": 264.38
         }
     }
 };
@@ -157,6 +154,7 @@ function calculateFinaPoints(timeMs, gender, poolLength, stroke, distance) {
     if (!baseTime || !timeMs) return null;
     
     const timeSec = timeMs / 1000;
+    // FINA Points formula: Points = 1000 × (BaseTime / SwimmerTime)³
     const points = Math.round(1000 * Math.pow(baseTime / timeSec, 3));
     return points;
 }
@@ -225,7 +223,7 @@ function renderProfileTab() {
             <div class="help-box">
                 <h4>💡 Comment ça marche ?</h4>
                 <ol>
-                    <li>Les données sont synchronisées automatiquement chaque jour</li>
+                    <li>Les données sont synchronisées automatiquement chaque jour depuis SwimRankings</li>
                     <li>Pour ajouter un nageur, modifie <code>athletes.txt</code> sur GitHub</li>
                     <li>Les temps limites sont mis à jour chaque saison</li>
                 </ol>
@@ -324,37 +322,6 @@ function renderPBsByPool(poolLength, title) {
     `;
 }
 
-async function handleProfileSubmit(e) {
-    e.preventDefault();
-    const input = document.getElementById('athlete-id-input');
-    const athleteId = input.value.trim();
-    if (!athleteId) return;
-    
-    const btn = document.getElementById('profile-submit-btn');
-    const errorDiv = document.getElementById('profile-error');
-    
-    btn.disabled = true;
-    btn.innerHTML = '<span class="loading"></span> Chargement...';
-    errorDiv.innerHTML = '';
-    
-    try {
-        swimmer = await fetchSwimmerData(athleteId);
-        localStorage.setItem('swimmer_profile', JSON.stringify(swimmer));
-        localStorage.setItem('athlete_id', athleteId);
-        
-        document.getElementById('header-user').textContent = swimmer.firstName;
-        document.getElementById('select-gender').value = swimmer.gender || 'Female';
-        
-        renderProfileTab();
-        updateSwimmerInfoBar();
-        setTimeout(() => showTab('times'), 1000);
-    } catch (err) {
-        errorDiv.innerHTML = `<div class="error-box">⚠️ ${err.message}</div>`;
-        btn.disabled = false;
-        btn.innerHTML = `Charger mon profil`;
-    }
-}
-
 async function refreshProfile() {
     if (!swimmer) return;
     swimmersData = null; // Force reload
@@ -363,6 +330,7 @@ async function refreshProfile() {
         localStorage.setItem('swimmer_profile', JSON.stringify(swimmer));
         renderProfileTab();
         updateSwimmerInfoBar();
+        alert('Profil actualisé !');
     } catch (err) {
         alert('Erreur: ' + err.message);
     }
@@ -403,7 +371,7 @@ function updateSwimmerInfoBar() {
 function updateTimesDisplay() {
     if (!TIME_STANDARDS) return;
     
-    // Presélectionner le genre du nageur sélectionné
+    // Présélectionner le genre du nageur sélectionné (demande #6)
     if (swimmer?.gender) {
         document.getElementById('select-gender').value = swimmer.gender;
     }
@@ -428,7 +396,7 @@ function updateTimesDisplay() {
     
     const actualDistance = distSelect.value;
     
-    // Update swimmer info bar
+    // Update swimmer info bar (demande #5)
     updateSwimmerInfoBar();
     
     // Find PB
@@ -542,9 +510,9 @@ function updateProgressDisplay() {
                 if (!bestQualified || categoryOrder.indexOf(cat) < categoryOrder.indexOf(bestQualified)) {
                     bestQualified = cat;
                 }
-            } else if (finaGap < smallestFinaGap) {
+            } else if (finaGap < smallestFinaGap && finaGap > 0) {
                 smallestFinaGap = finaGap;
-                nextTarget = { category: cat, gap: diff, time, finaGap, targetFinaPoints };
+                nextTarget = { category: cat, gap: diff, time, finaGap: Math.round(finaGap), targetFinaPoints };
             }
         });
         
@@ -558,9 +526,9 @@ function updateProgressDisplay() {
     });
     
     const qualified = analysis.filter(a => a.bestQualified);
-    // Sort by FINA points gap (smallest first = closest to qualifying)
+    // Sort by FINA points gap (smallest first = closest to qualifying) - demande #4
     const objectives = analysis
-        .filter(a => a.nextTarget && a.nextTarget.finaGap !== Infinity)
+        .filter(a => a.nextTarget && a.nextTarget.finaGap !== Infinity && a.nextTarget.finaGap > 0)
         .sort((a, b) => a.nextTarget.finaGap - b.nextTarget.finaGap);
     
     container.innerHTML = `
