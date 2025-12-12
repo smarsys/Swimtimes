@@ -174,8 +174,17 @@ class SwimRankingsParser(HTMLParser):
             if not stroke:
                 return
             
-            # Find time in cells
-            for cell in self.row_cells[1:]:
+            # Pool length is in column 2 (index 1) with format "25m" or "50m"
+            row_pool_length = 50  # default
+            if len(self.row_cells) > 1:
+                bassin_cell = self.row_cells[1].strip().lower()
+                if bassin_cell == "25m" or bassin_cell == "25":
+                    row_pool_length = 25
+                elif bassin_cell == "50m" or bassin_cell == "50":
+                    row_pool_length = 50
+            
+            # Find time in cells (starting from column 3, index 2)
+            for cell in self.row_cells[2:]:
                 time_match = re.search(r"(\d{1,2}:\d{2}\.\d{2}|\d{2}\.\d{2})", cell)
                 if time_match:
                     time_str = time_match.group(1)
@@ -186,7 +195,7 @@ class SwimRankingsParser(HTMLParser):
                         exists = any(
                             pb["stroke"] == stroke and 
                             pb["distance"] == distance and 
-                            pb["poolLength"] == self.current_pool
+                            pb["poolLength"] == row_pool_length
                             for pb in self.data["personalBests"]
                         )
                         
@@ -194,7 +203,7 @@ class SwimRankingsParser(HTMLParser):
                             self.data["personalBests"].append({
                                 "stroke": stroke,
                                 "distance": distance,
-                                "poolLength": self.current_pool,
+                                "poolLength": row_pool_length,
                                 "timeMs": time_ms,
                                 "timeDisplay": time_str
                             })
@@ -221,7 +230,9 @@ class SwimRankingsParser(HTMLParser):
 
 
 def fetch_athlete(athlete_id):
-    """Récupère les données d'un athlète depuis SwimRankings (50m ET 25m)"""
+    """Récupère les données d'un athlète depuis SwimRankings (50m ET 25m sur la même page)"""
+    
+    url = f"https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={athlete_id}"
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -229,57 +240,26 @@ def fetch_athlete(athlete_id):
         "Accept-Language": "en-US,en;q=0.9",
     }
     
-    # URLs pour les deux types de bassin
-    # course=1 = Long Course (50m), course=2 = Short Course (25m)
-    urls = [
-        (50, f"https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={athlete_id}&course=1"),
-        (25, f"https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={athlete_id}&course=2"),
-    ]
+    req = Request(url, headers=headers)
     
-    data = None
-    all_personal_bests = []
-    
-    for pool_length, url in urls:
-        req = Request(url, headers=headers)
-        
-        try:
-            with urlopen(req, timeout=30) as response:
-                html = response.read().decode("utf-8", errors="ignore")
-        except Exception as e:
-            print(f"  Erreur fetch {athlete_id} ({pool_length}m): {e}", file=sys.stderr)
-            continue
-        
-        parser = SwimRankingsParser()
-        parser.current_pool = pool_length  # Force le pool length
-        parser.feed(html)
-        
-        # Force all times to have the correct pool length
-        for pb in parser.data["personalBests"]:
-            pb["poolLength"] = pool_length
-        
-        if data is None:
-            data = parser.data
-        
-        # Ajouter les temps de ce bassin
-        for pb in parser.data["personalBests"]:
-            # Éviter les doublons
-            exists = any(
-                existing["stroke"] == pb["stroke"] and 
-                existing["distance"] == pb["distance"] and 
-                existing["poolLength"] == pb["poolLength"]
-                for existing in all_personal_bests
-            )
-            if not exists:
-                all_personal_bests.append(pb)
-        
-        print(f"    {pool_length}m: {len(parser.data['personalBests'])} temps", file=sys.stderr)
-    
-    if data is None:
+    try:
+        with urlopen(req, timeout=30) as response:
+            html = response.read().decode("utf-8", errors="ignore")
+    except Exception as e:
+        print(f"  Erreur fetch {athlete_id}: {e}", file=sys.stderr)
         return None
     
-    data["personalBests"] = all_personal_bests
+    parser = SwimRankingsParser()
+    parser.feed(html)
+    
+    data = parser.data
     data["id"] = athlete_id
     data["lastUpdated"] = datetime.utcnow().isoformat() + "Z"
+    
+    # Count by pool length for debug
+    count_25 = sum(1 for pb in data["personalBests"] if pb["poolLength"] == 25)
+    count_50 = sum(1 for pb in data["personalBests"] if pb["poolLength"] == 50)
+    print(f"    50m: {count_50} temps, 25m: {count_25} temps", file=sys.stderr)
     
     # Clean and split name
     fullName = data["fullName"]
