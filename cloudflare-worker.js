@@ -29,14 +29,24 @@ export default {
     const url = new URL(request.url);
     const athleteId = url.searchParams.get("athleteId");
 
-    // Validation
+    // Si pas d'athleteId, retourner une page d'accueil
     if (!athleteId) {
       return new Response(
-        JSON.stringify({ error: "Missing athleteId parameter" }),
+        `<!DOCTYPE html>
+<html>
+<head><title>SwimRankings Proxy</title></head>
+<body style="font-family:sans-serif;max-width:600px;margin:50px auto;padding:20px">
+  <h1>🏊 SwimRankings Proxy</h1>
+  <p>Ce Worker fait proxy vers SwimRankings.net</p>
+  <h3>Usage:</h3>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:5px">?athleteId=5332548</pre>
+  <p><a href="?athleteId=5332548">Tester avec l'ID 5332548</a></p>
+</body>
+</html>`,
         {
-          status: 400,
+          status: 200,
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "text/html",
             "Access-Control-Allow-Origin": "*",
           },
         }
@@ -63,9 +73,20 @@ export default {
       
       const response = await fetch(swimRankingsUrl, {
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-          "Accept-Language": "en-US,en;q=0.5",
+          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+          "Accept-Language": "en-US,en;q=0.9,fr;q=0.8",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache",
+          "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+          "Sec-Ch-Ua-Mobile": "?0",
+          "Sec-Ch-Ua-Platform": '"macOS"',
+          "Sec-Fetch-Dest": "document",
+          "Sec-Fetch-Mode": "navigate",
+          "Sec-Fetch-Site": "none",
+          "Sec-Fetch-User": "?1",
+          "Upgrade-Insecure-Requests": "1",
         },
       });
 
