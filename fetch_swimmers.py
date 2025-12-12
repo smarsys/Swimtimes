@@ -221,8 +221,7 @@ class SwimRankingsParser(HTMLParser):
 
 
 def fetch_athlete(athlete_id):
-    """Récupère les données d'un athlète depuis SwimRankings"""
-    url = f"https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={athlete_id}"
+    """Récupère les données d'un athlète depuis SwimRankings (50m ET 25m)"""
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -230,19 +229,55 @@ def fetch_athlete(athlete_id):
         "Accept-Language": "en-US,en;q=0.9",
     }
     
-    req = Request(url, headers=headers)
+    # URLs pour les deux types de bassin
+    # course=1 = Long Course (50m), course=2 = Short Course (25m)
+    urls = [
+        (50, f"https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={athlete_id}&course=1"),
+        (25, f"https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={athlete_id}&course=2"),
+    ]
     
-    try:
-        with urlopen(req, timeout=30) as response:
-            html = response.read().decode("utf-8", errors="ignore")
-    except Exception as e:
-        print(f"Erreur fetch {athlete_id}: {e}", file=sys.stderr)
+    data = None
+    all_personal_bests = []
+    
+    for pool_length, url in urls:
+        req = Request(url, headers=headers)
+        
+        try:
+            with urlopen(req, timeout=30) as response:
+                html = response.read().decode("utf-8", errors="ignore")
+        except Exception as e:
+            print(f"  Erreur fetch {athlete_id} ({pool_length}m): {e}", file=sys.stderr)
+            continue
+        
+        parser = SwimRankingsParser()
+        parser.current_pool = pool_length  # Force le pool length
+        parser.feed(html)
+        
+        # Force all times to have the correct pool length
+        for pb in parser.data["personalBests"]:
+            pb["poolLength"] = pool_length
+        
+        if data is None:
+            data = parser.data
+        
+        # Ajouter les temps de ce bassin
+        for pb in parser.data["personalBests"]:
+            # Éviter les doublons
+            exists = any(
+                existing["stroke"] == pb["stroke"] and 
+                existing["distance"] == pb["distance"] and 
+                existing["poolLength"] == pb["poolLength"]
+                for existing in all_personal_bests
+            )
+            if not exists:
+                all_personal_bests.append(pb)
+        
+        print(f"    {pool_length}m: {len(parser.data['personalBests'])} temps", file=sys.stderr)
+    
+    if data is None:
         return None
     
-    parser = SwimRankingsParser()
-    parser.feed(html)
-    
-    data = parser.data
+    data["personalBests"] = all_personal_bests
     data["id"] = athlete_id
     data["lastUpdated"] = datetime.utcnow().isoformat() + "Z"
     
