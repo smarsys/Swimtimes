@@ -261,7 +261,7 @@ function renderProfileTab() {
                 </div>
                 <div class="profile-stats">
                     <div><div class="profile-stat-value">${swimmer.personalBests?.length || 0}</div><div class="profile-stat-label">Records</div></div>
-                    <div><div class="profile-stat-value" style="font-size:32px">${getNationFlag(swimmer.nation)}</div><div class="profile-stat-label">${swimmer.nation || 'Nation'}</div></div>
+                    <div><div class="profile-stat-value" style="font-size:40px">${getNationFlag(swimmer.nation)}</div><div class="profile-stat-label">${swimmer.nation || 'Nation'}</div></div>
                     <div><div class="profile-stat-value">${age ? age + ' ans' : '—'}</div><div class="profile-stat-label">Âge</div></div>
                 </div>
                 <div style="font-size:12px;opacity:.5">ID: ${swimmer.id} • Mis à jour: ${new Date(swimmer.lastUpdated).toLocaleDateString('fr-CH')}</div>
@@ -304,8 +304,6 @@ async function handleSwimmerSelect(athleteId) {
         swimmer = await fetchSwimmerData(athleteId);
         localStorage.setItem('swimmer_profile', JSON.stringify(swimmer));
         localStorage.setItem('athlete_id', athleteId);
-        
-        document.getElementById('header-user').textContent = swimmer.firstName;
         
         // Update gender selector based on swimmer profile
         const genderSelect = document.getElementById('select-gender');
@@ -358,7 +356,6 @@ function clearProfile() {
     swimmer = null;
     localStorage.removeItem('swimmer_profile');
     localStorage.removeItem('athlete_id');
-    document.getElementById('header-user').textContent = '';
     renderProfileTab();
     updateSwimmerInfoBar();
 }
@@ -596,7 +593,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (savedProfile) {
         try {
             swimmer = JSON.parse(savedProfile);
-            document.getElementById('header-user').textContent = swimmer.firstName;
             document.getElementById('select-gender').value = swimmer.gender || 'Female';
         } catch (e) {
             console.error('Error loading profile:', e);
