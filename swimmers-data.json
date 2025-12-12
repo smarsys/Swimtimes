@@ -1,8 +1,8 @@
 {
   "_metadata": {
-    "generated": "2025-12-12T12:40:31.276431Z",
+    "generated": "2025-12-12T12:44:40.507015Z",
     "source": "swimrankings.net",
-    "count": 5
+    "count": 6
   },
   "swimmers": {
     "5332548": {
@@ -154,7 +154,7 @@
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2025-12-12T12:40:29.620637Z",
+      "lastUpdated": "2025-12-12T12:44:39.116237Z",
       "firstName": "Swimrankings",
       "lastName": "- HEHLEN, Ava"
     },
@@ -321,7 +321,7 @@
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2025-12-12T12:40:30.067292Z",
+      "lastUpdated": "2025-12-12T12:44:39.392491Z",
       "firstName": "Swimrankings",
       "lastName": "- ROCHAT, Leane"
     },
@@ -481,7 +481,7 @@
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2025-12-12T12:40:30.542505Z",
+      "lastUpdated": "2025-12-12T12:44:39.680386Z",
       "firstName": "Swimrankings",
       "lastName": "- BOUKARI, Kenza"
     },
@@ -648,7 +648,7 @@
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2025-12-12T12:40:30.837184Z",
+      "lastUpdated": "2025-12-12T12:44:39.844804Z",
       "firstName": "Swimrankings",
       "lastName": "- GUEGUEN, Eloa"
     },
@@ -808,9 +808,148 @@
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2025-12-12T12:40:31.276394Z",
+      "lastUpdated": "2025-12-12T12:44:40.160829Z",
       "firstName": "Swimrankings",
       "lastName": "- PENNEL, Alice Mei"
+    },
+    "5316667": {
+      "fullName": "Swimrankings - PENNEL, Jamie Alexander",
+      "club": "",
+      "nation": "",
+      "yearOfBirth": null,
+      "gender": "Female",
+      "personalBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 26350,
+          "timeDisplay": "26.35"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 56290,
+          "timeDisplay": "56.29"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 121470,
+          "timeDisplay": "2:01.47"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 256070,
+          "timeDisplay": "4:16.07"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 50,
+          "timeMs": 534080,
+          "timeDisplay": "8:54.08"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 50,
+          "timeMs": 1029040,
+          "timeDisplay": "17:09.04"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 30770,
+          "timeDisplay": "30.77"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 70330,
+          "timeDisplay": "1:10.33"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 158980,
+          "timeDisplay": "2:38.98"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 49770,
+          "timeDisplay": "49.77"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 86420,
+          "timeDisplay": "1:26.42"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 190440,
+          "timeDisplay": "3:10.44"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 27000,
+          "timeDisplay": "27.00"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 59020,
+          "timeDisplay": "59.02"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 136650,
+          "timeDisplay": "2:16.65"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64180,
+          "timeDisplay": "1:04.18"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 144380,
+          "timeDisplay": "2:24.38"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 299810,
+          "timeDisplay": "4:59.81"
+        }
+      ],
+      "id": "5316667",
+      "lastUpdated": "2025-12-12T12:44:40.506976Z",
+      "firstName": "Swimrankings",
+      "lastName": "- PENNEL, Jamie Alexander"
     }
   }
 }
