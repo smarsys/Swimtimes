@@ -1,53 +1,162 @@
 {
   "_metadata": {
-    "generated": "2025-12-12T12:00:00Z",
+    "generated": "2025-12-12T11:35:07.566456Z",
     "source": "swimrankings.net",
     "count": 1
   },
   "swimmers": {
     "5332548": {
-      "id": "5332548",
-      "firstName": "Ava",
-      "lastName": "Hehlen",
-      "fullName": "Ava Hehlen",
+      "fullName": "Swimrankings - HEHLEN, Ava",
+      "club": "",
+      "nation": "",
+      "yearOfBirth": null,
       "gender": "Female",
-      "club": "Lausanne Aquatics",
-      "nation": "SUI",
-      "yearOfBirth": 2010,
       "personalBests": [
-        {"stroke": "Freestyle", "distance": 50, "poolLength": 50, "timeMs": 30250, "timeDisplay": "30.25"},
-        {"stroke": "Freestyle", "distance": 50, "poolLength": 25, "timeMs": 29680, "timeDisplay": "29.68"},
-        {"stroke": "Freestyle", "distance": 100, "poolLength": 50, "timeMs": 64850, "timeDisplay": "1:04.85"},
-        {"stroke": "Freestyle", "distance": 100, "poolLength": 25, "timeMs": 65060, "timeDisplay": "1:05.06"},
-        {"stroke": "Freestyle", "distance": 200, "poolLength": 50, "timeMs": 143710, "timeDisplay": "2:23.71"},
-        {"stroke": "Freestyle", "distance": 200, "poolLength": 25, "timeMs": 142330, "timeDisplay": "2:22.33"},
-        {"stroke": "Freestyle", "distance": 400, "poolLength": 50, "timeMs": 427400, "timeDisplay": "7:07.40"},
-        {"stroke": "Freestyle", "distance": 400, "poolLength": 25, "timeMs": 301560, "timeDisplay": "5:01.56"},
-        {"stroke": "Freestyle", "distance": 800, "poolLength": 25, "timeMs": 786930, "timeDisplay": "13:06.93"},
-        {"stroke": "Backstroke", "distance": 50, "poolLength": 50, "timeMs": 39510, "timeDisplay": "39.51"},
-        {"stroke": "Backstroke", "distance": 50, "poolLength": 25, "timeMs": 37450, "timeDisplay": "37.45"},
-        {"stroke": "Backstroke", "distance": 100, "poolLength": 50, "timeMs": 80230, "timeDisplay": "1:20.23"},
-        {"stroke": "Backstroke", "distance": 100, "poolLength": 25, "timeMs": 82170, "timeDisplay": "1:22.17"},
-        {"stroke": "Backstroke", "distance": 200, "poolLength": 50, "timeMs": 169050, "timeDisplay": "2:49.05"},
-        {"stroke": "Backstroke", "distance": 200, "poolLength": 25, "timeMs": 174670, "timeDisplay": "2:54.67"},
-        {"stroke": "Breaststroke", "distance": 50, "poolLength": 50, "timeMs": 35790, "timeDisplay": "35.79"},
-        {"stroke": "Breaststroke", "distance": 50, "poolLength": 25, "timeMs": 34490, "timeDisplay": "34.49"},
-        {"stroke": "Breaststroke", "distance": 100, "poolLength": 50, "timeMs": 78020, "timeDisplay": "1:18.02"},
-        {"stroke": "Breaststroke", "distance": 100, "poolLength": 25, "timeMs": 74910, "timeDisplay": "1:14.91"},
-        {"stroke": "Breaststroke", "distance": 200, "poolLength": 50, "timeMs": 167750, "timeDisplay": "2:47.75"},
-        {"stroke": "Breaststroke", "distance": 200, "poolLength": 25, "timeMs": 163620, "timeDisplay": "2:43.62"},
-        {"stroke": "Butterfly", "distance": 50, "poolLength": 50, "timeMs": 31210, "timeDisplay": "31.21"},
-        {"stroke": "Butterfly", "distance": 50, "poolLength": 25, "timeMs": 32690, "timeDisplay": "32.69"},
-        {"stroke": "Butterfly", "distance": 100, "poolLength": 50, "timeMs": 74720, "timeDisplay": "1:14.72"},
-        {"stroke": "Butterfly", "distance": 100, "poolLength": 25, "timeMs": 89430, "timeDisplay": "1:29.43"},
-        {"stroke": "Butterfly", "distance": 200, "poolLength": 50, "timeMs": 171750, "timeDisplay": "2:51.75"},
-        {"stroke": "Medley", "distance": 100, "poolLength": 25, "timeMs": 70670, "timeDisplay": "1:10.67"},
-        {"stroke": "Medley", "distance": 200, "poolLength": 50, "timeMs": 181100, "timeDisplay": "3:01.10"},
-        {"stroke": "Medley", "distance": 200, "poolLength": 25, "timeMs": 152240, "timeDisplay": "2:32.24"},
-        {"stroke": "Medley", "distance": 400, "poolLength": 50, "timeMs": 345580, "timeDisplay": "5:45.58"},
-        {"stroke": "Medley", "distance": 400, "poolLength": 25, "timeMs": 367870, "timeDisplay": "6:07.87"}
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 50,
+          "timeMs": 27460,
+          "timeDisplay": "27.46"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 30250,
+          "timeDisplay": "30.25"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64850,
+          "timeDisplay": "1:04.85"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 143710,
+          "timeDisplay": "2:23.71"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 427400,
+          "timeDisplay": "7:07.40"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 50,
+          "timeMs": 786930,
+          "timeDisplay": "13:06.93"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 25,
+          "poolLength": 50,
+          "timeMs": 28000,
+          "timeDisplay": "28.00"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 39510,
+          "timeDisplay": "39.51"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 80230,
+          "timeDisplay": "1:20.23"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 169050,
+          "timeDisplay": "2:49.05"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 35790,
+          "timeDisplay": "35.79"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 78020,
+          "timeDisplay": "1:18.02"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 167750,
+          "timeDisplay": "2:47.75"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 25,
+          "poolLength": 50,
+          "timeMs": 30440,
+          "timeDisplay": "30.44"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 31210,
+          "timeDisplay": "31.21"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 74720,
+          "timeDisplay": "1:14.72"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 171750,
+          "timeDisplay": "2:51.75"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 70670,
+          "timeDisplay": "1:10.67"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 181100,
+          "timeDisplay": "3:01.10"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 345580,
+          "timeDisplay": "5:45.58"
+        }
       ],
-      "lastUpdated": "2025-12-12T12:00:00Z"
+      "id": "5332548",
+      "lastUpdated": "2025-12-12T11:35:07.566411Z",
+      "firstName": "Swimrankings",
+      "lastName": "- HEHLEN, Ava"
     }
   }
 }
