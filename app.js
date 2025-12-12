@@ -433,9 +433,6 @@ function updateTimesDisplay() {
     const poolData = TIME_STANDARDS?.[gender]?.[poolLength];
     const standards = poolData?.[eventKey] || {};
     
-    // Filter standards by pool length (50m competitions only show for 50m pool, etc.)
-    const poolLengthNum = poolLength === '50m' ? 50 : 25;
-    
     // Build table
     const tableContainer = document.getElementById('times-table');
     
