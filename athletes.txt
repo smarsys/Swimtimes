@@ -1,0 +1,5 @@
+# Liste des IDs SwimRankings à suivre (un par ligne)
+# Trouve l'ID dans l'URL: swimrankings.net/...athleteId=XXXXXX
+
+# Ava Hehlen - Lausanne Aquatics
+5332548

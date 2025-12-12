@@ -2,11 +2,11 @@
 // SwimTimes App - app.js
 // =============================================================================
 
-// ⚠️ CONFIGURATION - Remplace cette URL par ton Cloudflare Worker
-const SWIMRANKINGS_PROXY_URL = 'https://swimrankings-proxy.TONCOMPTE.workers.dev';
-// Exemple: 'https://swimrankings-proxy.cristobal.workers.dev'
+// Les données des nageurs sont chargées depuis swimmers-data.json
+// (généré automatiquement par GitHub Actions)
 
 let swimmer = null;
+let swimmersData = null;  // Cache des données swimmers-data.json
 let TIME_STANDARDS = null;
 let CATEGORIES = null;
 let STROKES = null;
@@ -60,29 +60,35 @@ function formatDiff(diffMs) {
 }
 
 // =============================================================================
-// SWIMRANKINGS FETCH (via Cloudflare Worker)
+// SWIMMERS DATA (depuis swimmers-data.json généré par GitHub Actions)
 // =============================================================================
-async function fetchSwimmerData(athleteId) {
-    // Utilise le Cloudflare Worker comme proxy
-    const url = `${SWIMRANKINGS_PROXY_URL}?athleteId=${athleteId}`;
+async function loadSwimmersData() {
+    if (swimmersData) return swimmersData;
     
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
+    try {
+        const response = await fetch('swimmers-data.json');
+        if (!response.ok) throw new Error('Fichier non trouvé');
+        swimmersData = await response.json();
+        console.log('✅ Données nageurs chargées:', swimmersData._metadata?.generated);
+        return swimmersData;
+    } catch (err) {
+        console.log('ℹ️ swimmers-data.json non disponible');
+        return null;
     }
-    
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(data.error);
-    }
-    
-    return data;
 }
 
-// Note: Le parsing HTML est fait côté Cloudflare Worker
+async function fetchSwimmerData(athleteId) {
+    // Charger les données depuis swimmers-data.json
+    const data = await loadSwimmersData();
+    
+    if (data?.swimmers?.[athleteId]) {
+        return data.swimmers[athleteId];
+    }
+    
+    throw new Error(`Nageur ${athleteId} non trouvé. Ajoutez cet ID dans athletes.txt et relancez le workflow GitHub.`);
+}
+
+// Note: Le parsing HTML est fait côté GitHub Actions via fetch_swimmers.py
 
 // =============================================================================
 // UI FUNCTIONS
@@ -106,13 +112,14 @@ function renderProfileTab() {
             <div style="text-align:center;padding:20px 0">
                 <div class="profile-avatar">🏊</div>
                 <h2 style="font-size:24px;margin-bottom:8px">Bienvenue !</h2>
-                <p style="opacity:.7">Entre ton ID SwimRankings pour synchroniser tes temps</p>
+                <p style="opacity:.7">Sélectionne ton profil ou entre ton ID SwimRankings</p>
             </div>
-            <form onsubmit="handleProfileSubmit(event)">
+            <div id="swimmer-selector"></div>
+            <form onsubmit="handleProfileSubmit(event)" style="margin-top:16px">
                 <div class="form-group">
-                    <label class="form-label">ID SwimRankings</label>
+                    <label class="form-label">Ou entre ton ID SwimRankings</label>
                     <input type="text" id="athlete-id-input" class="form-input" placeholder="ex: 5332548" value="${localStorage.getItem('athlete_id') || ''}">
-                    <p class="form-hint">Trouve ton ID dans l'URL de ta page SwimRankings:<br>swimrankings.net/...athleteId=<strong>XXXXXX</strong></p>
+                    <p class="form-hint">Trouve ton ID dans l'URL de ta page SwimRankings</p>
                 </div>
                 <div id="profile-error"></div>
                 <button type="submit" class="btn btn-primary" id="profile-submit-btn">
@@ -121,15 +128,15 @@ function renderProfileTab() {
                 </button>
             </form>
             <div class="help-box">
-                <h4>🎯 Comment trouver mon ID ?</h4>
+                <h4>💡 Comment ça marche ?</h4>
                 <ol>
-                    <li>Va sur <a href="https://www.swimrankings.net" target="_blank">swimrankings.net</a></li>
-                    <li>Recherche ton nom</li>
-                    <li>Clique sur ton profil</li>
-                    <li>Copie le nombre après "athleteId=" dans l'URL</li>
+                    <li>Les données sont synchronisées automatiquement chaque jour</li>
+                    <li>Pour ajouter un nageur, modifie <code>athletes.txt</code> sur GitHub</li>
+                    <li>Les temps limites sont mis à jour chaque saison</li>
                 </ol>
             </div>
         `;
+        loadSwimmerSelector();
     } else {
         const initials = (swimmer.firstName?.[0] || '') + (swimmer.lastName?.[0] || '');
         container.innerHTML = `
@@ -158,6 +165,53 @@ function renderProfileTab() {
             </div>
             <button class="btn btn-secondary" onclick="clearProfile()" style="margin-top:8px">Changer de profil</button>
         `;
+    }
+}
+
+async function loadSwimmerSelector() {
+    const container = document.getElementById('swimmer-selector');
+    if (!container) return;
+    
+    const data = await loadSwimmersData();
+    
+    if (!data?.swimmers || Object.keys(data.swimmers).length === 0) {
+        container.innerHTML = `<p style="text-align:center;opacity:.6;font-size:14px">Aucun nageur configuré</p>`;
+        return;
+    }
+    
+    const swimmers = Object.values(data.swimmers);
+    
+    container.innerHTML = `
+        <div class="form-group">
+            <label class="form-label">Nageurs disponibles</label>
+            <div style="display:grid;gap:8px">
+                ${swimmers.map(s => `
+                    <button class="btn btn-secondary" onclick="selectSwimmer('${s.id}')" style="justify-content:flex-start;padding:12px 16px">
+                        <span style="font-size:20px">🏊</span>
+                        <span style="flex:1;text-align:left">
+                            <strong>${s.fullName}</strong><br>
+                            <small style="opacity:.7">${s.club || ''} • ${s.personalBests?.length || 0} PBs</small>
+                        </span>
+                    </button>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+async function selectSwimmer(athleteId) {
+    try {
+        swimmer = await fetchSwimmerData(athleteId);
+        localStorage.setItem('swimmer_profile', JSON.stringify(swimmer));
+        localStorage.setItem('athlete_id', athleteId);
+        
+        document.getElementById('header-user').textContent = swimmer.firstName;
+        document.getElementById('select-gender').value = swimmer.gender || 'Female';
+        
+        renderProfileTab();
+        setTimeout(() => showTab('times'), 500);
+    } catch (err) {
+        alert('Erreur: ' + err.message);
     }
 }
 
