@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#dc2626">
+    <title>SwimTimes - Temps Limites Natation Suisse</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏊</text></svg>">
+    <link rel="manifest" href="manifest.json">
+    <style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red-600:#dc2626;--red-700:#b91c1c;--red-900:#7f1d1d;--green-400:#4ade80;--yellow-400:#facc15}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--red-600),var(--red-700),var(--red-900));min-height:100vh;color:#fff;line-height:1.5}
+.header{background:rgba(0,0,0,.2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px}
+.header-user{font-size:14px;opacity:.8}
+.nav{display:flex;border-bottom:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.1)}
+.nav-tab{flex:1;padding:14px 8px;text-align:center;background:0 0;border:none;color:#fff;font-size:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.7}
+.nav-tab:hover{background:rgba(255,255,255,.1)}
+.nav-tab.active{background:rgba(255,255,255,.15);opacity:1;border-bottom:2px solid #fff}
+.nav-tab svg{width:18px;height:18px}
+.main{max-width:500px;margin:0 auto;padding:16px;padding-bottom:80px}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:rgba(255,255,255,.1);border-radius:16px;padding:20px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:6px}
+.form-input,.form-select{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:16px}
+.form-input:focus,.form-select:focus{outline:0;border-color:rgba(255,255,255,.5)}
+.form-input::placeholder{color:rgba(255,255,255,.5)}
+.form-select option{background:#333;color:#fff}
+.form-hint{font-size:12px;opacity:.6;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:12px;border:none;font-size:16px;font-weight:600;cursor:pointer;width:100%}
+.btn-primary{background:#fff;color:var(--red-600)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-icon{padding:10px;border-radius:10px;background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer}
+.profile-avatar{width:80px;height:80px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px}
+.profile-avatar-small{width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);margin:16px 0;text-align:center}
+.profile-stat-value{font-size:24px;font-weight:700}
+.profile-stat-label{font-size:11px;opacity:.6}
+.help-box{background:rgba(255,255,255,.05);border-radius:12px;padding:16px;margin-top:24px}
+.help-box h4{margin-bottom:12px;font-size:14px}
+.help-box ol{padding-left:20px;font-size:13px;opacity:.8}
+.help-box li{margin-bottom:8px}
+.help-box a{color:#fff}
+.error-box{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.5);border-radius:12px;padding:14px;margin-bottom:16px;font-size:14px}
+.selectors-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.pb-display{background:rgba(255,255,255,.15);border-radius:12px;padding:16px;margin-bottom:16px}
+.pb-display.empty{background:rgba(255,255,255,.05)}
+.pb-label{font-size:12px;opacity:.7;margin-bottom:4px}
+.pb-time{font-size:32px;font-family:"SF Mono",Monaco,monospace;font-weight:700}
+.times-table{background:rgba(255,255,255,.1);border-radius:12px;overflow:hidden}
+.times-table table{width:100%;border-collapse:collapse}
+.times-table th{background:rgba(0,0,0,.2);padding:12px;text-align:left;font-size:11px;text-transform:uppercase;opacity:.7}
+.times-table th:nth-child(2),.times-table th:nth-child(3){text-align:center}
+.times-table td{padding:14px 12px;border-top:1px solid rgba(255,255,255,.1)}
+.times-table td:nth-child(2){text-align:center;font-family:"SF Mono",Monaco,monospace}
+.times-table td:nth-child(3){text-align:center;font-weight:600}
+.times-table tr.olympic{background:rgba(250,204,21,.1)}
+.comp-name{display:flex;align-items:center;gap:8px}
+.diff-qualified{color:var(--green-400)}
+.diff-close{color:var(--yellow-400)}
+.diff-far{color:#f87171}
+.table-footer{text-align:center;font-size:12px;opacity:.5;padding:12px}
+.progress-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.progress-card{border-radius:12px;padding:16px;text-align:center}
+.progress-card.green{background:rgba(74,222,128,.2)}
+.progress-card.yellow{background:rgba(250,204,21,.2)}
+.progress-value{font-size:32px;font-weight:700}
+.progress-label{font-size:12px;opacity:.7}
+.section-title{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:12px}
+.objective-card{background:rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:10px}
+.objective-header{display:flex;justify-content:space-between;margin-bottom:8px}
+.objective-event{font-weight:600}
+.objective-current{font-size:13px;opacity:.7}
+.objective-gap{color:var(--yellow-400);font-weight:700}
+.objective-target{font-size:11px;opacity:.6}
+.progress-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-bar-fill{height:100%;background:var(--yellow-400);border-radius:3px}
+.qualification-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qualification-item{background:rgba(74,222,128,.2);border-radius:10px;padding:10px}
+.qualification-event{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500}
+.qualification-level{font-size:11px;opacity:.7}
+.pb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pb-item{background:rgba(255,255,255,.05);border-radius:10px;padding:10px}
+.pb-item-event{font-size:11px;opacity:.6}
+.pb-item-time{font-family:"SF Mono",Monaco,monospace;font-weight:700}
+.empty-state{text-align:center;padding:40px 20px}
+.empty-icon{width:64px;height:64px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+.footer{text-align:center;font-size:11px;opacity:.4;padding:20px}
+.loading{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:400px){.nav-tab span{display:none}.pb-time{font-size:28px}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-logo">🏊 SwimTimes</div>
+        <div class="header-user" id="header-user"></div>
+    </header>
+    <nav class="nav">
+        <button class="nav-tab active" data-tab="profile" onclick="showTab('profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profil</span>
+        </button>
+        <button class="nav-tab" data-tab="times" onclick="showTab('times')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Temps</span>
+        </button>
+        <button class="nav-tab" data-tab="progress" onclick="showTab('progress')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <span>Progression</span>
+        </button>
+    </nav>
+    <main class="main">
+        <div id="tab-profile" class="tab-content active"></div>
+        <div id="tab-times" class="tab-content">
+            <div class="selectors-grid">
+                <select id="select-gender" class="form-select" onchange="updateTimesDisplay()"><option value="Female">👩 Femme</option><option value="Male">👨 Homme</option></select>
+                <select id="select-pool" class="form-select" onchange="updateTimesDisplay()"><option value="50m">🏊 50m (GB)</option><option value="25m">🏊 25m (PB)</option></select>
+                <select id="select-stroke" class="form-select" onchange="updateTimesDisplay()"><option value="Freestyle">Nage Libre</option><option value="Backstroke">Dos</option><option value="Breaststroke">Brasse</option><option value="Butterfly">Papillon</option><option value="Medley">4 Nages</option></select>
+                <select id="select-distance" class="form-select" onchange="updateTimesDisplay()"><option value="50">50m</option><option value="100">100m</option><option value="200">200m</option></select>
+            </div>
+            <div id="pb-display" class="pb-display"><div class="pb-label">Mon Record Personnel</div><div class="pb-time" id="pb-time">—</div></div>
+            <div id="times-table" class="times-table"></div>
+            <div class="table-footer">Du plus facile ⬆️ au plus difficile ⬇️</div>
+        </div>
+        <div id="tab-progress" class="tab-content"><div id="progress-content"></div></div>
+    </main>
+    <footer class="footer">Données SwimRankings.net • Temps limites Swiss Swimming 2025-2028</footer>
+    <script src="app.js"></script>
+</body>
+</html>
