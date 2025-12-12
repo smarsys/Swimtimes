@@ -266,12 +266,12 @@ function renderProfileTab() {
                 </div>
                 <div style="font-size:12px;opacity:.5">ID: ${swimmer.id} • Mis à jour: ${new Date(swimmer.lastUpdated).toLocaleDateString('fr-CH')}</div>
             </div>
+            <button class="btn btn-secondary" onclick="clearProfile()" style="margin-bottom:16px">Changer de profil</button>
             <div class="card">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:600">🏅 Mes Records Personnels</div>
                 ${renderPBsByPool(50, 'Grand Bassin (50m)')}
                 ${renderPBsByPool(25, 'Petit Bassin (25m)')}
             </div>
-            <button class="btn btn-secondary" onclick="clearProfile()" style="margin-top:8px">Changer de profil</button>
         `;
     }
 }
@@ -306,11 +306,16 @@ async function handleSwimmerSelect(athleteId) {
         localStorage.setItem('athlete_id', athleteId);
         
         document.getElementById('header-user').textContent = swimmer.firstName;
-        document.getElementById('select-gender').value = swimmer.gender || 'Female';
+        
+        // Update gender selector based on swimmer profile
+        const genderSelect = document.getElementById('select-gender');
+        if (genderSelect && swimmer.gender) {
+            genderSelect.value = swimmer.gender;
+        }
         
         renderProfileTab();
         updateSwimmerInfoBar();
-        // Stay on current tab (profile) instead of switching to times
+        updateTimesDisplay();
     } catch (err) {
         document.getElementById('profile-error').innerHTML = `<div class="error-box">⚠️ ${err.message}</div>`;
     }
@@ -381,11 +386,6 @@ function updateSwimmerInfoBar() {
 
 function updateTimesDisplay() {
     if (!TIME_STANDARDS) return;
-    
-    // Présélectionner le genre du nageur sélectionné (demande #6)
-    if (swimmer?.gender) {
-        document.getElementById('select-gender').value = swimmer.gender;
-    }
     
     const gender = document.getElementById('select-gender').value;
     const poolLength = document.getElementById('select-pool').value;
