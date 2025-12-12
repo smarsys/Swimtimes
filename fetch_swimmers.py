@@ -38,18 +38,40 @@ class SwimRankingsParser(HTMLParser):
         self.raw_html = ""
     
     def feed(self, data):
-        self.raw_html = data.lower()
-        # Detect gender
-        if "women" in self.raw_html or "female" in self.raw_html or "damen" in self.raw_html or 'gender2.png' in self.raw_html:
+        self.raw_html = data
+        html_lower = data.lower()
+        
+        # Detect gender: gender1.png = Male, gender2.png = Female
+        if 'gender2.png' in html_lower:
             self.data["gender"] = "Female"
+        elif 'gender1.png' in html_lower:
+            self.data["gender"] = "Male"
         
         # Extract year of birth from the name div: (2010&nbsp;&nbsp;<img...)
-        # Pattern: (YYYY followed by &nbsp; or whitespace or <img)
         birth_match = re.search(r'\((\d{4})(?:&nbsp;|[\s<])', data)
         if birth_match:
             year = int(birth_match.group(1))
             if 1950 < year <= 2025:
                 self.data["yearOfBirth"] = year
+        
+        # Extract nation and club from <div id="nationclub">
+        # Format: <br>SUI - Suisse<br>Lausanne Aquatique
+        nationclub_match = re.search(r'<div id="nationclub"[^>]*>(.*?)</div>', data, re.DOTALL | re.IGNORECASE)
+        if nationclub_match:
+            content = nationclub_match.group(1)
+            # Clean HTML tags and entities
+            content = re.sub(r'<[^>]+>', '\n', content)
+            content = content.replace('&nbsp;', ' ')
+            lines = [line.strip() for line in content.split('\n') if line.strip()]
+            
+            for line in lines:
+                # Nation line format: "SUI - Suisse" or just "SUI"
+                nation_match = re.match(r'^([A-Z]{3})(?:\s*-\s*(.+))?$', line)
+                if nation_match:
+                    self.data["nation"] = nation_match.group(1)
+                elif line and not self.data["club"]:
+                    # Other non-empty line is likely the club
+                    self.data["club"] = line
         
         super().feed(data)
     
