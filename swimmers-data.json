@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "generated": "2025-12-12T21:55:47.940895Z",
+    "generated": "2025-12-12T22:24:19.555797Z",
     "source": "swimrankings.net",
     "count": 6
   },
@@ -151,10 +151,150 @@
           "poolLength": 50,
           "timeMs": 345580,
           "timeDisplay": "5:45.58"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 27460,
+          "timeDisplay": "27.46"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 30250,
+          "timeDisplay": "30.25"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 64850,
+          "timeDisplay": "1:04.85"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 143710,
+          "timeDisplay": "2:23.71"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 427400,
+          "timeDisplay": "7:07.40"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 786930,
+          "timeDisplay": "13:06.93"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 28000,
+          "timeDisplay": "28.00"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 39510,
+          "timeDisplay": "39.51"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 80230,
+          "timeDisplay": "1:20.23"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 169050,
+          "timeDisplay": "2:49.05"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 35790,
+          "timeDisplay": "35.79"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 78020,
+          "timeDisplay": "1:18.02"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 167750,
+          "timeDisplay": "2:47.75"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 30440,
+          "timeDisplay": "30.44"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 31210,
+          "timeDisplay": "31.21"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 74720,
+          "timeDisplay": "1:14.72"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 171750,
+          "timeDisplay": "2:51.75"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 70670,
+          "timeDisplay": "1:10.67"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 181100,
+          "timeDisplay": "3:01.10"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 345580,
+          "timeDisplay": "5:45.58"
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2025-12-12T21:55:46.569335Z",
+      "lastUpdated": "2025-12-12T22:24:14.939176Z",
       "lastName": "HEHLEN",
       "firstName": "Ava"
     },
@@ -318,10 +458,164 @@
           "poolLength": 50,
           "timeMs": 319080,
           "timeDisplay": "5:19.08"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 24350,
+          "timeDisplay": "24.35"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 27800,
+          "timeDisplay": "27.80"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 59500,
+          "timeDisplay": "59.50"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 129560,
+          "timeDisplay": "2:09.56"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 276130,
+          "timeDisplay": "4:36.13"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 578110,
+          "timeDisplay": "9:38.11"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 25,
+          "timeMs": 1148040,
+          "timeDisplay": "19:08.04"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 25580,
+          "timeDisplay": "25.58"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 31840,
+          "timeDisplay": "31.84"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 69480,
+          "timeDisplay": "1:09.48"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 152230,
+          "timeDisplay": "2:32.23"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 24880,
+          "timeDisplay": "24.88"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 38680,
+          "timeDisplay": "38.68"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 84730,
+          "timeDisplay": "1:24.73"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 185100,
+          "timeDisplay": "3:05.10"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 20070,
+          "timeDisplay": "20.07"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 30260,
+          "timeDisplay": "30.26"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 66120,
+          "timeDisplay": "1:06.12"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 155420,
+          "timeDisplay": "2:35.42"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 66700,
+          "timeDisplay": "1:06.70"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 153100,
+          "timeDisplay": "2:33.10"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 319080,
+          "timeDisplay": "5:19.08"
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2025-12-12T21:55:46.759456Z",
+      "lastUpdated": "2025-12-12T22:24:15.956038Z",
       "lastName": "ROCHAT",
       "firstName": "Leane"
     },
@@ -478,10 +772,157 @@
           "poolLength": 50,
           "timeMs": 353390,
           "timeDisplay": "5:53.39"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 24780,
+          "timeDisplay": "24.78"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 27160,
+          "timeDisplay": "27.16"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 59340,
+          "timeDisplay": "59.34"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 131470,
+          "timeDisplay": "2:11.47"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 307460,
+          "timeDisplay": "5:07.46"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 689680,
+          "timeDisplay": "11:29.68"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 23350,
+          "timeDisplay": "23.35"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 33700,
+          "timeDisplay": "33.70"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 73570,
+          "timeDisplay": "1:13.57"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 164660,
+          "timeDisplay": "2:44.66"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 28630,
+          "timeDisplay": "28.63"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 39410,
+          "timeDisplay": "39.41"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 108980,
+          "timeDisplay": "1:48.98"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 234610,
+          "timeDisplay": "3:54.61"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 28220,
+          "timeDisplay": "28.22"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 29230,
+          "timeDisplay": "29.23"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 66230,
+          "timeDisplay": "1:06.23"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 179670,
+          "timeDisplay": "2:59.67"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 72970,
+          "timeDisplay": "1:12.97"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 160940,
+          "timeDisplay": "2:40.94"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 353390,
+          "timeDisplay": "5:53.39"
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2025-12-12T21:55:47.050317Z",
+      "lastUpdated": "2025-12-12T22:24:16.638931Z",
       "lastName": "BOUKARI",
       "firstName": "Kenza"
     },
@@ -645,10 +1086,164 @@
           "poolLength": 50,
           "timeMs": 339530,
           "timeDisplay": "5:39.53"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 26890,
+          "timeDisplay": "26.89"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 29860,
+          "timeDisplay": "29.86"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 63630,
+          "timeDisplay": "1:03.63"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 141270,
+          "timeDisplay": "2:21.27"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 301400,
+          "timeDisplay": "5:01.40"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 645880,
+          "timeDisplay": "10:45.88"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 25,
+          "timeMs": 1195280,
+          "timeDisplay": "19:55.28"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 30000,
+          "timeDisplay": "30.00"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 32120,
+          "timeDisplay": "32.12"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 69140,
+          "timeDisplay": "1:09.14"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 155220,
+          "timeDisplay": "2:35.22"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 41970,
+          "timeDisplay": "41.97"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 38500,
+          "timeDisplay": "38.50"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 82870,
+          "timeDisplay": "1:22.87"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 178530,
+          "timeDisplay": "2:58.53"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 27100,
+          "timeDisplay": "27.10"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 31050,
+          "timeDisplay": "31.05"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 69420,
+          "timeDisplay": "1:09.42"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 179160,
+          "timeDisplay": "2:59.16"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 68110,
+          "timeDisplay": "1:08.11"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 155670,
+          "timeDisplay": "2:35.67"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 339530,
+          "timeDisplay": "5:39.53"
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2025-12-12T21:55:47.343085Z",
+      "lastUpdated": "2025-12-12T22:24:17.663291Z",
       "lastName": "GUEGUEN",
       "firstName": "Eloa"
     },
@@ -805,10 +1400,157 @@
           "poolLength": 50,
           "timeMs": 332530,
           "timeDisplay": "5:32.53"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 31340,
+          "timeDisplay": "31.34"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 30150,
+          "timeDisplay": "30.15"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 63370,
+          "timeDisplay": "1:03.37"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 139420,
+          "timeDisplay": "2:19.42"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 299810,
+          "timeDisplay": "4:59.81"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 594000,
+          "timeDisplay": "9:54.00"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 31720,
+          "timeDisplay": "31.72"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 36680,
+          "timeDisplay": "36.68"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 75640,
+          "timeDisplay": "1:15.64"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 175620,
+          "timeDisplay": "2:55.62"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 25890,
+          "timeDisplay": "25.89"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 40540,
+          "timeDisplay": "40.54"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 84870,
+          "timeDisplay": "1:24.87"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 218110,
+          "timeDisplay": "3:38.11"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 24490,
+          "timeDisplay": "24.49"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 29340,
+          "timeDisplay": "29.34"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 66120,
+          "timeDisplay": "1:06.12"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 149850,
+          "timeDisplay": "2:29.85"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 69690,
+          "timeDisplay": "1:09.69"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 153380,
+          "timeDisplay": "2:33.38"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 332530,
+          "timeDisplay": "5:32.53"
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2025-12-12T21:55:47.640429Z",
+      "lastUpdated": "2025-12-12T22:24:18.688502Z",
       "lastName": "PENNEL",
       "firstName": "Alice Mei"
     },
@@ -944,10 +1686,136 @@
           "poolLength": 50,
           "timeMs": 299810,
           "timeDisplay": "4:59.81"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 26350,
+          "timeDisplay": "26.35"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 56290,
+          "timeDisplay": "56.29"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 121470,
+          "timeDisplay": "2:01.47"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 256070,
+          "timeDisplay": "4:16.07"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 534080,
+          "timeDisplay": "8:54.08"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 25,
+          "timeMs": 1029040,
+          "timeDisplay": "17:09.04"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 30770,
+          "timeDisplay": "30.77"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 70330,
+          "timeDisplay": "1:10.33"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 158980,
+          "timeDisplay": "2:38.98"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 49770,
+          "timeDisplay": "49.77"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 86420,
+          "timeDisplay": "1:26.42"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 190440,
+          "timeDisplay": "3:10.44"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 27000,
+          "timeDisplay": "27.00"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 59020,
+          "timeDisplay": "59.02"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 136650,
+          "timeDisplay": "2:16.65"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 64180,
+          "timeDisplay": "1:04.18"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 144380,
+          "timeDisplay": "2:24.38"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 299810,
+          "timeDisplay": "4:59.81"
         }
       ],
       "id": "5316667",
-      "lastUpdated": "2025-12-12T21:55:47.940854Z",
+      "lastUpdated": "2025-12-12T22:24:19.555772Z",
       "lastName": "PENNEL",
       "firstName": "Jamie Alexander"
     }
