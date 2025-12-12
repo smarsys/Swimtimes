@@ -139,6 +139,19 @@ function timeToMs(timeStr) {
     }
 }
 
+function getNationFlag(nationCode) {
+    if (!nationCode) return '🏊';
+    const flags = {
+        'SUI': '🇨🇭', 'FRA': '🇫🇷', 'GER': '🇩🇪', 'ITA': '🇮🇹', 'ESP': '🇪🇸',
+        'GBR': '🇬🇧', 'USA': '🇺🇸', 'AUS': '🇦🇺', 'JPN': '🇯🇵', 'CHN': '🇨🇳',
+        'BRA': '🇧🇷', 'CAN': '🇨🇦', 'NED': '🇳🇱', 'BEL': '🇧🇪', 'AUT': '🇦🇹',
+        'POR': '🇵🇹', 'SWE': '🇸🇪', 'NOR': '🇳🇴', 'DEN': '🇩🇰', 'FIN': '🇫🇮',
+        'POL': '🇵🇱', 'RUS': '🇷🇺', 'UKR': '🇺🇦', 'GRE': '🇬🇷', 'TUR': '🇹🇷',
+        'RSA': '🇿🇦', 'MEX': '🇲🇽', 'ARG': '🇦🇷', 'KOR': '🇰🇷', 'IND': '🇮🇳'
+    };
+    return flags[nationCode.toUpperCase()] || '🏊';
+}
+
 function formatDiff(diffMs) {
     if (diffMs === null) return '';
     const diffSec = diffMs / 1000;
@@ -248,7 +261,7 @@ function renderProfileTab() {
                 </div>
                 <div class="profile-stats">
                     <div><div class="profile-stat-value">${swimmer.personalBests?.length || 0}</div><div class="profile-stat-label">Records</div></div>
-                    <div><div class="profile-stat-value">${swimmer.nation || '🇨🇭'}</div><div class="profile-stat-label">Nation</div></div>
+                    <div><div class="profile-stat-value" style="font-size:32px">${getNationFlag(swimmer.nation)}</div><div class="profile-stat-label">${swimmer.nation || 'Nation'}</div></div>
                     <div><div class="profile-stat-value">${age ? age + ' ans' : '—'}</div><div class="profile-stat-label">Âge</div></div>
                 </div>
                 <div style="font-size:12px;opacity:.5">ID: ${swimmer.id} • Mis à jour: ${new Date(swimmer.lastUpdated).toLocaleDateString('fr-CH')}</div>
@@ -297,7 +310,7 @@ async function handleSwimmerSelect(athleteId) {
         
         renderProfileTab();
         updateSwimmerInfoBar();
-        setTimeout(() => showTab('times'), 500);
+        // Stay on current tab (profile) instead of switching to times
     } catch (err) {
         document.getElementById('profile-error').innerHTML = `<div class="error-box">⚠️ ${err.message}</div>`;
     }
@@ -355,12 +368,10 @@ function updateSwimmerInfoBar() {
         return;
     }
     
-    const initials = (swimmer.firstName?.[0] || '') + (swimmer.lastName?.[0] || '');
     const age = swimmer.yearOfBirth ? (new Date().getFullYear() - swimmer.yearOfBirth) : null;
     
     container.style.display = 'flex';
     container.innerHTML = `
-        <div class="swimmer-info-avatar">${initials}</div>
         <div class="swimmer-info-details">
             <div class="swimmer-info-name">${swimmer.fullName}</div>
             <div class="swimmer-info-meta">${swimmer.club || ''} ${age ? '• ' + age + ' ans' : ''} ${swimmer.nation ? '• ' + swimmer.nation : ''}</div>
