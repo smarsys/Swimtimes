@@ -1,176 +1,187 @@
 {
   "_metadata": {
     "version": "2025-2028",
-    "lastUpdated": "2025-01-01",
+    "lastUpdated": "2025-12-12",
     "sources": {
       "CS": "Swiss Aquatics - Championnats Suisses Grand Bassin 2025-2028",
-      "RSR": "Association RSR - Limites 2024-2028 (catégorie OPEN J16+)",
+      "CS_Hiver": "Swiss Aquatics - Championnats Suisses Petit Bassin 2025-2028",
+      "RSR_Ete": "Association RSR - Limites Été 2024-2028 (50m)",
+      "RSR_Hiver": "Association RSR - Limites Hiver 2024-2028 (25m)",
       "JO": "World Aquatics - LA28 Olympic Qualifying Standards"
-    },
-    "notes": "Temps en format MM:SS.CC. RSR = Championnats Romands, CS = Championnats Suisses, JO_A/JO_B = Standards olympiques"
+    }
   },
   
   "Female": {
     "50m": {
       "50_Freestyle": {
         "RSR_Ete": "00:30.40",
-        "RSR_Hiver": "00:31.30",
         "CS": "00:28.39",
-        "JO_B": "00:25.31",
-        "JO_A": "00:24.69"
+        "JO_B": "00:24.81",
+        "JO_A": "00:24.56"
       },
       "100_Freestyle": {
         "RSR_Ete": "01:06.10",
-        "RSR_Hiver": "01:09.40",
         "CS": "01:01.48",
         "JO_B": "00:54.14",
         "JO_A": "00:53.60"
       },
       "200_Freestyle": {
         "RSR_Ete": "02:26.00",
-        "RSR_Hiver": "02:33.40",
         "CS": "02:13.67",
-        "JO_B": "01:57.68",
-        "JO_A": "01:56.90"
+        "JO_B": "01:57.59",
+        "JO_A": "01:56.43"
       },
       "400_Freestyle": {
         "RSR_Ete": "05:07.00",
-        "RSR_Hiver": "05:22.00",
         "CS": "04:42.77",
-        "JO_B": "04:07.90",
-        "JO_A": "04:06.00"
+        "JO_B": "04:08.73",
+        "JO_A": "04:06.27"
       },
       "800_Freestyle": {
         "RSR_Ete": "10:29.50",
-        "RSR_Hiver": "10:56.00",
         "CS": "09:51.28",
-        "JO_B": "08:26.50",
-        "JO_A": "08:22.90"
+        "JO_B": "08:31.78",
+        "JO_A": "08:26.71"
       },
       "1500_Freestyle": {
         "RSR_Ete": "20:24.10",
-        "RSR_Hiver": "20:59.10",
         "CS": "19:30.00",
-        "JO_B": "16:10.00",
-        "JO_A": "16:03.00"
+        "JO_B": "16:18.34",
+        "JO_A": "16:08.65"
       },
       "50_Backstroke": {
         "RSR_Ete": "00:35.10",
-        "RSR_Hiver": "00:37.30",
         "CS": "00:33.06"
       },
       "100_Backstroke": {
         "RSR_Ete": "01:14.30",
-        "RSR_Hiver": "01:18.00",
         "CS": "01:10.91",
-        "JO_B": "01:00.41",
-        "JO_A": "00:59.72"
+        "JO_B": "01:00.08",
+        "JO_A": "00:59.49"
       },
       "200_Backstroke": {
         "RSR_Ete": "02:42.20",
-        "RSR_Hiver": "02:50.90",
         "CS": "02:32.85",
-        "JO_B": "02:10.39",
-        "JO_A": "02:09.00"
+        "JO_B": "02:10.24",
+        "JO_A": "02:08.95"
       },
       "50_Breaststroke": {
         "RSR_Ete": "00:38.80",
-        "RSR_Hiver": "00:40.70",
         "CS": "00:36.48"
       },
       "100_Breaststroke": {
         "RSR_Ete": "01:24.40",
-        "RSR_Hiver": "01:29.30",
         "CS": "01:19.83",
-        "JO_B": "01:07.07",
-        "JO_A": "01:06.30"
+        "JO_B": "01:06.76",
+        "JO_A": "01:06.10"
       },
       "200_Breaststroke": {
         "RSR_Ete": "03:03.90",
-        "RSR_Hiver": "03:11.30",
         "CS": "02:52.44",
-        "JO_B": "02:25.00",
-        "JO_A": "02:23.00"
+        "JO_B": "02:24.92",
+        "JO_A": "02:23.49"
       },
       "50_Butterfly": {
         "RSR_Ete": "00:32.60",
-        "RSR_Hiver": "00:34.10",
         "CS": "00:30.34"
       },
       "100_Butterfly": {
         "RSR_Ete": "01:14.30",
-        "RSR_Hiver": "01:16.50",
         "CS": "01:08.46",
-        "JO_B": "00:58.11",
-        "JO_A": "00:57.55"
+        "JO_B": "00:57.95",
+        "JO_A": "00:57.38"
       },
       "200_Butterfly": {
         "RSR_Ete": "02:42.20",
-        "RSR_Hiver": "02:54.90",
         "CS": "02:35.15",
-        "JO_B": "02:09.00",
-        "JO_A": "02:07.50"
+        "JO_B": "02:09.43",
+        "JO_A": "02:08.15"
       },
       "200_Medley": {
         "RSR_Ete": "02:45.50",
-        "RSR_Hiver": "02:52.10",
         "CS": "02:32.01",
-        "JO_B": "02:12.56",
-        "JO_A": "02:11.60"
+        "JO_B": "02:11.20",
+        "JO_A": "02:09.90"
       },
       "400_Medley": {
         "RSR_Ete": "05:45.60",
-        "RSR_Hiver": "06:02.50",
         "CS": "05:27.22",
-        "JO_B": "04:40.21",
-        "JO_A": "04:38.00"
+        "JO_B": "04:40.10",
+        "JO_A": "04:37.33"
       }
     },
     "25m": {
       "50_Freestyle": {
-        "RSR_Hiver": "00:31.30"
+        "RSR_Hiver": "00:29.40",
+        "CS_Hiver": "00:27.82"
       },
       "100_Freestyle": {
-        "RSR_Hiver": "01:09.40"
+        "RSR_Hiver": "01:04.10",
+        "CS_Hiver": "01:00.23"
       },
       "200_Freestyle": {
-        "RSR_Hiver": "02:33.40"
+        "RSR_Hiver": "02:22.00",
+        "CS_Hiver": "02:11.12"
       },
       "400_Freestyle": {
-        "RSR_Hiver": "05:22.00"
+        "RSR_Hiver": "04:59.00",
+        "CS_Hiver": "04:37.57"
       },
       "800_Freestyle": {
-        "RSR_Hiver": "10:56.00"
+        "RSR_Hiver": "10:13.50",
+        "CS_Hiver": "09:39.98"
       },
       "1500_Freestyle": {
-        "RSR_Hiver": "20:59.10"
+        "RSR_Hiver": "19:44.10",
+        "CS_Hiver": "19:30.00"
+      },
+      "50_Backstroke": {
+        "RSR_Hiver": "00:34.10",
+        "CS_Hiver": "00:31.98"
       },
       "100_Backstroke": {
-        "RSR_Hiver": "01:18.00"
+        "RSR_Hiver": "01:12.30",
+        "CS_Hiver": "01:08.59"
       },
       "200_Backstroke": {
-        "RSR_Hiver": "02:50.90"
+        "RSR_Hiver": "02:38.20",
+        "CS_Hiver": "02:27.79"
+      },
+      "50_Breaststroke": {
+        "RSR_Hiver": "00:37.80",
+        "CS_Hiver": "00:35.73"
       },
       "100_Breaststroke": {
-        "RSR_Hiver": "01:29.30"
+        "RSR_Hiver": "01:22.40",
+        "CS_Hiver": "01:17.58"
       },
       "200_Breaststroke": {
-        "RSR_Hiver": "03:11.30"
+        "RSR_Hiver": "02:59.90",
+        "CS_Hiver": "02:47.71"
+      },
+      "50_Butterfly": {
+        "RSR_Hiver": "00:31.60",
+        "CS_Hiver": "00:30.25"
       },
       "100_Butterfly": {
-        "RSR_Hiver": "01:16.50"
+        "RSR_Hiver": "01:12.30",
+        "CS_Hiver": "01:07.48"
       },
       "200_Butterfly": {
-        "RSR_Hiver": "02:54.90"
+        "RSR_Hiver": "02:38.20",
+        "CS_Hiver": "02:32.19"
       },
       "100_Medley": {
-        "RSR_Hiver": "01:18.50"
+        "RSR_Hiver": "01:14.70",
+        "CS_Hiver": "01:09.05"
       },
       "200_Medley": {
-        "RSR_Hiver": "02:52.10"
+        "RSR_Hiver": "02:41.50",
+        "CS_Hiver": "02:28.52"
       },
       "400_Medley": {
-        "RSR_Hiver": "06:02.50"
+        "RSR_Hiver": "05:37.60",
+        "CS_Hiver": "05:18.00"
       }
     }
   },
@@ -178,164 +189,180 @@
   "Male": {
     "50m": {
       "50_Freestyle": {
-        "RSR_Ete": "00:26.10",
-        "RSR_Hiver": "00:27.10",
+        "RSR_Ete": "00:27.10",
         "CS": "00:25.11",
-        "JO_B": "00:22.21",
-        "JO_A": "00:21.96"
+        "JO_B": "00:21.91",
+        "JO_A": "00:21.69"
       },
       "100_Freestyle": {
-        "RSR_Ete": "00:57.70",
-        "RSR_Hiver": "00:59.70",
+        "RSR_Ete": "00:59.70",
         "CS": "00:54.88",
-        "JO_B": "00:48.44",
-        "JO_A": "00:47.92"
+        "JO_B": "00:48.34",
+        "JO_A": "00:47.86"
       },
       "200_Freestyle": {
-        "RSR_Ete": "02:10.10",
-        "RSR_Hiver": "02:14.10",
+        "RSR_Ete": "02:14.10",
         "CS": "02:00.69",
-        "JO_B": "01:47.02",
-        "JO_A": "01:46.02"
+        "JO_B": "01:46.89",
+        "JO_A": "01:45.83"
       },
       "400_Freestyle": {
-        "RSR_Ete": "04:34.50",
-        "RSR_Hiver": "04:42.50",
+        "RSR_Ete": "04:42.50",
         "CS": "04:19.36",
-        "JO_B": "03:47.79",
-        "JO_A": "03:45.90"
+        "JO_B": "03:47.71",
+        "JO_A": "03:45.46"
       },
       "800_Freestyle": {
-        "RSR_Ete": "09:51.50",
-        "RSR_Hiver": "10:07.50",
+        "RSR_Ete": "10:07.50",
         "CS": "09:18.48",
-        "JO_B": "07:51.50",
-        "JO_A": "07:47.80"
+        "JO_B": "07:51.71",
+        "JO_A": "07:47.04"
       },
       "1500_Freestyle": {
-        "RSR_Ete": "18:29.10",
-        "RSR_Hiver": "18:59.10",
+        "RSR_Ete": "18:59.10",
         "CS": "17:37.01",
-        "JO_B": "15:05.00",
-        "JO_A": "14:57.00"
+        "JO_B": "15:00.54",
+        "JO_A": "14:51.62"
       },
       "50_Backstroke": {
-        "RSR_Ete": "00:30.60",
-        "RSR_Hiver": "00:31.60",
-        "CS": "00:29.56"
+        "RSR_Ete": "00:31.60",
+        "CS": "00:29.56",
+        "JO_B": "00:25.35",
+        "JO_A": "00:25.35"
       },
       "100_Backstroke": {
-        "RSR_Ete": "01:05.30",
-        "RSR_Hiver": "01:07.30",
+        "RSR_Ete": "01:07.30",
         "CS": "01:03.79",
-        "JO_B": "00:54.07",
-        "JO_A": "00:53.52"
+        "JO_B": "00:53.53",
+        "JO_A": "00:53.00"
       },
       "200_Backstroke": {
-        "RSR_Ete": "02:24.20",
-        "RSR_Hiver": "02:28.20",
+        "RSR_Ete": "02:28.20",
         "CS": "02:19.79",
-        "JO_B": "01:57.50",
-        "JO_A": "01:56.40"
+        "JO_B": "01:57.21",
+        "JO_A": "01:56.05"
       },
       "50_Breaststroke": {
-        "RSR_Ete": "00:33.90",
-        "RSR_Hiver": "00:34.90",
-        "CS": "00:32.00"
+        "RSR_Ete": "00:34.90",
+        "CS": "00:32.00",
+        "JO_B": "00:27.71",
+        "JO_A": "00:27.71"
       },
       "100_Breaststroke": {
-        "RSR_Ete": "01:14.50",
-        "RSR_Hiver": "01:16.50",
+        "RSR_Ete": "01:16.50",
         "CS": "01:11.20",
-        "JO_B": "00:59.93",
-        "JO_A": "00:59.39"
+        "JO_B": "00:59.86",
+        "JO_A": "00:59.27"
       },
       "200_Breaststroke": {
-        "RSR_Ete": "02:41.80",
-        "RSR_Hiver": "02:45.80",
+        "RSR_Ete": "02:45.80",
         "CS": "02:36.93",
-        "JO_B": "02:10.78",
-        "JO_A": "02:09.39"
+        "JO_B": "02:10.64",
+        "JO_A": "02:09.35"
       },
       "50_Butterfly": {
-        "RSR_Ete": "00:28.30",
-        "RSR_Hiver": "00:29.30",
-        "CS": "00:26.90"
+        "RSR_Ete": "00:29.30",
+        "CS": "00:26.90",
+        "JO_B": "00:23.55",
+        "JO_A": "00:23.55"
       },
       "100_Butterfly": {
-        "RSR_Ete": "01:05.00",
-        "RSR_Hiver": "01:07.00",
+        "RSR_Ete": "01:07.00",
         "CS": "01:00.39",
-        "JO_B": "00:51.71",
-        "JO_A": "00:51.23"
+        "JO_B": "00:51.57",
+        "JO_A": "00:51.06"
       },
       "200_Butterfly": {
-        "RSR_Ete": "02:32.50",
-        "RSR_Hiver": "02:36.50",
+        "RSR_Ete": "02:36.50",
         "CS": "02:19.58",
-        "JO_B": "01:55.59",
-        "JO_A": "01:54.40"
+        "JO_B": "01:55.84",
+        "JO_A": "01:54.69"
       },
       "200_Medley": {
-        "RSR_Ete": "02:28.20",
-        "RSR_Hiver": "02:32.20",
+        "RSR_Ete": "02:32.20",
         "CS": "02:17.16",
-        "JO_B": "01:59.34",
-        "JO_A": "01:58.45"
+        "JO_B": "01:58.72",
+        "JO_A": "01:57.54"
       },
       "400_Medley": {
-        "RSR_Ete": "05:14.50",
-        "RSR_Hiver": "05:22.50",
+        "RSR_Ete": "05:22.50",
         "CS": "04:58.95",
-        "JO_B": "04:17.38",
-        "JO_A": "04:15.20"
+        "JO_B": "04:14.04",
+        "JO_A": "04:11.52"
       }
     },
     "25m": {
       "50_Freestyle": {
-        "RSR_Hiver": "00:27.10"
+        "RSR_Hiver": "00:26.10",
+        "CS_Hiver": "00:24.48"
       },
       "100_Freestyle": {
-        "RSR_Hiver": "00:59.70"
+        "RSR_Hiver": "00:57.70",
+        "CS_Hiver": "00:53.44"
       },
       "200_Freestyle": {
-        "RSR_Hiver": "02:14.10"
+        "RSR_Hiver": "02:10.10",
+        "CS_Hiver": "01:57.44"
       },
       "400_Freestyle": {
-        "RSR_Hiver": "04:42.50"
+        "RSR_Hiver": "04:34.50",
+        "CS_Hiver": "04:11.93"
       },
       "800_Freestyle": {
-        "RSR_Hiver": "10:07.50"
+        "RSR_Hiver": "09:51.50",
+        "CS_Hiver": "09:04.53"
       },
       "1500_Freestyle": {
-        "RSR_Hiver": "18:59.10"
+        "RSR_Hiver": "18:29.10",
+        "CS_Hiver": "17:10.93"
+      },
+      "50_Backstroke": {
+        "RSR_Hiver": "00:30.60",
+        "CS_Hiver": "00:28.35"
       },
       "100_Backstroke": {
-        "RSR_Hiver": "01:07.30"
+        "RSR_Hiver": "01:05.30",
+        "CS_Hiver": "01:01.22"
       },
       "200_Backstroke": {
-        "RSR_Hiver": "02:28.20"
+        "RSR_Hiver": "02:24.20",
+        "CS_Hiver": "02:13.64"
+      },
+      "50_Breaststroke": {
+        "RSR_Hiver": "00:33.90",
+        "CS_Hiver": "00:31.18"
       },
       "100_Breaststroke": {
-        "RSR_Hiver": "01:16.50"
+        "RSR_Hiver": "01:14.50",
+        "CS_Hiver": "01:08.37"
       },
       "200_Breaststroke": {
-        "RSR_Hiver": "02:45.80"
+        "RSR_Hiver": "02:41.80",
+        "CS_Hiver": "02:31.24"
+      },
+      "50_Butterfly": {
+        "RSR_Hiver": "00:28.30",
+        "CS_Hiver": "00:26.62"
       },
       "100_Butterfly": {
-        "RSR_Hiver": "01:07.00"
+        "RSR_Hiver": "01:05.00",
+        "CS_Hiver": "00:59.23"
       },
       "200_Butterfly": {
-        "RSR_Hiver": "02:36.50"
+        "RSR_Hiver": "02:32.50",
+        "CS_Hiver": "02:15.55"
       },
       "100_Medley": {
-        "RSR_Hiver": "01:06.50"
+        "RSR_Hiver": "01:06.50",
+        "CS_Hiver": "01:00.80"
       },
       "200_Medley": {
-        "RSR_Hiver": "02:32.20"
+        "RSR_Hiver": "02:28.20",
+        "CS_Hiver": "02:13.02"
       },
       "400_Medley": {
-        "RSR_Hiver": "05:22.50"
+        "RSR_Hiver": "05:14.50",
+        "CS_Hiver": "04:48.74"
       }
     }
   },
@@ -344,18 +371,18 @@
     "RSR_Ete": {
       "name": "Champ. Romands Été",
       "shortName": "RSR Été",
-      "icon": "🏊",
-      "color": "#3b82f6",
+      "icon": "☀️",
+      "color": "#f97316",
       "poolLength": 50,
-      "description": "Championnats Romands Été - Temps à réaliser en bassin 50m"
+      "description": "Championnats Romands Été - Bassin 50m"
     },
     "RSR_Hiver": {
       "name": "Champ. Romands Hiver",
       "shortName": "RSR Hiver",
       "icon": "❄️",
       "color": "#06b6d4",
-      "poolLength": null,
-      "description": "Championnats Romands Hiver / Critérium - Tous bassins"
+      "poolLength": 25,
+      "description": "Championnats Romands Hiver - Bassin 25m"
     },
     "CS": {
       "name": "Championnats Suisses",
@@ -365,13 +392,21 @@
       "poolLength": 50,
       "description": "Championnats Suisses Grand Bassin"
     },
+    "CS_Hiver": {
+      "name": "Champ. Suisses Hiver",
+      "shortName": "CS Hiver",
+      "icon": "🇨🇭",
+      "color": "#dc2626",
+      "poolLength": 25,
+      "description": "Championnats Suisses Petit Bassin"
+    },
     "JO_B": {
       "name": "JO LA28 - Standard B",
       "shortName": "JO B",
       "icon": "🥈",
       "color": "#f59e0b",
       "poolLength": 50,
-      "description": "Jeux Olympiques Los Angeles 2028 - Standard d'entrée B"
+      "description": "Jeux Olympiques Los Angeles 2028 - Standard B"
     },
     "JO_A": {
       "name": "JO LA28 - Standard A",
@@ -379,7 +414,7 @@
       "icon": "🥇",
       "color": "#eab308",
       "poolLength": 50,
-      "description": "Jeux Olympiques Los Angeles 2028 - Standard d'entrée A"
+      "description": "Jeux Olympiques Los Angeles 2028 - Standard A"
     }
   },
   

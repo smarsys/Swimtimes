@@ -433,6 +433,9 @@ function updateTimesDisplay() {
     const poolData = TIME_STANDARDS?.[gender]?.[poolLength];
     const standards = poolData?.[eventKey] || {};
     
+    // Filter standards by pool length (50m competitions only show for 50m pool, etc.)
+    const poolLengthNum = poolLength === '50m' ? 50 : 25;
+    
     // Build table
     const tableContainer = document.getElementById('times-table');
     
@@ -442,6 +445,12 @@ function updateTimesDisplay() {
     }
     
     const rows = Object.entries(standards)
+        .filter(([cat, time]) => {
+            // Filter by pool length - only show competitions matching selected pool
+            const catInfo = CATEGORIES?.[cat];
+            if (!catInfo || catInfo.poolLength === null) return true; // Show if no pool restriction
+            return catInfo.poolLength === poolLengthNum;
+        })
         .map(([cat, time]) => {
             const limitMs = timeToMs(time);
             const pbMs = pb?.timeMs;
@@ -497,7 +506,16 @@ function updateProgressDisplay() {
     const analysis = swimmer.personalBests.map(pb => {
         const poolKey = pb.poolLength === 25 ? '25m' : '50m';
         const eventKey = `${pb.distance}_${pb.stroke}`;
-        const standards = TIME_STANDARDS?.[gender]?.[poolKey]?.[eventKey] || {};
+        const allStandards = TIME_STANDARDS?.[gender]?.[poolKey]?.[eventKey] || {};
+        
+        // Filter standards by pool length (only show competitions for matching pool)
+        const standards = Object.fromEntries(
+            Object.entries(allStandards).filter(([cat, time]) => {
+                const catInfo = CATEGORIES?.[cat];
+                if (!catInfo || catInfo.poolLength === null) return true;
+                return catInfo.poolLength === pb.poolLength;
+            })
+        );
         
         // Calculate current FINA points
         const currentFinaPoints = calculateFinaPoints(pb.timeMs, gender, pb.poolLength, pb.stroke, pb.distance);
