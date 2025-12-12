@@ -60,13 +60,15 @@ function formatDiff(diffMs) {
 }
 
 // =============================================================================
-// SWIMMERS DATA (depuis swimmers-data.json généré par GitHub Actions)
+// SWIMMERS DATA (depuis GitHub - mis à jour automatiquement chaque jour)
 // =============================================================================
+const SWIMMERS_DATA_URL = 'https://raw.githubusercontent.com/smarsys/Swimtimes/main/swimmers-data.json';
+
 async function loadSwimmersData() {
     if (swimmersData) return swimmersData;
     
     try {
-        const response = await fetch('swimmers-data.json');
+        const response = await fetch(SWIMMERS_DATA_URL);
         if (!response.ok) throw new Error('Fichier non trouvé');
         swimmersData = await response.json();
         console.log('✅ Données nageurs chargées:', swimmersData._metadata?.generated);
