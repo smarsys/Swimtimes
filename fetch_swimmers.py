@@ -247,9 +247,18 @@ def fetch_athlete(athlete_id):
     data["lastUpdated"] = datetime.utcnow().isoformat() + "Z"
     
     # Split name
-    parts = data["fullName"].split()
-    data["firstName"] = parts[0] if parts else ""
-    data["lastName"] = " ".join(parts[1:]) if len(parts) > 1 else ""
+    fullName = data["fullName"].replace("Swimrankings -", "").replace("SwimRankings -", "").strip()
+    data["fullName"] = fullName
+    
+    # Handle "LASTNAME, Firstname" format
+    if "," in fullName:
+        parts = fullName.split(",")
+        data["lastName"] = parts[0].strip()
+        data["firstName"] = parts[1].strip() if len(parts) > 1 else ""
+    else:
+        parts = fullName.split()
+        data["firstName"] = parts[0] if parts else ""
+        data["lastName"] = " ".join(parts[1:]) if len(parts) > 1 else ""
     
     return data
 
