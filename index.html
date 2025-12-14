@@ -148,9 +148,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
             <div class="table-footer">Du plus facile ⬆️ au plus difficile ⬇️</div>
         </div>
         <div id="tab-progress" class="tab-content">
-            <div class="pool-toggle" style="margin-bottom:16px">
-                <button class="pool-btn active" data-progress-pool="50m" onclick="setProgressPool('50m')">🏊 Grand Bassin (50m)</button>
-                <button class="pool-btn" data-progress-pool="25m" onclick="setProgressPool('25m')">🏊 Petit Bassin (25m)</button>
+            <div style="margin-bottom:16px">
+                <select id="select-progress-pool" class="form-select" onchange="updateProgressDisplay()" style="width:100%">
+                    <option value="50m">🏊 Grand Bassin (50m)</option>
+                    <option value="25m">🏊 Petit Bassin (25m)</option>
+                </select>
             </div>
             <div id="progress-content"></div>
         </div>

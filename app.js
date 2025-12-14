@@ -484,18 +484,17 @@ function updateTimesDisplay() {
 }
 
 function setProgressPool(pool) {
-    document.querySelectorAll('[data-progress-pool]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.progressPool === pool);
-    });
+    const select = document.getElementById('select-progress-pool');
+    if (select) select.value = pool;
     updateProgressDisplay();
 }
 
 function updateProgressDisplay() {
     const container = document.getElementById('progress-content');
     
-    // Get selected pool from active button
-    const activePoolBtn = document.querySelector('[data-progress-pool].active');
-    const selectedPool = activePoolBtn?.dataset.progressPool || '50m';
+    // Get selected pool from select dropdown
+    const poolSelect = document.getElementById('select-progress-pool');
+    const selectedPool = poolSelect?.value || '50m';
     const poolLengthNum = selectedPool === '50m' ? 50 : 25;
     
     if (!swimmer || !swimmer.personalBests?.length || !TIME_STANDARDS) {
@@ -648,14 +647,12 @@ function initializePoolSelectors() {
     const defaultPool = getSeasonalDefaultPool();
     
     // Set Times tab pool selector
-    document.querySelectorAll('[data-pool]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.pool === defaultPool);
-    });
+    const timesPoolSelect = document.getElementById('select-pool');
+    if (timesPoolSelect) timesPoolSelect.value = defaultPool;
     
     // Set Progression tab pool selector
-    document.querySelectorAll('[data-progress-pool]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.progressPool === defaultPool);
-    });
+    const progressPoolSelect = document.getElementById('select-progress-pool');
+    if (progressPoolSelect) progressPoolSelect.value = defaultPool;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
