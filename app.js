@@ -483,8 +483,20 @@ function updateTimesDisplay() {
     `;
 }
 
+function setProgressPool(pool) {
+    document.querySelectorAll('[data-progress-pool]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.progressPool === pool);
+    });
+    updateProgressDisplay();
+}
+
 function updateProgressDisplay() {
     const container = document.getElementById('progress-content');
+    
+    // Get selected pool from active button
+    const activePoolBtn = document.querySelector('[data-progress-pool].active');
+    const selectedPool = activePoolBtn?.dataset.progressPool || '50m';
+    const poolLengthNum = selectedPool === '50m' ? 50 : 25;
     
     if (!swimmer || !swimmer.personalBests?.length || !TIME_STANDARDS) {
         container.innerHTML = `
@@ -498,9 +510,23 @@ function updateProgressDisplay() {
     }
     
     const gender = swimmer.gender || 'Female';
-    const categoryOrder = ['JO_A', 'JO_B', 'CS', 'RSR_Ete', 'RSR_Hiver'];
+    const categoryOrder = ['JO_A', 'JO_B', 'CS', 'CS_Hiver', 'RSR_Ete', 'RSR_Hiver'];
     
-    const analysis = swimmer.personalBests.map(pb => {
+    // Filter personal bests by selected pool length
+    const filteredPBs = swimmer.personalBests.filter(pb => pb.poolLength === poolLengthNum);
+    
+    if (filteredPBs.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🏊</div>
+                <h3 style="margin-bottom:8px">Pas de temps en ${selectedPool === '50m' ? 'grand' : 'petit'} bassin</h3>
+                <p style="opacity:.6;font-size:14px">Aucun record personnel enregistré pour ce type de bassin</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const analysis = filteredPBs.map(pb => {
         const poolKey = pb.poolLength === 25 ? '25m' : '50m';
         const eventKey = `${pb.distance}_${pb.stroke}`;
         const allStandards = TIME_STANDARDS?.[gender]?.[poolKey]?.[eventKey] || {};
@@ -544,7 +570,7 @@ function updateProgressDisplay() {
             currentFinaPoints,
             bestQualified,
             nextTarget,
-            eventName: `${pb.distance}m ${STROKES?.[pb.stroke]?.abbr || pb.stroke} ${pb.poolLength === 25 ? 'PB' : 'GB'}`
+            eventName: `${pb.distance}m ${STROKES?.[pb.stroke]?.abbr || pb.stroke}`
         };
     });
     
@@ -601,6 +627,37 @@ function updateProgressDisplay() {
 // =============================================================================
 // INIT
 // =============================================================================
+// =============================================================================
+// SEASONAL DEFAULT POOL
+// Petit bassin: 1er août - 30 novembre
+// Grand bassin: 1er décembre - 31 juillet
+// =============================================================================
+function getSeasonalDefaultPool() {
+    const now = new Date();
+    const month = now.getMonth() + 1; // 1-12
+    
+    // Petit bassin: août (8) à novembre (11)
+    if (month >= 8 && month <= 11) {
+        return '25m';
+    }
+    // Grand bassin: décembre (12) à juillet (7)
+    return '50m';
+}
+
+function initializePoolSelectors() {
+    const defaultPool = getSeasonalDefaultPool();
+    
+    // Set Times tab pool selector
+    document.querySelectorAll('[data-pool]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pool === defaultPool);
+    });
+    
+    // Set Progression tab pool selector
+    document.querySelectorAll('[data-progress-pool]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.progressPool === defaultPool);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     await loadTimeStandards();
     
@@ -614,7 +671,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     
+    // Initialize pool selectors based on season
+    initializePoolSelectors();
+    
     renderProfileTab();
     updateSwimmerInfoBar();
     updateTimesDisplay();
+    updateProgressDisplay();
 });
