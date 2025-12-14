@@ -147,7 +147,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
             <div id="times-table" class="times-table"></div>
             <div class="table-footer">Du plus facile ⬆️ au plus difficile ⬇️</div>
         </div>
-        <div id="tab-progress" class="tab-content"><div id="progress-content"></div></div>
+        <div id="tab-progress" class="tab-content">
+            <div class="pool-toggle" style="margin-bottom:16px">
+                <button class="pool-btn active" data-progress-pool="50m" onclick="setProgressPool('50m')">🏊 Grand Bassin (50m)</button>
+                <button class="pool-btn" data-progress-pool="25m" onclick="setProgressPool('25m')">🏊 Petit Bassin (25m)</button>
+            </div>
+            <div id="progress-content"></div>
+        </div>
     </main>
     <footer class="footer">Lausanne Aquatique • Données SwimRankings.net • Temps limites Swiss Swimming 2025-2028</footer>
     <script src="app.js"></script>
