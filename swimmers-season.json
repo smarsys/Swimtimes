@@ -24,6 +24,12 @@
           "poolLength": 25,
           "timeMs": 34490,
           "timeDisplay": "34.49"
+        },{
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 175000,
+          "timeDisplay": "2:55.00"
         },
         {
           "stroke": "Breaststroke",
