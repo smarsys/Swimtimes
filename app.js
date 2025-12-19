@@ -391,24 +391,30 @@ function clearProfile() {
 }
 
 function updateSwimmerInfoBar() {
-    const container = document.getElementById('swimmer-info-bar');
-    if (!container) return;
+    const containers = [
+        document.getElementById('swimmer-info-bar'),
+        document.getElementById('swimmer-info-bar-progress')
+    ];
     
-    if (!swimmer) {
-        container.innerHTML = '';
-        container.style.display = 'none';
-        return;
-    }
-    
-    const age = swimmer.yearOfBirth ? (new Date().getFullYear() - swimmer.yearOfBirth) : null;
-    
-    container.style.display = 'flex';
-    container.innerHTML = `
-        <div class="swimmer-info-details">
-            <div class="swimmer-info-name">${swimmer.fullName}</div>
-            <div class="swimmer-info-meta">${swimmer.club || ''} ${age ? '• ' + age + ' ans' : ''} ${swimmer.nation ? '• ' + swimmer.nation : ''}</div>
-        </div>
-    `;
+    containers.forEach(container => {
+        if (!container) return;
+        
+        if (!swimmer) {
+            container.innerHTML = '';
+            container.style.display = 'none';
+            return;
+        }
+        
+        const age = swimmer.yearOfBirth ? (new Date().getFullYear() - swimmer.yearOfBirth) : null;
+        
+        container.style.display = 'flex';
+        container.innerHTML = `
+            <div class="swimmer-info-details">
+                <div class="swimmer-info-name">${swimmer.fullName}</div>
+                <div class="swimmer-info-meta">${swimmer.club || ''} ${age ? '• ' + age + ' ans' : ''} ${swimmer.nation ? '• ' + swimmer.nation : ''}</div>
+            </div>
+        `;
+    });
 }
 
 function updateTimesDisplay() {
@@ -628,12 +634,21 @@ function updateProgressDisplay() {
         return;
     }
     
+    // Get season bests for this pool
+    const filteredSeasonBests = swimmer.seasonBests?.filter(sb => sb.poolLength === poolLengthNum) || [];
+    
+    // Analyze each event
     const analysis = filteredPBs.map(pb => {
         const poolKey = pb.poolLength === 25 ? '25m' : '50m';
         const eventKey = `${pb.distance}_${pb.stroke}`;
         const allStandards = TIME_STANDARDS?.[gender]?.[poolKey]?.[eventKey] || {};
         
-        // Filter standards by pool length (only show competitions for matching pool)
+        // Find season best for this event
+        const seasonBest = filteredSeasonBests.find(sb => 
+            sb.stroke === pb.stroke && sb.distance === pb.distance
+        );
+        
+        // Filter standards by pool length
         const standards = Object.fromEntries(
             Object.entries(allStandards).filter(([cat, time]) => {
                 const catInfo = CATEGORIES?.[cat];
@@ -642,82 +657,160 @@ function updateProgressDisplay() {
             })
         );
         
-        // Calculate current FINA points
-        const currentFinaPoints = calculateFinaPoints(pb.timeMs, gender, pb.poolLength, pb.stroke, pb.distance);
+        // Calculate current FINA points (from PB)
+        const pbFinaPoints = calculateFinaPoints(pb.timeMs, gender, pb.poolLength, pb.stroke, pb.distance);
+        const seasonFinaPoints = seasonBest ? calculateFinaPoints(seasonBest.timeMs, gender, pb.poolLength, pb.stroke, pb.distance) : null;
         
-        let bestQualified = null;
+        // Find qualifications and next targets
+        let qualifiedSeason = []; // Qualified with season time
+        let qualifiedPBOnly = []; // Qualified with PB but not season (pending)
         let nextTarget = null;
         let smallestFinaGap = Infinity;
         
         Object.entries(standards).forEach(([cat, time]) => {
             const limitMs = timeToMs(time);
-            const diff = pb.timeMs - limitMs;
+            const pbDiff = pb.timeMs - limitMs;
+            const seasonDiff = seasonBest ? seasonBest.timeMs - limitMs : null;
             
             // Calculate FINA points for the target time
             const targetFinaPoints = calculateFinaPoints(limitMs, gender, pb.poolLength, pb.stroke, pb.distance);
-            const finaGap = targetFinaPoints && currentFinaPoints ? targetFinaPoints - currentFinaPoints : Infinity;
+            const finaGap = targetFinaPoints && pbFinaPoints ? targetFinaPoints - pbFinaPoints : Infinity;
             
-            if (diff <= 0) {
-                if (!bestQualified || categoryOrder.indexOf(cat) < categoryOrder.indexOf(bestQualified)) {
-                    bestQualified = cat;
-                }
+            if (seasonDiff !== null && seasonDiff <= 0) {
+                // Qualified this season
+                qualifiedSeason.push({ cat, time, targetFinaPoints });
+            } else if (pbDiff <= 0) {
+                // PB qualifies but not season time - need to redo
+                qualifiedPBOnly.push({ cat, time, targetFinaPoints, finaGap: seasonFinaPoints && targetFinaPoints ? targetFinaPoints - seasonFinaPoints : finaGap });
             } else if (finaGap < smallestFinaGap && finaGap > 0) {
+                // Next objective
                 smallestFinaGap = finaGap;
-                nextTarget = { category: cat, gap: diff, time, finaGap: Math.round(finaGap), targetFinaPoints };
+                nextTarget = { category: cat, gap: pbDiff, time, finaGap: Math.round(finaGap), targetFinaPoints };
             }
         });
         
+        // Get best qualification level
+        const bestQualifiedSeason = qualifiedSeason.length > 0 ? 
+            qualifiedSeason.reduce((best, q) => !best || categoryOrder.indexOf(q.cat) < categoryOrder.indexOf(best.cat) ? q.cat : best, null) : null;
+        
         return {
             ...pb,
-            currentFinaPoints,
-            bestQualified,
+            seasonBest,
+            pbFinaPoints,
+            seasonFinaPoints,
+            bestQualifiedSeason,
+            qualifiedPBOnly, // Array of qualifs to redo
             nextTarget,
             eventName: `${pb.distance}m ${STROKES?.[pb.stroke]?.abbr || pb.stroke}`
         };
     });
     
-    const qualified = analysis.filter(a => a.bestQualified);
-    // Sort by FINA points gap (smallest first = closest to qualifying) - demande #4
+    // Separate into categories
+    const qualifiedThisSeason = analysis.filter(a => a.bestQualifiedSeason);
+    
+    // Events where PB qualifies but need to redo this season (sorted by FINA gap)
+    const pendingRedo = analysis
+        .filter(a => a.qualifiedPBOnly.length > 0)
+        .map(a => ({
+            ...a,
+            // Take the easiest qualification to redo (smallest FINA gap)
+            targetToRedo: a.qualifiedPBOnly.sort((x, y) => x.finaGap - y.finaGap)[0]
+        }))
+        .sort((a, b) => (a.targetToRedo?.finaGap || Infinity) - (b.targetToRedo?.finaGap || Infinity));
+    
+    // Events where PB doesn't qualify yet (sorted by FINA gap to next target)
     const objectives = analysis
-        .filter(a => a.nextTarget && a.nextTarget.finaGap !== Infinity && a.nextTarget.finaGap > 0)
+        .filter(a => a.nextTarget && a.qualifiedPBOnly.length === 0 && !a.bestQualifiedSeason)
         .sort((a, b) => a.nextTarget.finaGap - b.nextTarget.finaGap);
     
     container.innerHTML = `
         <div class="progress-summary">
-            <div class="progress-card green"><div class="progress-value">${qualified.length}</div><div class="progress-label">Qualifications</div></div>
+            <div class="progress-card green"><div class="progress-value">${qualifiedThisSeason.length}</div><div class="progress-label">Qualifiés</div></div>
+            <div class="progress-card orange"><div class="progress-value">${pendingRedo.length}</div><div class="progress-label">À refaire</div></div>
             <div class="progress-card yellow"><div class="progress-value">${objectives.length}</div><div class="progress-label">Objectifs</div></div>
         </div>
         
-        ${objectives.length > 0 ? `
+        ${pendingRedo.length > 0 ? `
             <div style="margin-bottom:24px">
-                <div class="section-title">🎯 Prochains objectifs (par écart FINA)</div>
-                ${objectives.slice(0, 5).map(item => `
-                    <div class="objective-card">
-                        <div class="objective-header">
-                            <div>
-                                <div class="objective-event">${item.eventName}</div>
-                                <div class="objective-current">Actuel: ${item.timeDisplay} (${item.currentFinaPoints || '—'} pts)</div>
-                            </div>
-                            <div style="text-align:right">
-                                <div class="objective-gap">+${item.nextTarget.finaGap} pts</div>
-                                <div class="objective-target">${CATEGORIES?.[item.nextTarget.category]?.name || item.nextTarget.category}</div>
-                                <div class="objective-fina">Objectif: ${item.nextTarget.time} (${item.nextTarget.targetFinaPoints} pts)</div>
-                            </div>
-                        </div>
-                        <div class="progress-bar"><div class="progress-bar-fill" style="width:${Math.min(95, Math.max(10, (item.currentFinaPoints / item.nextTarget.targetFinaPoints) * 100))}%"></div></div>
-                    </div>
-                `).join('')}
+                <div class="section-title">⏳ À refaire cette saison</div>
+                <div class="progress-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Épreuve</th>
+                                <th>Objectif</th>
+                                <th>Saison</th>
+                                <th>Écart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${pendingRedo.map(item => {
+                                const target = item.targetToRedo;
+                                const catName = CATEGORIES?.[target.cat]?.name || target.cat;
+                                const seasonTime = item.seasonBest ? formatTime(item.seasonBest.timeMs) : '—';
+                                const limitMs = timeToMs(target.time);
+                                const seasonDiff = item.seasonBest ? item.seasonBest.timeMs - limitMs : null;
+                                const displayDiff = seasonDiff !== null ? formatDiff(seasonDiff) : `PB: ${item.timeDisplay}`;
+                                return `
+                                    <tr>
+                                        <td><strong>${item.eventName}</strong></td>
+                                        <td>
+                                            <div>${catName}</div>
+                                            <div class="comp-limit">${target.time}</div>
+                                        </td>
+                                        <td>${seasonTime}</td>
+                                        <td class="${seasonDiff !== null && seasonDiff <= 1000 ? 'diff-close' : 'diff-far'}">${displayDiff}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         ` : ''}
         
-        ${qualified.length > 0 ? `
+        ${objectives.length > 0 ? `
+            <div style="margin-bottom:24px">
+                <div class="section-title">🎯 Prochains objectifs</div>
+                <div class="progress-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Épreuve</th>
+                                <th>Objectif</th>
+                                <th>PB</th>
+                                <th>Écart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${objectives.slice(0, 10).map(item => {
+                                const catName = CATEGORIES?.[item.nextTarget.category]?.name || item.nextTarget.category;
+                                return `
+                                    <tr>
+                                        <td><strong>${item.eventName}</strong></td>
+                                        <td>
+                                            <div>${catName}</div>
+                                            <div class="comp-limit">${item.nextTarget.time}</div>
+                                        </td>
+                                        <td>${item.timeDisplay}</td>
+                                        <td class="${item.nextTarget.gap <= 1000 ? 'diff-close' : 'diff-far'}">${formatDiff(item.nextTarget.gap)}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        ` : ''}
+        
+        ${qualifiedThisSeason.length > 0 ? `
             <div>
-                <div class="section-title">🏆 Qualifications atteintes</div>
+                <div class="section-title">✓ Qualifié cette saison</div>
                 <div class="qualification-grid">
-                    ${qualified.map(item => `
+                    ${qualifiedThisSeason.map(item => `
                         <div class="qualification-item">
-                            <div class="qualification-event">✓ ${item.eventName}</div>
-                            <div class="qualification-level">${CATEGORIES?.[item.bestQualified]?.name || item.bestQualified}</div>
+                            <div class="qualification-event">${item.eventName}</div>
+                            <div class="qualification-level">${CATEGORIES?.[item.bestQualifiedSeason]?.name || item.bestQualifiedSeason}</div>
                         </div>
                     `).join('')}
                 </div>
