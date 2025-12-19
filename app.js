@@ -342,7 +342,7 @@ async function handleSwimmerSelect(athleteId) {
         }
         
         renderProfileTab();
-        updateSwimmerInfoBar();
+        updateHeaderAvatar();
         updateTimesDisplay();
     } catch (err) {
         document.getElementById('profile-error').innerHTML = `<div class="error-box">⚠️ ${err.message}</div>`;
@@ -375,7 +375,7 @@ async function refreshProfile() {
         swimmer = await fetchSwimmerData(swimmer.id);
         localStorage.setItem('swimmer_profile', JSON.stringify(swimmer));
         renderProfileTab();
-        updateSwimmerInfoBar();
+        updateHeaderAvatar();
         alert('Profil actualisé !');
     } catch (err) {
         alert('Erreur: ' + err.message);
@@ -387,34 +387,82 @@ function clearProfile() {
     localStorage.removeItem('swimmer_profile');
     localStorage.removeItem('athlete_id');
     renderProfileTab();
-    updateSwimmerInfoBar();
+    updateHeaderAvatar();
 }
 
-function updateSwimmerInfoBar() {
-    const containers = [
-        document.getElementById('swimmer-info-bar'),
-        document.getElementById('swimmer-info-bar-progress')
-    ];
+function updateHeaderAvatar() {
+    const avatar = document.getElementById('header-avatar');
+    if (!avatar) return;
     
-    containers.forEach(container => {
-        if (!container) return;
-        
-        if (!swimmer) {
-            container.innerHTML = '';
-            container.style.display = 'none';
-            return;
-        }
-        
-        const age = swimmer.yearOfBirth ? (new Date().getFullYear() - swimmer.yearOfBirth) : null;
-        
-        container.style.display = 'flex';
-        container.innerHTML = `
-            <div class="swimmer-info-details">
-                <div class="swimmer-info-name">${swimmer.fullName}</div>
-                <div class="swimmer-info-meta">${swimmer.club || ''} ${age ? '• ' + age + ' ans' : ''} ${swimmer.nation ? '• ' + swimmer.nation : ''}</div>
+    if (!swimmer) {
+        avatar.innerHTML = '';
+        return;
+    }
+    
+    const initials = (swimmer.firstName?.[0] || '') + (swimmer.lastName?.[0] || '');
+    avatar.innerHTML = initials || '?';
+}
+
+function toggleSwimmerPopup() {
+    const popup = document.getElementById('swimmer-popup');
+    if (!popup || !swimmer) return;
+    
+    if (popup.style.display === 'none') {
+        showSwimmerPopup();
+    } else {
+        hideSwimmerPopup();
+    }
+}
+
+function showSwimmerPopup() {
+    const popup = document.getElementById('swimmer-popup');
+    const content = document.getElementById('swimmer-popup-content');
+    if (!popup || !content || !swimmer) return;
+    
+    const age = swimmer.yearOfBirth ? (new Date().getFullYear() - swimmer.yearOfBirth) : null;
+    const seasonLabel = getSeasonLabel();
+    
+    content.innerHTML = `
+        <button class="swimmer-popup-close" onclick="hideSwimmerPopup()">✕</button>
+        <div class="swimmer-popup-name">${swimmer.fullName}</div>
+        <div class="swimmer-popup-meta">${swimmer.club || ''} ${swimmer.nation ? '• ' + swimmer.nation : ''}</div>
+        <div class="swimmer-popup-stats">
+            <div>
+                <div class="swimmer-popup-stat-value">${age || '—'}</div>
+                <div class="swimmer-popup-stat-label">ans</div>
             </div>
-        `;
-    });
+            <div>
+                <div class="swimmer-popup-stat-value">${swimmer.personalBests?.length || 0}</div>
+                <div class="swimmer-popup-stat-label">PBs</div>
+            </div>
+            <div>
+                <div class="swimmer-popup-stat-value">${swimmer.seasonBests?.length || 0}</div>
+                <div class="swimmer-popup-stat-label">${seasonLabel}</div>
+            </div>
+        </div>
+        <div style="font-size:11px;opacity:.4;margin-top:8px">ID: ${swimmer.id}</div>
+    `;
+    
+    popup.style.display = 'block';
+    
+    // Close on click outside
+    setTimeout(() => {
+        document.addEventListener('click', closePopupOnClickOutside);
+    }, 10);
+}
+
+function hideSwimmerPopup() {
+    const popup = document.getElementById('swimmer-popup');
+    if (popup) popup.style.display = 'none';
+    document.removeEventListener('click', closePopupOnClickOutside);
+}
+
+function closePopupOnClickOutside(e) {
+    const popup = document.getElementById('swimmer-popup');
+    const avatar = document.getElementById('header-avatar');
+    if (popup && !popup.contains(e.target) && !avatar.contains(e.target)) {
+        hideSwimmerPopup();
+    }
 }
 
 function updateTimesDisplay() {
@@ -441,7 +489,7 @@ function updateTimesDisplay() {
     const actualDistance = distSelect.value;
     
     // Update swimmer info bar (demande #5)
-    updateSwimmerInfoBar();
+    updateHeaderAvatar();
     
     // Find PB (all-time) and Season Best
     const poolLengthNum = poolLength === '50m' ? 50 : 25;
@@ -751,15 +799,19 @@ function updateProgressDisplay() {
                                 const limitMs = timeToMs(target.time);
                                 const seasonDiff = item.seasonBest ? item.seasonBest.timeMs - limitMs : null;
                                 const displayDiff = seasonDiff !== null ? formatDiff(seasonDiff) : `PB: ${item.timeDisplay}`;
+                                const finaGap = target.finaGap ? `+${Math.round(target.finaGap)} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
                                         <td>
                                             <div>${catName}</div>
-                                            <div class="comp-limit">${target.time}</div>
+                                            <div class="comp-limit">${target.time} <span class="fina-small">${target.targetFinaPoints || ''} pts</span></div>
                                         </td>
                                         <td>${seasonTime}</td>
-                                        <td class="${seasonDiff !== null && seasonDiff <= 1000 ? 'diff-close' : 'diff-far'}">${displayDiff}</td>
+                                        <td class="${seasonDiff !== null && seasonDiff <= 1000 ? 'diff-close' : 'diff-far'}">
+                                            ${displayDiff}
+                                            ${finaGap ? `<div class="fina-small">${finaGap}</div>` : ''}
+                                        </td>
                                     </tr>
                                 `;
                             }).join('')}
@@ -785,15 +837,19 @@ function updateProgressDisplay() {
                         <tbody>
                             ${objectives.slice(0, 10).map(item => {
                                 const catName = CATEGORIES?.[item.nextTarget.category]?.name || item.nextTarget.category;
+                                const finaGap = item.nextTarget.finaGap ? `+${item.nextTarget.finaGap} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
                                         <td>
                                             <div>${catName}</div>
-                                            <div class="comp-limit">${item.nextTarget.time}</div>
+                                            <div class="comp-limit">${item.nextTarget.time} <span class="fina-small">${item.nextTarget.targetFinaPoints || ''} pts</span></div>
                                         </td>
-                                        <td>${item.timeDisplay}</td>
-                                        <td class="${item.nextTarget.gap <= 1000 ? 'diff-close' : 'diff-far'}">${formatDiff(item.nextTarget.gap)}</td>
+                                        <td>${item.timeDisplay}<div class="fina-small">${item.pbFinaPoints || ''} pts</div></td>
+                                        <td class="${item.nextTarget.gap <= 1000 ? 'diff-close' : 'diff-far'}">
+                                            ${formatDiff(item.nextTarget.gap)}
+                                            ${finaGap ? `<div class="fina-small">${finaGap}</div>` : ''}
+                                        </td>
                                     </tr>
                                 `;
                             }).join('')}
@@ -875,7 +931,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializePoolSelectors();
     
     renderProfileTab();
-    updateSwimmerInfoBar();
+    updateHeaderAvatar();
     updateTimesDisplay();
     updateProgressDisplay();
 });

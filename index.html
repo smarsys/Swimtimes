@@ -22,7 +22,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .header-logo{justify-self:start}
 .header-logo img{height:28px}
 .header-title{justify-self:center;font-weight:700;font-size:18px}
-.header-spacer{width:40px}
+.header-avatar{width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;justify-self:end}
+.header-avatar:empty{display:none}
+.header-avatar:hover{background:rgba(255,255,255,.3)}
+.swimmer-popup{position:fixed;top:56px;right:16px;z-index:200;animation:fadeIn .2s ease}
+.swimmer-popup-content{background:rgba(30,30,30,.95);backdrop-filter:blur(10px);border-radius:16px;padding:20px;min-width:260px;box-shadow:0 10px 40px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1)}
+.swimmer-popup-name{font-size:18px;font-weight:700;margin-bottom:4px}
+.swimmer-popup-meta{font-size:13px;opacity:.7;margin-bottom:12px}
+.swimmer-popup-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;padding:12px 0;border-top:1px solid rgba(255,255,255,.1)}
+.swimmer-popup-stat-value{font-size:18px;font-weight:700}
+.swimmer-popup-stat-label{font-size:10px;opacity:.6}
+.swimmer-popup-close{position:absolute;top:12px;right:12px;background:none;border:none;color:#fff;opacity:.5;cursor:pointer;font-size:18px}
+.swimmer-popup-close:hover{opacity:1}
 .nav{display:flex;border-bottom:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.1)}
 .nav-tab{flex:1;padding:14px 8px;text-align:center;background:0 0;border:none;color:#fff;font-size:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.7}
 .nav-tab:hover{background:rgba(255,255,255,.1)}
@@ -77,6 +88,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .comp-name span:first-child{font-size:20px}
 .comp-name-solo{font-weight:500}
 .comp-limit{font-family:"SF Mono",Monaco,monospace;opacity:.7;margin-top:2px}
+.fina-small{font-size:11px;font-style:italic;opacity:.6}
 .diff-qualified{color:var(--green-400);font-size:22px}
 .diff-close{color:var(--yellow-400)}
 .diff-far{color:#fca5a5}
@@ -132,8 +144,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
             <img src="logo-lausanne-aquatique.png" alt="LA">
         </div>
         <div class="header-title">SwimTimes</div>
-        <div class="header-spacer"></div>
+        <div id="header-avatar" class="header-avatar" onclick="toggleSwimmerPopup()"></div>
     </header>
+    <div id="swimmer-popup" class="swimmer-popup" style="display:none">
+        <div class="swimmer-popup-content" id="swimmer-popup-content"></div>
+    </div>
     <nav class="nav">
         <button class="nav-tab active" data-tab="profile" onclick="showTab('profile')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -151,7 +166,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
     <main class="main">
         <div id="tab-profile" class="tab-content active"></div>
         <div id="tab-times" class="tab-content">
-            <div id="swimmer-info-bar"></div>
             <div class="selectors-grid">
                 <select id="select-gender" class="form-select" onchange="updateTimesDisplay()"><option value="Female">👩 Femme</option><option value="Male">👨 Homme</option></select>
                 <select id="select-pool" class="form-select" onchange="updateTimesDisplay()"><option value="50m">🏊 50m (GB)</option><option value="25m">🏊 25m (PB)</option></select>
@@ -163,7 +177,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
             <div class="table-footer">Du plus facile ⬆️ au plus difficile ⬇️</div>
         </div>
         <div id="tab-progress" class="tab-content">
-            <div id="swimmer-info-bar-progress"></div>
             <div style="margin-bottom:16px">
                 <select id="select-progress-pool" class="form-select" onchange="updateProgressDisplay()" style="width:100%">
                     <option value="50m">🏊 Grand Bassin (50m)</option>
