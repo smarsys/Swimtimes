@@ -584,7 +584,6 @@ function getStatusDisplay(status, seasonDiffMs, pbDiffMs) {
             return '—';
     }
 }
-}
 
 function setProgressPool(pool) {
     const select = document.getElementById('select-progress-pool');
