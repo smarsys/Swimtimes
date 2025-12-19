@@ -781,8 +781,8 @@ function updateProgressDisplay() {
             });
         });
     });
-    // Sort by FINA gap from PB (smallest first = closest to target based on PB)
-    pendingRedo.sort((a, b) => Math.abs(a.finaGapFromPB) - Math.abs(b.finaGapFromPB));
+    // Sort by FINA gap from PB (ascending - most negative first = easiest to achieve)
+    pendingRedo.sort((a, b) => a.finaGapFromPB - b.finaGapFromPB);
     
     // Events where PB doesn't qualify yet (sorted by FINA gap to next target)
     const objectives = analysis
