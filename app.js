@@ -544,7 +544,7 @@ function updateTimesDisplay() {
                 ${rows.map(row => `
                     <tr class="${row.cat.includes('JO') ? 'olympic' : ''}">
                         <td>
-                            <div class="comp-name"><span>${row.info?.icon || ''}</span><span>${row.info?.name || row.cat}</span></div>
+                            <div class="comp-name-solo">${row.info?.name || row.cat}</div>
                             <div class="comp-limit">${row.time}</div>
                         </td>
                         <td class="pb-icon-cell">${row.pbDiffMs !== null && row.pbDiffMs <= 0 ? '💪' : ''}</td>
