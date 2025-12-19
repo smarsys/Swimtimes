@@ -747,6 +747,7 @@ function updateProgressDisplay() {
             pbFinaPoints,
             seasonFinaPoints,
             bestQualifiedSeason,
+            qualifiedSeason, // All season qualifications for this event
             qualifiedPBOnly, // Array of qualifs to redo
             nextTarget,
             eventName: `${pb.distance}m ${STROKES?.[pb.stroke]?.abbr || pb.stroke}`
@@ -755,6 +756,20 @@ function updateProgressDisplay() {
     
     // Separate into categories
     const qualifiedThisSeason = analysis.filter(a => a.bestQualifiedSeason);
+    
+    // Build flat list of ALL season qualifications (one entry per event+competition)
+    const allSeasonQualifications = [];
+    analysis.forEach(a => {
+        if (a.qualifiedSeason && a.qualifiedSeason.length > 0) {
+            a.qualifiedSeason.forEach(q => {
+                allSeasonQualifications.push({
+                    eventName: a.eventName,
+                    cat: q.cat,
+                    time: q.time
+                });
+            });
+        }
+    });
     
     // Build flat list of all qualifications to redo (one entry per event+competition)
     const pendingRedo = [];
@@ -791,7 +806,7 @@ function updateProgressDisplay() {
     
     container.innerHTML = `
         <div class="progress-summary">
-            <div class="progress-card green"><div class="progress-value">${qualifiedThisSeason.length}</div><div class="progress-label">Qualifiés</div></div>
+            <div class="progress-card green"><div class="progress-value">${allSeasonQualifications.length}</div><div class="progress-label">Qualifiés</div></div>
             <div class="progress-card orange"><div class="progress-value">${pendingRedo.length}</div><div class="progress-label">À refaire</div></div>
             <div class="progress-card yellow"><div class="progress-value">${objectives.length}</div><div class="progress-label">Objectifs</div></div>
         </div>
@@ -889,14 +904,14 @@ function updateProgressDisplay() {
             </div>
         ` : ''}
         
-        ${qualifiedThisSeason.length > 0 ? `
+        ${allSeasonQualifications.length > 0 ? `
             <div>
                 <div class="section-title">✓ Qualifié cette saison</div>
                 <div class="qualification-grid">
-                    ${qualifiedThisSeason.map(item => `
+                    ${allSeasonQualifications.map(item => `
                         <div class="qualification-item">
                             <div class="qualification-event">${item.eventName}</div>
-                            <div class="qualification-level">${CATEGORIES?.[item.bestQualifiedSeason]?.name || item.bestQualifiedSeason}</div>
+                            <div class="qualification-level">${CATEGORIES?.[item.cat]?.name || item.cat}</div>
                         </div>
                     `).join('')}
                 </div>
