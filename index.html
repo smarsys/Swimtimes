@@ -72,12 +72,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .times-table th:nth-child(2),.times-table th:nth-child(3){text-align:center}
 .times-table td{padding:14px 12px;border-top:1px solid rgba(255,255,255,.1)}
 .times-table td:nth-child(2){text-align:center;font-family:"SF Mono",Monaco,monospace}
-.times-table td:nth-child(3){text-align:center;font-weight:600}
 .times-table tr.olympic{background:rgba(250,204,21,.15)}
 .comp-name{display:flex;align-items:center;gap:8px}
 .diff-qualified{color:var(--green-400)}
 .diff-close{color:var(--yellow-400)}
 .diff-far{color:#fca5a5}
+.diff-pending{color:#fb923c}
+.status-badge{display:inline-block;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;white-space:nowrap}
+.status-badge.qualified{background:rgba(74,222,128,.2);color:var(--green-400)}
+.status-badge.pending{background:rgba(251,146,60,.2);color:#fb923c}
+.status-badge.close{background:rgba(250,204,21,.2);color:var(--yellow-400)}
+.status-badge.far{background:rgba(252,165,165,.2);color:#fca5a5}
+.times-table th:nth-child(3),.times-table th:nth-child(4),.times-table th:nth-child(5){text-align:center}
+.times-table td:nth-child(3),.times-table td:nth-child(4){text-align:center;font-family:"SF Mono",Monaco,monospace;font-size:13px}
+.times-table td:nth-child(5){text-align:center}
 .table-footer{text-align:center;font-size:12px;opacity:.5;padding:12px}
 .progress-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
 .progress-card{border-radius:12px;padding:16px;text-align:center}
@@ -143,7 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
                 <select id="select-stroke" class="form-select" onchange="updateTimesDisplay()"><option value="Freestyle">Nage Libre</option><option value="Backstroke">Dos</option><option value="Breaststroke">Brasse</option><option value="Butterfly">Papillon</option><option value="Medley">4 Nages</option></select>
                 <select id="select-distance" class="form-select" onchange="updateTimesDisplay()"><option value="50">50m</option><option value="100">100m</option><option value="200">200m</option></select>
             </div>
-            <div id="pb-display" class="pb-display"><div class="pb-label">Mon Record Personnel</div><div class="pb-time" id="pb-time">—</div></div>
+            <div id="pb-display" class="pb-display"><div class="pb-label">Mes Temps</div><div class="pb-time" id="pb-time">—</div></div>
             <div id="times-table" class="times-table"></div>
             <div class="table-footer">Du plus facile ⬆️ au plus difficile ⬇️</div>
         </div>

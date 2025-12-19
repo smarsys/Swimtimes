@@ -176,6 +176,9 @@ function calculateFinaPoints(timeMs, gender, poolLength, stroke, distance) {
 // SWIMMERS DATA (depuis GitHub - mis à jour automatiquement chaque jour)
 // =============================================================================
 const SWIMMERS_DATA_URL = 'https://raw.githubusercontent.com/smarsys/Swimtimes/main/swimmers-data.json';
+const SWIMMERS_SEASON_URL = 'https://raw.githubusercontent.com/smarsys/Swimtimes/main/swimmers-season.json';
+
+let swimmersSeasonData = null;
 
 async function loadSwimmersData() {
     if (swimmersData) return swimmersData;
@@ -192,11 +195,38 @@ async function loadSwimmersData() {
     }
 }
 
+async function loadSwimmersSeasonData() {
+    if (swimmersSeasonData) return swimmersSeasonData;
+    
+    try {
+        const response = await fetch(SWIMMERS_SEASON_URL);
+        if (!response.ok) throw new Error('Fichier non trouvé');
+        swimmersSeasonData = await response.json();
+        console.log('✅ Données saison chargées:', swimmersSeasonData._metadata?.season?.label);
+        return swimmersSeasonData;
+    } catch (err) {
+        console.log('ℹ️ swimmers-season.json non disponible');
+        return null;
+    }
+}
+
+function getSeasonLabel() {
+    return swimmersSeasonData?._metadata?.season?.label || 'Saison courante';
+}
+
 async function fetchSwimmerData(athleteId) {
     const data = await loadSwimmersData();
+    const seasonData = await loadSwimmersSeasonData();
     
     if (data?.swimmers?.[athleteId]) {
-        return data.swimmers[athleteId];
+        const swimmerData = data.swimmers[athleteId];
+        // Attach season bests if available
+        if (seasonData?.swimmers?.[athleteId]) {
+            swimmerData.seasonBests = seasonData.swimmers[athleteId].seasonBests || [];
+        } else {
+            swimmerData.seasonBests = [];
+        }
+        return swimmerData;
     }
     
     throw new Error(`Nageur ${athleteId} non trouvé. Ajoutez cet ID dans athletes.txt et relancez le workflow GitHub.`);
@@ -407,22 +437,42 @@ function updateTimesDisplay() {
     // Update swimmer info bar (demande #5)
     updateSwimmerInfoBar();
     
-    // Find PB
+    // Find PB (all-time) and Season Best
     const poolLengthNum = poolLength === '50m' ? 50 : 25;
     const pb = swimmer?.personalBests?.find(p => 
         p.stroke === stroke && 
         p.distance === parseInt(actualDistance) && 
         p.poolLength === poolLengthNum
     );
+    const seasonBest = swimmer?.seasonBests?.find(p => 
+        p.stroke === stroke && 
+        p.distance === parseInt(actualDistance) && 
+        p.poolLength === poolLengthNum
+    );
     
-    // Update PB display
+    // Update PB display (show both PB and season)
     const pbDisplay = document.getElementById('pb-display');
     const pbTime = document.getElementById('pb-time');
     
-    if (pb) {
+    if (pb || seasonBest) {
         pbDisplay.classList.remove('empty');
-        const finaPoints = calculateFinaPoints(pb.timeMs, gender, poolLengthNum, stroke, parseInt(actualDistance));
-        pbTime.innerHTML = `${pb.timeDisplay} <span style="font-size:14px;opacity:.6">${finaPoints ? finaPoints + ' pts FINA' : ''}</span>`;
+        const displayTime = pb || seasonBest;
+        const finaPoints = calculateFinaPoints(displayTime.timeMs, gender, poolLengthNum, stroke, parseInt(actualDistance));
+        
+        let pbHtml = '';
+        if (pb) {
+            pbHtml += `<div>PB: ${pb.timeDisplay}</div>`;
+        }
+        if (seasonBest) {
+            const seasonLabel = getSeasonLabel();
+            pbHtml += `<div style="font-size:14px;opacity:.8">${seasonLabel}: ${seasonBest.timeDisplay}</div>`;
+        } else if (pb) {
+            pbHtml += `<div style="font-size:12px;opacity:.5">Pas encore nagé cette saison</div>`;
+        }
+        if (finaPoints) {
+            pbHtml += `<div style="font-size:12px;opacity:.6">${finaPoints} pts FINA</div>`;
+        }
+        pbTime.innerHTML = pbHtml;
     } else {
         pbDisplay.classList.add('empty');
         pbTime.innerHTML = swimmer ? '<span style="font-size:14px;opacity:.5">Pas encore de temps</span>' : '—';
@@ -451,17 +501,30 @@ function updateTimesDisplay() {
         .map(([cat, time]) => {
             const limitMs = timeToMs(time);
             const pbMs = pb?.timeMs;
-            const diffMs = (pbMs && limitMs) ? pbMs - limitMs : null;
+            const seasonMs = seasonBest?.timeMs;
             
+            // Calculate diffs
+            const pbDiffMs = (pbMs && limitMs) ? pbMs - limitMs : null;
+            const seasonDiffMs = (seasonMs && limitMs) ? seasonMs - limitMs : null;
+            
+            // Determine qualification status
+            // qualified: season time under limit
+            // pending: PB under limit but no season time yet (or season time above limit)
+            // close: within 1 second
+            // far: more than 1 second away
             let status = '';
-            if (diffMs !== null) {
-                if (diffMs <= 0) status = 'qualified';
-                else if (diffMs <= 1000) status = 'close';
-                else status = 'far';
+            if (seasonDiffMs !== null && seasonDiffMs <= 0) {
+                status = 'qualified';
+            } else if (pbDiffMs !== null && pbDiffMs <= 0) {
+                status = 'pending'; // PB is good but need to redo this season
+            } else if (seasonDiffMs !== null) {
+                status = seasonDiffMs <= 1000 ? 'close' : 'far';
+            } else if (pbDiffMs !== null) {
+                status = pbDiffMs <= 1000 ? 'close' : 'far';
             }
             
             return { 
-                cat, time, limitMs, diffMs, status, 
+                cat, time, limitMs, pbMs, seasonMs, pbDiffMs, seasonDiffMs, status, 
                 info: CATEGORIES?.[cat] || { name: cat, icon: '🏊' }
             };
         })
@@ -469,18 +532,58 @@ function updateTimesDisplay() {
     
     tableContainer.innerHTML = `
         <table>
-            <thead><tr><th>Compétition</th><th>Limite</th><th>Écart</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Compétition</th>
+                    <th>Limite</th>
+                    <th>PB</th>
+                    <th>Saison</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
             <tbody>
                 ${rows.map(row => `
                     <tr class="${row.cat.includes('JO') ? 'olympic' : ''}">
                         <td><div class="comp-name"><span>${row.info?.icon || ''}</span><span>${row.info?.name || row.cat}</span></div></td>
                         <td>${row.time}</td>
-                        <td class="diff-${row.status}">${row.diffMs !== null ? (row.status === 'qualified' ? '✓ ' : '') + formatDiff(row.diffMs) : '—'}</td>
+                        <td class="${row.pbDiffMs !== null && row.pbDiffMs <= 0 ? 'diff-qualified' : ''}">${row.pbMs ? formatTime(row.pbMs) : '—'}</td>
+                        <td class="${row.seasonDiffMs !== null && row.seasonDiffMs <= 0 ? 'diff-qualified' : ''}">${row.seasonMs ? formatTime(row.seasonMs) : '—'}</td>
+                        <td class="diff-${row.status}">${getStatusDisplay(row.status, row.seasonDiffMs, row.pbDiffMs)}</td>
                     </tr>
                 `).join('')}
             </tbody>
         </table>
     `;
+}
+
+function formatTime(timeMs) {
+    if (!timeMs) return '—';
+    const totalSeconds = timeMs / 1000;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    
+    if (minutes > 0) {
+        return `${minutes}:${seconds.toFixed(2).padStart(5, '0')}`;
+    }
+    return seconds.toFixed(2);
+}
+
+function getStatusDisplay(status, seasonDiffMs, pbDiffMs) {
+    switch (status) {
+        case 'qualified':
+            return `<span class="status-badge qualified">✓ Qualifié</span>`;
+        case 'pending':
+            return `<span class="status-badge pending">⏳ À refaire</span>`;
+        case 'close':
+            const diff = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
+            return `<span class="status-badge close">${formatDiff(diff)}</span>`;
+        case 'far':
+            const diffFar = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
+            return `<span class="status-badge far">${formatDiff(diffFar)}</span>`;
+        default:
+            return '—';
+    }
+}
 }
 
 function setProgressPool(pool) {
@@ -657,12 +760,19 @@ function initializePoolSelectors() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadTimeStandards();
+    await loadSwimmersSeasonData(); // Pre-load season data
     
     const savedProfile = localStorage.getItem('swimmer_profile');
     if (savedProfile) {
         try {
             swimmer = JSON.parse(savedProfile);
             document.getElementById('select-gender').value = swimmer.gender || 'Female';
+            
+            // Attach season bests if available
+            const seasonData = await loadSwimmersSeasonData();
+            if (seasonData?.swimmers?.[swimmer.id]) {
+                swimmer.seasonBests = seasonData.swimmers[swimmer.id].seasonBests || [];
+            }
         } catch (e) {
             console.error('Error loading profile:', e);
         }
