@@ -535,7 +535,6 @@ function updateTimesDisplay() {
             <thead>
                 <tr>
                     <th>Compétition</th>
-                    <th>Limite</th>
                     <th>PB</th>
                     <th>Saison</th>
                     <th>Écart</th>
@@ -544,8 +543,10 @@ function updateTimesDisplay() {
             <tbody>
                 ${rows.map(row => `
                     <tr class="${row.cat.includes('JO') ? 'olympic' : ''}">
-                        <td><div class="comp-name"><span>${row.info?.icon || ''}</span><span>${row.info?.name || row.cat}</span></div></td>
-                        <td>${row.time}</td>
+                        <td>
+                            <div class="comp-name"><span>${row.info?.icon || ''}</span><span>${row.info?.name || row.cat}</span></div>
+                            <div class="comp-limit">${row.time}</div>
+                        </td>
                         <td class="pb-icon-cell">${row.pbDiffMs !== null && row.pbDiffMs <= 0 ? '💪' : ''}</td>
                         <td>${row.seasonMs ? formatTime(row.seasonMs) : '—'}</td>
                         <td class="diff-${row.status}">${getStatusDisplay(row.status, row.seasonDiffMs, row.pbDiffMs)}</td>
