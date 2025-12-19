@@ -808,7 +808,8 @@ function updateProgressDisplay() {
                                 const catName = CATEGORIES?.[item.target.cat]?.name || item.target.cat;
                                 const seasonTime = item.seasonBest ? formatTime(item.seasonBest.timeMs) : '—';
                                 const displayDiff = item.seasonDiff !== null ? formatDiff(item.seasonDiff) : `PB: ${item.timeDisplay}`;
-                                const finaGap = item.target.finaGap ? `-${Math.round(item.target.finaGap)} pts` : '';
+                                const finaGapValue = item.target.finaGap ? Math.round(item.target.finaGap) : null;
+                                const finaGapDisplay = finaGapValue !== null ? `${finaGapValue > 0 ? '+' : ''}${finaGapValue} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
@@ -820,7 +821,7 @@ function updateProgressDisplay() {
                                         <td>${seasonTime}</td>
                                         <td class="${item.seasonDiff !== null && item.seasonDiff <= 1000 ? 'diff-close' : 'diff-far'}">
                                             ${displayDiff}
-                                            ${finaGap ? `<div class="fina-small">${finaGap}</div>` : ''}
+                                            ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
                                         </td>
                                     </tr>
                                 `;
@@ -847,7 +848,8 @@ function updateProgressDisplay() {
                         <tbody>
                             ${objectives.slice(0, 10).map(item => {
                                 const catName = CATEGORIES?.[item.nextTarget.category]?.name || item.nextTarget.category;
-                                const finaGap = item.nextTarget.finaGap ? `-${item.nextTarget.finaGap} pts` : '';
+                                const finaGapValue = item.nextTarget.finaGap;
+                                const finaGapDisplay = finaGapValue ? `${finaGapValue > 0 ? '+' : ''}${finaGapValue} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
@@ -862,7 +864,7 @@ function updateProgressDisplay() {
                                         </td>
                                         <td class="${item.nextTarget.gap <= 1000 ? 'diff-close' : 'diff-far'}">
                                             ${formatDiff(item.nextTarget.gap)}
-                                            ${finaGap ? `<div class="fina-small">${finaGap}</div>` : ''}
+                                            ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
                                         </td>
                                     </tr>
                                 `;
