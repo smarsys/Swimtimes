@@ -571,15 +571,15 @@ function formatTime(timeMs) {
 function getStatusDisplay(status, seasonDiffMs, pbDiffMs) {
     switch (status) {
         case 'qualified':
-            return `<span class="status-badge qualified">✓ Qualifié</span>`;
+            return `<span class="status-icon qualified">✓</span>`;
         case 'pending':
-            return `<span class="status-badge pending">⏳ À refaire</span>`;
+            return `<span class="status-icon pending">⏳</span>`;
         case 'close':
             const diff = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
-            return `<span class="status-badge close">${formatDiff(diff)}</span>`;
+            return `<span class="status-icon close">${formatDiff(diff)}</span>`;
         case 'far':
             const diffFar = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
-            return `<span class="status-badge far">${formatDiff(diffFar)}</span>`;
+            return `<span class="status-icon far">${formatDiff(diffFar)}</span>`;
         default:
             return '—';
     }
