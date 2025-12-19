@@ -626,9 +626,9 @@ function formatTime(timeMs) {
 function getStatusDisplay(status, seasonDiffMs, pbDiffMs) {
     switch (status) {
         case 'qualified':
-            return '✓';
+            return '<span class="status-icon">✓</span>';
         case 'pending':
-            return '⏳';
+            return '<span class="status-icon">⏳</span>';
         case 'close':
             const diff = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
             return formatDiff(diff);
@@ -830,7 +830,7 @@ function updateProgressDisplay() {
                                             <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
                                         </td>
                                         <td>
-                                            ${seasonTime}
+                                            <span class="time-mono">${seasonTime}</span>
                                             ${seasonDiffDisplay ? `<div class="fina-small">${seasonDiffDisplay}</div>` : ''}
                                         </td>
                                         <td class="${pbDiffClass}">
