@@ -756,15 +756,27 @@ function updateProgressDisplay() {
     // Separate into categories
     const qualifiedThisSeason = analysis.filter(a => a.bestQualifiedSeason);
     
-    // Events where PB qualifies but need to redo this season (sorted by FINA gap)
-    const pendingRedo = analysis
-        .filter(a => a.qualifiedPBOnly.length > 0)
-        .map(a => ({
-            ...a,
-            // Take the easiest qualification to redo (smallest FINA gap)
-            targetToRedo: a.qualifiedPBOnly.sort((x, y) => x.finaGap - y.finaGap)[0]
-        }))
-        .sort((a, b) => (a.targetToRedo?.finaGap || Infinity) - (b.targetToRedo?.finaGap || Infinity));
+    // Build flat list of all qualifications to redo (one entry per event+competition)
+    const pendingRedo = [];
+    analysis.forEach(a => {
+        a.qualifiedPBOnly.forEach(q => {
+            const limitMs = timeToMs(q.time);
+            const seasonDiff = a.seasonBest ? a.seasonBest.timeMs - limitMs : null;
+            pendingRedo.push({
+                eventName: a.eventName,
+                stroke: a.stroke,
+                distance: a.distance,
+                seasonBest: a.seasonBest,
+                timeDisplay: a.timeDisplay,
+                pbFinaPoints: a.pbFinaPoints,
+                seasonFinaPoints: a.seasonFinaPoints,
+                target: q,
+                seasonDiff
+            });
+        });
+    });
+    // Sort by FINA gap (easiest first)
+    pendingRedo.sort((a, b) => (a.target.finaGap || Infinity) - (b.target.finaGap || Infinity));
     
     // Events where PB doesn't qualify yet (sorted by FINA gap to next target)
     const objectives = analysis
@@ -793,22 +805,20 @@ function updateProgressDisplay() {
                         </thead>
                         <tbody>
                             ${pendingRedo.map(item => {
-                                const target = item.targetToRedo;
-                                const catName = CATEGORIES?.[target.cat]?.name || target.cat;
+                                const catName = CATEGORIES?.[item.target.cat]?.name || item.target.cat;
                                 const seasonTime = item.seasonBest ? formatTime(item.seasonBest.timeMs) : '—';
-                                const limitMs = timeToMs(target.time);
-                                const seasonDiff = item.seasonBest ? item.seasonBest.timeMs - limitMs : null;
-                                const displayDiff = seasonDiff !== null ? formatDiff(seasonDiff) : `PB: ${item.timeDisplay}`;
-                                const finaGap = target.finaGap ? `+${Math.round(target.finaGap)} pts` : '';
+                                const displayDiff = item.seasonDiff !== null ? formatDiff(item.seasonDiff) : `PB: ${item.timeDisplay}`;
+                                const finaGap = item.target.finaGap ? `-${Math.round(item.target.finaGap)} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
                                         <td>
-                                            <div>${catName}</div>
-                                            <div class="comp-limit">${target.time} <span class="fina-small">${target.targetFinaPoints || ''} pts</span></div>
+                                            <div class="comp-cat">${catName}</div>
+                                            <div class="comp-limit">${item.target.time}</div>
+                                            <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
                                         </td>
                                         <td>${seasonTime}</td>
-                                        <td class="${seasonDiff !== null && seasonDiff <= 1000 ? 'diff-close' : 'diff-far'}">
+                                        <td class="${item.seasonDiff !== null && item.seasonDiff <= 1000 ? 'diff-close' : 'diff-far'}">
                                             ${displayDiff}
                                             ${finaGap ? `<div class="fina-small">${finaGap}</div>` : ''}
                                         </td>
@@ -837,15 +847,19 @@ function updateProgressDisplay() {
                         <tbody>
                             ${objectives.slice(0, 10).map(item => {
                                 const catName = CATEGORIES?.[item.nextTarget.category]?.name || item.nextTarget.category;
-                                const finaGap = item.nextTarget.finaGap ? `+${item.nextTarget.finaGap} pts` : '';
+                                const finaGap = item.nextTarget.finaGap ? `-${item.nextTarget.finaGap} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
                                         <td>
-                                            <div>${catName}</div>
-                                            <div class="comp-limit">${item.nextTarget.time} <span class="fina-small">${item.nextTarget.targetFinaPoints || ''} pts</span></div>
+                                            <div class="comp-cat">${catName}</div>
+                                            <div class="comp-limit">${item.nextTarget.time}</div>
+                                            <div class="fina-small">${item.nextTarget.targetFinaPoints || ''} pts</div>
                                         </td>
-                                        <td>${item.timeDisplay}<div class="fina-small">${item.pbFinaPoints || ''} pts</div></td>
+                                        <td>
+                                            ${item.timeDisplay}
+                                            <div class="fina-small">${item.pbFinaPoints || ''} pts</div>
+                                        </td>
                                         <td class="${item.nextTarget.gap <= 1000 ? 'diff-close' : 'diff-far'}">
                                             ${formatDiff(item.nextTarget.gap)}
                                             ${finaGap ? `<div class="fina-small">${finaGap}</div>` : ''}
