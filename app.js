@@ -538,7 +538,7 @@ function updateTimesDisplay() {
                     <th>Limite</th>
                     <th>PB</th>
                     <th>Saison</th>
-                    <th>Statut</th>
+                    <th>Écart</th>
                 </tr>
             </thead>
             <tbody>
@@ -546,8 +546,8 @@ function updateTimesDisplay() {
                     <tr class="${row.cat.includes('JO') ? 'olympic' : ''}">
                         <td><div class="comp-name"><span>${row.info?.icon || ''}</span><span>${row.info?.name || row.cat}</span></div></td>
                         <td>${row.time}</td>
-                        <td class="${row.pbDiffMs !== null && row.pbDiffMs <= 0 ? 'diff-qualified' : ''}">${row.pbMs ? formatTime(row.pbMs) : '—'}</td>
-                        <td class="${row.seasonDiffMs !== null && row.seasonDiffMs <= 0 ? 'diff-qualified' : ''}">${row.seasonMs ? formatTime(row.seasonMs) : '—'}</td>
+                        <td class="pb-icon-cell">${row.pbDiffMs !== null && row.pbDiffMs <= 0 ? '💪' : ''}</td>
+                        <td>${row.seasonMs ? formatTime(row.seasonMs) : '—'}</td>
                         <td class="diff-${row.status}">${getStatusDisplay(row.status, row.seasonDiffMs, row.pbDiffMs)}</td>
                     </tr>
                 `).join('')}
@@ -571,15 +571,15 @@ function formatTime(timeMs) {
 function getStatusDisplay(status, seasonDiffMs, pbDiffMs) {
     switch (status) {
         case 'qualified':
-            return `<span class="status-icon qualified">✓</span>`;
+            return '✓';
         case 'pending':
-            return `<span class="status-icon pending">⏳</span>`;
+            return '⏳';
         case 'close':
             const diff = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
-            return `<span class="status-icon close">${formatDiff(diff)}</span>`;
+            return formatDiff(diff);
         case 'far':
             const diffFar = seasonDiffMs !== null ? seasonDiffMs : pbDiffMs;
-            return `<span class="status-icon far">${formatDiff(diffFar)}</span>`;
+            return formatDiff(diffFar);
         default:
             return '—';
     }
