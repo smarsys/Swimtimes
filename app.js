@@ -805,19 +805,22 @@ function updateProgressDisplay() {
     pendingRedo.sort((a, b) => a.finaGapFromPB - b.finaGapFromPB);
     
     // Build flat list of all objectives (one entry per event+competition)
+    // Only include objectives within +100 FINA points
     const objectives = [];
     analysis.forEach(a => {
         if (a.notYetQualified && a.notYetQualified.length > 0) {
             a.notYetQualified.forEach(q => {
-                objectives.push({
-                    eventName: a.eventName,
-                    stroke: a.stroke,
-                    distance: a.distance,
-                    timeDisplay: a.timeDisplay,
-                    timeMs: a.timeMs,
-                    pbFinaPoints: a.pbFinaPoints,
-                    target: q
-                });
+                if (q.finaGap <= 100) {
+                    objectives.push({
+                        eventName: a.eventName,
+                        stroke: a.stroke,
+                        distance: a.distance,
+                        timeDisplay: a.timeDisplay,
+                        timeMs: a.timeMs,
+                        pbFinaPoints: a.pbFinaPoints,
+                        target: q
+                    });
+                }
             });
         }
     });
@@ -895,7 +898,7 @@ function updateProgressDisplay() {
                             </tr>
                         </thead>
                         <tbody>
-                            ${objectives.slice(0, 20).map(item => {
+                            ${objectives.map(item => {
                                 const catName = CATEGORIES?.[item.target.cat]?.name || item.target.cat;
                                 const finaGapValue = item.target.finaGap;
                                 const finaGapDisplay = finaGapValue ? `${finaGapValue > 0 ? '+' : ''}${finaGapValue} pts` : '';
