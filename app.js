@@ -712,6 +712,7 @@ function updateProgressDisplay() {
         // Find qualifications and next targets
         let qualifiedSeason = []; // Qualified with season time
         let qualifiedPBOnly = []; // Qualified with PB but not season (pending)
+        let notYetQualified = []; // PB doesn't qualify yet
         let nextTarget = null;
         let smallestFinaGap = Infinity;
         
@@ -730,10 +731,13 @@ function updateProgressDisplay() {
             } else if (pbDiff <= 0) {
                 // PB qualifies but not season time - need to redo
                 qualifiedPBOnly.push({ cat, time, targetFinaPoints, finaGap: seasonFinaPoints && targetFinaPoints ? targetFinaPoints - seasonFinaPoints : finaGap });
-            } else if (finaGap < smallestFinaGap && finaGap > 0) {
-                // Next objective
-                smallestFinaGap = finaGap;
-                nextTarget = { category: cat, gap: pbDiff, time, finaGap: Math.round(finaGap), targetFinaPoints };
+            } else {
+                // PB doesn't qualify yet - add to objectives
+                notYetQualified.push({ cat, time, targetFinaPoints, finaGap: Math.round(finaGap), gap: pbDiff });
+                if (finaGap < smallestFinaGap && finaGap > 0) {
+                    smallestFinaGap = finaGap;
+                    nextTarget = { category: cat, gap: pbDiff, time, finaGap: Math.round(finaGap), targetFinaPoints };
+                }
             }
         });
         
@@ -749,6 +753,7 @@ function updateProgressDisplay() {
             bestQualifiedSeason,
             qualifiedSeason, // All season qualifications for this event
             qualifiedPBOnly, // Array of qualifs to redo
+            notYetQualified, // Array of objectives not yet reached
             nextTarget,
             eventName: `${pb.distance}m ${STROKES?.[pb.stroke]?.abbr || pb.stroke}`
         };
@@ -799,10 +804,25 @@ function updateProgressDisplay() {
     // Sort by FINA gap from PB (ascending - most negative first = easiest to achieve)
     pendingRedo.sort((a, b) => a.finaGapFromPB - b.finaGapFromPB);
     
-    // Events where PB doesn't qualify yet (sorted by FINA gap to next target)
-    const objectives = analysis
-        .filter(a => a.nextTarget && a.qualifiedPBOnly.length === 0 && !a.bestQualifiedSeason)
-        .sort((a, b) => a.nextTarget.finaGap - b.nextTarget.finaGap);
+    // Build flat list of all objectives (one entry per event+competition)
+    const objectives = [];
+    analysis.forEach(a => {
+        if (a.notYetQualified && a.notYetQualified.length > 0) {
+            a.notYetQualified.forEach(q => {
+                objectives.push({
+                    eventName: a.eventName,
+                    stroke: a.stroke,
+                    distance: a.distance,
+                    timeDisplay: a.timeDisplay,
+                    timeMs: a.timeMs,
+                    pbFinaPoints: a.pbFinaPoints,
+                    target: q
+                });
+            });
+        }
+    });
+    // Sort by FINA gap (ascending - smallest gap first = closest to achieving)
+    objectives.sort((a, b) => a.target.finaGap - b.target.finaGap);
     
     container.innerHTML = `
         <div class="progress-summary">
@@ -875,24 +895,24 @@ function updateProgressDisplay() {
                             </tr>
                         </thead>
                         <tbody>
-                            ${objectives.slice(0, 10).map(item => {
-                                const catName = CATEGORIES?.[item.nextTarget.category]?.name || item.nextTarget.category;
-                                const finaGapValue = item.nextTarget.finaGap;
+                            ${objectives.slice(0, 20).map(item => {
+                                const catName = CATEGORIES?.[item.target.cat]?.name || item.target.cat;
+                                const finaGapValue = item.target.finaGap;
                                 const finaGapDisplay = finaGapValue ? `${finaGapValue > 0 ? '+' : ''}${finaGapValue} pts` : '';
                                 return `
                                     <tr>
                                         <td><strong>${item.eventName}</strong></td>
                                         <td>
                                             <div class="comp-cat">${catName}</div>
-                                            <div class="comp-limit">${item.nextTarget.time}</div>
-                                            <div class="fina-small">${item.nextTarget.targetFinaPoints || ''} pts</div>
+                                            <div class="comp-limit">${item.target.time}</div>
+                                            <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
                                         </td>
                                         <td>
-                                            ${item.timeDisplay}
+                                            <span class="time-mono">${item.timeDisplay}</span>
                                             <div class="fina-small">${item.pbFinaPoints || ''} pts</div>
                                         </td>
-                                        <td class="${item.nextTarget.gap <= 1000 ? 'diff-close' : 'diff-far'}">
-                                            ${formatDiff(item.nextTarget.gap)}
+                                        <td class="${item.target.gap <= 1000 ? 'diff-close' : 'diff-far'}">
+                                            ${formatDiff(item.target.gap)}
                                             ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
                                         </td>
                                     </tr>
