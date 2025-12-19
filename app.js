@@ -813,30 +813,56 @@ function updateProgressDisplay() {
                             ${pendingRedo.map(item => {
                                 const catName = CATEGORIES?.[item.target.cat]?.name || item.target.cat;
                                 const seasonTime = item.seasonBest ? formatTime(item.seasonBest.timeMs) : '—';
-                                // If season time exists, show season diff. Otherwise show PB diff with (PB) label
                                 const hasSeason = item.seasonBest !== null && item.seasonBest !== undefined;
+                                
+                                // Time diff and FINA gap for display
                                 const timeDiff = hasSeason ? item.seasonDiff : item.pbDiff;
-                                const displayDiff = timeDiff !== null ? `${formatDiff(timeDiff)}${!hasSeason ? ' (PB)' : ''}` : '—';
-                                // FINA gap: if season exists use season-based, otherwise use PB-based
-                                const finaGapValue = hasSeason ? 
+                                const timeDiffClass = timeDiff !== null && timeDiff <= 0 ? 'diff-qualified' : (timeDiff !== null && timeDiff <= 1000 ? 'diff-close' : 'diff-far');
+                                
+                                // FINA gap display for last column
+                                const finaGapForDisplay = hasSeason ? 
                                     (item.target.targetFinaPoints && item.seasonFinaPoints ? item.target.targetFinaPoints - item.seasonFinaPoints : null) :
                                     item.finaGapFromPB;
-                                const finaGapDisplay = finaGapValue !== null ? `${finaGapValue > 0 ? '+' : ''}${Math.round(finaGapValue)} pts` : '';
-                                return `
-                                    <tr>
-                                        <td><strong>${item.eventName}</strong></td>
-                                        <td>
-                                            <div class="comp-cat">${catName}</div>
-                                            <div class="comp-limit">${item.target.time}</div>
-                                            <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
-                                        </td>
-                                        <td>${seasonTime}</td>
-                                        <td class="${timeDiff !== null && timeDiff <= 1000 ? 'diff-close' : 'diff-far'}">
-                                            ${displayDiff}
-                                            ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
-                                        </td>
-                                    </tr>
-                                `;
+                                const finaGapDisplay = finaGapForDisplay !== null ? `${finaGapForDisplay > 0 ? '+' : ''}${Math.round(finaGapForDisplay)} pts` : '';
+                                
+                                // PB FINA gap for objective column (only when season exists)
+                                const pbFinaGapDisplay = item.finaGapFromPB !== null ? `${item.finaGapFromPB > 0 ? '+' : ''}${Math.round(item.finaGapFromPB)} pts (PB)` : '';
+                                
+                                if (hasSeason) {
+                                    // Has season time: normal display, add PB gap in objective column
+                                    return `
+                                        <tr>
+                                            <td><strong>${item.eventName}</strong></td>
+                                            <td>
+                                                <div class="comp-cat">${catName}</div>
+                                                <div class="comp-limit">${item.target.time}</div>
+                                                <div class="fina-small">${item.target.targetFinaPoints || ''} pts <span class="fina-italic">${pbFinaGapDisplay}</span></div>
+                                            </td>
+                                            <td>${seasonTime}</td>
+                                            <td class="${timeDiffClass}">
+                                                ${formatDiff(timeDiff)}
+                                                ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
+                                            </td>
+                                        </tr>
+                                    `;
+                                } else {
+                                    // No season time: last column in italic
+                                    return `
+                                        <tr>
+                                            <td><strong>${item.eventName}</strong></td>
+                                            <td>
+                                                <div class="comp-cat">${catName}</div>
+                                                <div class="comp-limit">${item.target.time}</div>
+                                                <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
+                                            </td>
+                                            <td>${seasonTime}</td>
+                                            <td class="${timeDiffClass} italic-cell">
+                                                ${formatDiff(timeDiff)} (PB)
+                                                ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
+                                            </td>
+                                        </tr>
+                                    `;
+                                }
                             }).join('')}
                         </tbody>
                     </table>
