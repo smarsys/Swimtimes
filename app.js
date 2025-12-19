@@ -806,63 +806,39 @@ function updateProgressDisplay() {
                                 <th>Épreuve</th>
                                 <th>Objectif</th>
                                 <th>Saison</th>
-                                <th>Écart</th>
+                                <th>Écart (PB)</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${pendingRedo.map(item => {
                                 const catName = CATEGORIES?.[item.target.cat]?.name || item.target.cat;
-                                const seasonTime = item.seasonBest ? formatTime(item.seasonBest.timeMs) : '—';
                                 const hasSeason = item.seasonBest !== null && item.seasonBest !== undefined;
+                                const seasonTime = hasSeason ? formatTime(item.seasonBest.timeMs) : '—';
+                                const seasonDiffDisplay = hasSeason && item.seasonDiff !== null ? formatDiff(item.seasonDiff) : '';
                                 
-                                // Time diff and FINA gap for display
-                                const timeDiff = hasSeason ? item.seasonDiff : item.pbDiff;
-                                const timeDiffClass = timeDiff !== null && timeDiff <= 0 ? 'diff-qualified' : (timeDiff !== null && timeDiff <= 1000 ? 'diff-close' : 'diff-far');
+                                // Always show PB-based data in last column
+                                const pbDiffClass = item.pbDiff !== null && item.pbDiff <= 0 ? 'diff-qualified' : (item.pbDiff !== null && item.pbDiff <= 1000 ? 'diff-close' : 'diff-far');
+                                const pbDiffDisplay = item.pbDiff !== null ? formatDiff(item.pbDiff) : '—';
+                                const pbFinaGapDisplay = item.finaGapFromPB !== null ? `${item.finaGapFromPB > 0 ? '+' : ''}${Math.round(item.finaGapFromPB)} pts` : '';
                                 
-                                // FINA gap display for last column
-                                const finaGapForDisplay = hasSeason ? 
-                                    (item.target.targetFinaPoints && item.seasonFinaPoints ? item.target.targetFinaPoints - item.seasonFinaPoints : null) :
-                                    item.finaGapFromPB;
-                                const finaGapDisplay = finaGapForDisplay !== null ? `${finaGapForDisplay > 0 ? '+' : ''}${Math.round(finaGapForDisplay)} pts` : '';
-                                
-                                // PB FINA gap for objective column (only when season exists)
-                                const pbFinaGapDisplay = item.finaGapFromPB !== null ? `${item.finaGapFromPB > 0 ? '+' : ''}${Math.round(item.finaGapFromPB)} pts (PB)` : '';
-                                
-                                if (hasSeason) {
-                                    // Has season time: normal display, add PB gap in objective column
-                                    return `
-                                        <tr>
-                                            <td><strong>${item.eventName}</strong></td>
-                                            <td>
-                                                <div class="comp-cat">${catName}</div>
-                                                <div class="comp-limit">${item.target.time}</div>
-                                                <div class="fina-small">${item.target.targetFinaPoints || ''} pts <span class="fina-italic">${pbFinaGapDisplay}</span></div>
-                                            </td>
-                                            <td>${seasonTime}</td>
-                                            <td class="${timeDiffClass}">
-                                                ${formatDiff(timeDiff)}
-                                                ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
-                                            </td>
-                                        </tr>
-                                    `;
-                                } else {
-                                    // No season time: last column in italic
-                                    return `
-                                        <tr>
-                                            <td><strong>${item.eventName}</strong></td>
-                                            <td>
-                                                <div class="comp-cat">${catName}</div>
-                                                <div class="comp-limit">${item.target.time}</div>
-                                                <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
-                                            </td>
-                                            <td>${seasonTime}</td>
-                                            <td class="${timeDiffClass} italic-cell">
-                                                ${formatDiff(timeDiff)} (PB)
-                                                ${finaGapDisplay ? `<div class="fina-small">${finaGapDisplay}</div>` : ''}
-                                            </td>
-                                        </tr>
-                                    `;
-                                }
+                                return `
+                                    <tr>
+                                        <td><strong>${item.eventName}</strong></td>
+                                        <td>
+                                            <div class="comp-cat">${catName}</div>
+                                            <div class="comp-limit">${item.target.time}</div>
+                                            <div class="fina-small">${item.target.targetFinaPoints || ''} pts</div>
+                                        </td>
+                                        <td>
+                                            ${seasonTime}
+                                            ${seasonDiffDisplay ? `<div class="fina-small">${seasonDiffDisplay}</div>` : ''}
+                                        </td>
+                                        <td class="${pbDiffClass}">
+                                            ${pbDiffDisplay}
+                                            ${pbFinaGapDisplay ? `<div class="fina-small">${pbFinaGapDisplay}</div>` : ''}
+                                        </td>
+                                    </tr>
+                                `;
                             }).join('')}
                         </tbody>
                     </table>
