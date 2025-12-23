@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "generated": "2025-12-22T06:31:38.470029Z",
+    "generated": "2025-12-23T06:30:46.254567Z",
     "source": "swimrankings.net",
     "count": 8
   },
@@ -252,7 +252,7 @@
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2025-12-22T06:31:35.402745Z",
+      "lastUpdated": "2025-12-23T06:30:41.936701Z",
       "lastName": "HEHLEN",
       "firstName": "Ava"
     },
@@ -344,8 +344,8 @@
           "stroke": "Freestyle",
           "distance": 1500,
           "poolLength": 50,
-          "timeMs": 1148040,
-          "timeDisplay": "19:08.04"
+          "timeMs": 1121940,
+          "timeDisplay": "18:41.94"
         },
         {
           "stroke": "Freestyle",
@@ -538,7 +538,7 @@
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2025-12-22T06:31:35.891316Z",
+      "lastUpdated": "2025-12-23T06:30:42.457836Z",
       "lastName": "ROCHAT",
       "firstName": "Leane"
     },
@@ -796,7 +796,7 @@
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2025-12-22T06:31:36.384960Z",
+      "lastUpdated": "2025-12-23T06:30:43.007554Z",
       "lastName": "BOUKARI",
       "firstName": "Kenza"
     },
@@ -1075,7 +1075,7 @@
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2025-12-22T06:31:36.750499Z",
+      "lastUpdated": "2025-12-23T06:30:43.571866Z",
       "lastName": "GUEGUEN",
       "firstName": "Eloa"
     },
@@ -1139,8 +1139,8 @@
           "stroke": "Freestyle",
           "distance": 400,
           "poolLength": 50,
-          "timeMs": 299810,
-          "timeDisplay": "4:59.81"
+          "timeMs": 299250,
+          "timeDisplay": "4:59.25"
         },
         {
           "stroke": "Freestyle",
@@ -1265,8 +1265,8 @@
           "stroke": "Butterfly",
           "distance": 100,
           "poolLength": 50,
-          "timeMs": 66120,
-          "timeDisplay": "1:06.12"
+          "timeMs": 65800,
+          "timeDisplay": "1:05.80"
         },
         {
           "stroke": "Butterfly",
@@ -1326,7 +1326,7 @@
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2025-12-22T06:31:37.255729Z",
+      "lastUpdated": "2025-12-23T06:30:43.983603Z",
       "lastName": "PENNEL",
       "firstName": "Alice Mei"
     },
@@ -1577,7 +1577,7 @@
         }
       ],
       "id": "5316667",
-      "lastUpdated": "2025-12-22T06:31:37.631052Z",
+      "lastUpdated": "2025-12-23T06:30:45.399607Z",
       "lastName": "PENNEL",
       "firstName": "Jamie Alexander"
     },
@@ -1786,7 +1786,7 @@
         }
       ],
       "id": "4901328",
-      "lastUpdated": "2025-12-22T06:31:38.108005Z",
+      "lastUpdated": "2025-12-23T06:30:45.818891Z",
       "lastName": "GOBET",
       "firstName": "Malika"
     },
@@ -2044,7 +2044,7 @@
         }
       ],
       "id": "4874783",
-      "lastUpdated": "2025-12-22T06:31:38.469976Z",
+      "lastUpdated": "2025-12-23T06:30:46.254518Z",
       "lastName": "DROUPY",
       "firstName": "Louis"
     }
