@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "generated": "2025-12-22T06:35:06.360568Z",
+    "generated": "2025-12-23T06:33:53.000994Z",
     "source": "swimrankings.net",
     "count": 8,
     "season": {
@@ -21,6 +21,13 @@
         {
           "stroke": "Breaststroke",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 36290,
+          "timeDisplay": "36.29"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 34490,
           "timeDisplay": "34.49"
@@ -31,6 +38,13 @@
           "poolLength": 25,
           "timeMs": 75310,
           "timeDisplay": "1:15.31"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 175680,
+          "timeDisplay": "2:55.68"
         },
         {
           "stroke": "Breaststroke",
@@ -62,7 +76,7 @@
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2025-12-22T06:35:03.709509Z",
+      "lastUpdated": "2025-12-23T06:33:51.091460Z",
       "lastName": "HEHLEN",
       "firstName": "Ava"
     },
@@ -76,9 +90,23 @@
         {
           "stroke": "Freestyle",
           "distance": 100,
+          "poolLength": 50,
+          "timeMs": 62310,
+          "timeDisplay": "1:02.31"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
           "poolLength": 25,
           "timeMs": 59680,
           "timeDisplay": "59.68"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 137290,
+          "timeDisplay": "2:17.29"
         },
         {
           "stroke": "Freestyle",
@@ -90,6 +118,13 @@
         {
           "stroke": "Freestyle",
           "distance": 400,
+          "poolLength": 50,
+          "timeMs": 287010,
+          "timeDisplay": "4:47.01"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
           "poolLength": 25,
           "timeMs": 269970,
           "timeDisplay": "4:29.97"
@@ -97,9 +132,23 @@
         {
           "stroke": "Freestyle",
           "distance": 800,
+          "poolLength": 50,
+          "timeMs": 588140,
+          "timeDisplay": "9:48.14"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
           "poolLength": 25,
           "timeMs": 557280,
           "timeDisplay": "9:17.28"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 50,
+          "timeMs": 1121940,
+          "timeDisplay": "18:41.94"
         },
         {
           "stroke": "Freestyle",
@@ -160,9 +209,23 @@
         {
           "stroke": "Medley",
           "distance": 200,
+          "poolLength": 50,
+          "timeMs": 154220,
+          "timeDisplay": "2:34.22"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
           "poolLength": 25,
           "timeMs": 146300,
           "timeDisplay": "2:26.30"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 322270,
+          "timeDisplay": "5:22.27"
         },
         {
           "stroke": "Medley",
@@ -180,7 +243,7 @@
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2025-12-22T06:35:04.149137Z",
+      "lastUpdated": "2025-12-23T06:33:51.330965Z",
       "lastName": "ROCHAT",
       "firstName": "Leane"
     },
@@ -194,9 +257,23 @@
         {
           "stroke": "Freestyle",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 27730,
+          "timeDisplay": "27.73"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 26050,
           "timeDisplay": "26.05"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 60980,
+          "timeDisplay": "1:00.98"
         },
         {
           "stroke": "Freestyle",
@@ -215,6 +292,13 @@
         {
           "stroke": "Butterfly",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 30010,
+          "timeDisplay": "30.01"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 28320,
           "timeDisplay": "28.32"
@@ -228,7 +312,7 @@
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2025-12-22T06:35:04.590965Z",
+      "lastUpdated": "2025-12-23T06:33:51.780679Z",
       "lastName": "BOUKARI",
       "firstName": "Kenza"
     },
@@ -346,7 +430,7 @@
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2025-12-22T06:35:05.036223Z",
+      "lastUpdated": "2025-12-23T06:33:52.072814Z",
       "lastName": "GUEGUEN",
       "firstName": "Eloa"
     },
@@ -367,6 +451,13 @@
         {
           "stroke": "Freestyle",
           "distance": 400,
+          "poolLength": 50,
+          "timeMs": 299250,
+          "timeDisplay": "4:59.25"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
           "poolLength": 25,
           "timeMs": 281950,
           "timeDisplay": "4:41.95"
@@ -381,9 +472,23 @@
         {
           "stroke": "Butterfly",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 29560,
+          "timeDisplay": "29.56"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 29410,
           "timeDisplay": "29.41"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 65800,
+          "timeDisplay": "1:05.80"
         },
         {
           "stroke": "Butterfly",
@@ -422,7 +527,7 @@
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2025-12-22T06:35:05.506237Z",
+      "lastUpdated": "2025-12-23T06:33:52.293441Z",
       "lastName": "PENNEL",
       "firstName": "Alice Mei"
     },
@@ -443,9 +548,23 @@
         {
           "stroke": "Freestyle",
           "distance": 200,
+          "poolLength": 50,
+          "timeMs": 128130,
+          "timeDisplay": "2:08.13"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
           "poolLength": 25,
           "timeMs": 118620,
           "timeDisplay": "1:58.62"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 288100,
+          "timeDisplay": "4:48.10"
         },
         {
           "stroke": "Freestyle",
@@ -457,9 +576,23 @@
         {
           "stroke": "Freestyle",
           "distance": 800,
+          "poolLength": 50,
+          "timeMs": 580590,
+          "timeDisplay": "9:40.59"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
           "poolLength": 25,
           "timeMs": 549160,
           "timeDisplay": "9:09.16"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 50,
+          "timeMs": 1082260,
+          "timeDisplay": "18:02.26"
         },
         {
           "stroke": "Freestyle",
@@ -491,7 +624,7 @@
         }
       ],
       "id": "5316667",
-      "lastUpdated": "2025-12-22T06:35:05.785103Z",
+      "lastUpdated": "2025-12-23T06:33:52.516099Z",
       "lastName": "PENNEL",
       "firstName": "Jamie Alexander"
     },
@@ -512,9 +645,23 @@
         {
           "stroke": "Freestyle",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 26870,
+          "timeDisplay": "26.87"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 25960,
           "timeDisplay": "25.96"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 60920,
+          "timeDisplay": "1:00.92"
         },
         {
           "stroke": "Freestyle",
@@ -526,9 +673,23 @@
         {
           "stroke": "Backstroke",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 29470,
+          "timeDisplay": "29.47"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 27470,
           "timeDisplay": "27.47"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64900,
+          "timeDisplay": "1:04.90"
         },
         {
           "stroke": "Backstroke",
@@ -540,9 +701,23 @@
         {
           "stroke": "Breaststroke",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 35210,
+          "timeDisplay": "35.21"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 34040,
           "timeDisplay": "34.04"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 27650,
+          "timeDisplay": "27.65"
         },
         {
           "stroke": "Butterfly",
@@ -560,7 +735,7 @@
         }
       ],
       "id": "4901328",
-      "lastUpdated": "2025-12-22T06:35:06.042023Z",
+      "lastUpdated": "2025-12-23T06:33:52.751543Z",
       "lastName": "GOBET",
       "firstName": "Malika"
     },
@@ -574,6 +749,13 @@
         {
           "stroke": "Breaststroke",
           "distance": 50,
+          "poolLength": 50,
+          "timeMs": 29090,
+          "timeDisplay": "29.09"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
           "poolLength": 25,
           "timeMs": 27850,
           "timeDisplay": "27.85"
@@ -581,9 +763,23 @@
         {
           "stroke": "Breaststroke",
           "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64330,
+          "timeDisplay": "1:04.33"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
           "poolLength": 25,
           "timeMs": 61950,
           "timeDisplay": "1:01.95"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 152280,
+          "timeDisplay": "2:32.28"
         },
         {
           "stroke": "Breaststroke",
@@ -609,9 +805,23 @@
         {
           "stroke": "Medley",
           "distance": 200,
+          "poolLength": 50,
+          "timeMs": 135950,
+          "timeDisplay": "2:15.95"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
           "poolLength": 25,
           "timeMs": 131640,
           "timeDisplay": "2:11.64"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 298420,
+          "timeDisplay": "4:58.42"
         },
         {
           "stroke": "Freestyle",
@@ -629,7 +839,7 @@
         }
       ],
       "id": "4874783",
-      "lastUpdated": "2025-12-22T06:35:06.360529Z",
+      "lastUpdated": "2025-12-23T06:33:53.000946Z",
       "lastName": "DROUPY",
       "firstName": "Louis"
     }
