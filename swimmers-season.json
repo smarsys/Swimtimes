@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "generated": "2026-01-25T06:32:11.770644Z",
+    "generated": "2026-01-26T06:37:08.851925Z",
     "source": "swimrankings.net",
     "count": 8,
     "season": {
@@ -76,7 +76,7 @@
         }
       ],
       "id": "5332548",
-      "lastUpdated": "2026-01-25T06:32:08.827857Z",
+      "lastUpdated": "2026-01-26T06:37:05.845971Z",
       "lastName": "HEHLEN",
       "firstName": "Ava"
     },
@@ -105,8 +105,8 @@
           "stroke": "Freestyle",
           "distance": 200,
           "poolLength": 50,
-          "timeMs": 137290,
-          "timeDisplay": "2:17.29"
+          "timeMs": 137020,
+          "timeDisplay": "2:17.02"
         },
         {
           "stroke": "Freestyle",
@@ -195,6 +195,13 @@
         {
           "stroke": "Butterfly",
           "distance": 200,
+          "poolLength": 50,
+          "timeMs": 163780,
+          "timeDisplay": "2:43.78"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
           "poolLength": 25,
           "timeMs": 150670,
           "timeDisplay": "2:30.67"
@@ -243,7 +250,7 @@
         }
       ],
       "id": "5284006",
-      "lastUpdated": "2026-01-25T06:32:09.302940Z",
+      "lastUpdated": "2026-01-26T06:37:06.336018Z",
       "lastName": "ROCHAT",
       "firstName": "Leane"
     },
@@ -285,6 +292,13 @@
         {
           "stroke": "Freestyle",
           "distance": 200,
+          "poolLength": 50,
+          "timeMs": 141710,
+          "timeDisplay": "2:21.71"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
           "poolLength": 25,
           "timeMs": 130730,
           "timeDisplay": "2:10.73"
@@ -312,7 +326,7 @@
         }
       ],
       "id": "5264608",
-      "lastUpdated": "2026-01-25T06:32:09.743837Z",
+      "lastUpdated": "2026-01-26T06:37:06.661953Z",
       "lastName": "BOUKARI",
       "firstName": "Kenza"
     },
@@ -430,7 +444,7 @@
         }
       ],
       "id": "5338998",
-      "lastUpdated": "2026-01-25T06:32:10.041646Z",
+      "lastUpdated": "2026-01-26T06:37:07.096958Z",
       "lastName": "GUEGUEN",
       "firstName": "Eloa"
     },
@@ -441,6 +455,13 @@
       "yearOfBirth": 2010,
       "gender": "Female",
       "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 142950,
+          "timeDisplay": "2:22.95"
+        },
         {
           "stroke": "Freestyle",
           "distance": 200,
@@ -527,7 +548,7 @@
         }
       ],
       "id": "5316657",
-      "lastUpdated": "2026-01-25T06:32:10.509223Z",
+      "lastUpdated": "2026-01-26T06:37:07.561100Z",
       "lastName": "PENNEL",
       "firstName": "Alice Mei"
     },
@@ -624,7 +645,7 @@
         }
       ],
       "id": "5316667",
-      "lastUpdated": "2026-01-25T06:32:10.973022Z",
+      "lastUpdated": "2026-01-26T06:37:07.855981Z",
       "lastName": "PENNEL",
       "firstName": "Jamie Alexander"
     },
@@ -727,6 +748,13 @@
           "timeDisplay": "26.93"
         },
         {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 65070,
+          "timeDisplay": "1:05.07"
+        },
+        {
           "stroke": "Medley",
           "distance": 100,
           "poolLength": 25,
@@ -735,7 +763,7 @@
         }
       ],
       "id": "4901328",
-      "lastUpdated": "2026-01-25T06:32:11.297868Z",
+      "lastUpdated": "2026-01-26T06:37:08.373696Z",
       "lastName": "GOBET",
       "firstName": "Malika"
     },
@@ -750,8 +778,8 @@
           "stroke": "Breaststroke",
           "distance": 50,
           "poolLength": 50,
-          "timeMs": 29090,
-          "timeDisplay": "29.09"
+          "timeMs": 28810,
+          "timeDisplay": "28.81"
         },
         {
           "stroke": "Breaststroke",
@@ -778,8 +806,8 @@
           "stroke": "Breaststroke",
           "distance": 200,
           "poolLength": 50,
-          "timeMs": 152280,
-          "timeDisplay": "2:32.28"
+          "timeMs": 151710,
+          "timeDisplay": "2:31.71"
         },
         {
           "stroke": "Breaststroke",
@@ -794,6 +822,20 @@
           "poolLength": 25,
           "timeMs": 26020,
           "timeDisplay": "26.02"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 60610,
+          "timeDisplay": "1:00.61"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 143590,
+          "timeDisplay": "2:23.59"
         },
         {
           "stroke": "Medley",
@@ -839,7 +881,7 @@
         }
       ],
       "id": "4874783",
-      "lastUpdated": "2026-01-25T06:32:11.770600Z",
+      "lastUpdated": "2026-01-26T06:37:08.851878Z",
       "lastName": "DROUPY",
       "firstName": "Louis"
     }
