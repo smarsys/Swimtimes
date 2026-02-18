@@ -1,8 +1,8 @@
 {
   "_metadata": {
-    "generated": "2026-02-17T06:59:51.452062Z",
+    "generated": "2026-02-18T07:01:14.861015Z",
     "source": "swimrankings.net",
-    "count": 0,
+    "count": 8,
     "season": {
       "year": 2026,
       "label": "2025-2026",
@@ -10,5 +10,971 @@
       "end": "2026-08-31"
     }
   },
-  "swimmers": {}
+  "swimmers": {
+    "5332548": {
+      "fullName": "HEHLEN, Ava",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
+      "yearOfBirth": 2010,
+      "gender": "Female",
+      "seasonBests": [
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 36290,
+          "timeDisplay": "36.29"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 34490,
+          "timeDisplay": "34.49"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 75310,
+          "timeDisplay": "1:15.31"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 175680,
+          "timeDisplay": "2:55.68"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 164840,
+          "timeDisplay": "2:44.84"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 32690,
+          "timeDisplay": "32.69"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 70670,
+          "timeDisplay": "1:10.67"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 152240,
+          "timeDisplay": "2:32.24"
+        }
+      ],
+      "id": "5332548",
+      "lastUpdated": "2026-02-18T07:01:12.243239Z",
+      "lastName": "HEHLEN",
+      "firstName": "Ava"
+    },
+    "5284006": {
+      "fullName": "ROCHAT, Leane",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
+      "yearOfBirth": 2010,
+      "gender": "Female",
+      "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 62310,
+          "timeDisplay": "1:02.31"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 59680,
+          "timeDisplay": "59.68"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 137020,
+          "timeDisplay": "2:17.02"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 127400,
+          "timeDisplay": "2:07.40"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 287010,
+          "timeDisplay": "4:47.01"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 269970,
+          "timeDisplay": "4:29.97"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 50,
+          "timeMs": 588140,
+          "timeDisplay": "9:48.14"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 557280,
+          "timeDisplay": "9:17.28"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 50,
+          "timeMs": 1121940,
+          "timeDisplay": "18:41.94"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 25,
+          "timeMs": 1061890,
+          "timeDisplay": "17:41.89"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 32460,
+          "timeDisplay": "32.46"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 70000,
+          "timeDisplay": "1:10.00"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 157420,
+          "timeDisplay": "2:37.42"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 148100,
+          "timeDisplay": "2:28.10"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 37600,
+          "timeDisplay": "37.60"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 79660,
+          "timeDisplay": "1:19.66"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 30640,
+          "timeDisplay": "30.64"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 67970,
+          "timeDisplay": "1:07.97"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 163780,
+          "timeDisplay": "2:43.78"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 150670,
+          "timeDisplay": "2:30.67"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 66700,
+          "timeDisplay": "1:06.70"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 154220,
+          "timeDisplay": "2:34.22"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 146300,
+          "timeDisplay": "2:26.30"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 322270,
+          "timeDisplay": "5:22.27"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 304290,
+          "timeDisplay": "5:04.29"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 26930,
+          "timeDisplay": "26.93"
+        }
+      ],
+      "id": "5284006",
+      "lastUpdated": "2026-02-18T07:01:12.694775Z",
+      "lastName": "ROCHAT",
+      "firstName": "Leane"
+    },
+    "5264608": {
+      "fullName": "BOUKARI, Kenza",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
+      "yearOfBirth": 2010,
+      "gender": "Female",
+      "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 27730,
+          "timeDisplay": "27.73"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 26050,
+          "timeDisplay": "26.05"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 60980,
+          "timeDisplay": "1:00.98"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 58110,
+          "timeDisplay": "58.11"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 141710,
+          "timeDisplay": "2:21.71"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 130730,
+          "timeDisplay": "2:10.73"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 33790,
+          "timeDisplay": "33.79"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 167700,
+          "timeDisplay": "2:47.70"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 30010,
+          "timeDisplay": "30.01"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 28320,
+          "timeDisplay": "28.32"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 65480,
+          "timeDisplay": "1:05.48"
+        }
+      ],
+      "id": "5264608",
+      "lastUpdated": "2026-02-18T07:01:12.969805Z",
+      "lastName": "BOUKARI",
+      "firstName": "Kenza"
+    },
+    "5338998": {
+      "fullName": "GUEGUEN, Eloa",
+      "club": "Lausanne Aquatique - Switzerland",
+      "nation": "FRA",
+      "yearOfBirth": 2010,
+      "gender": "Female",
+      "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 62470,
+          "timeDisplay": "1:02.47"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 137620,
+          "timeDisplay": "2:17.62"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 311120,
+          "timeDisplay": "5:11.12"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 632300,
+          "timeDisplay": "10:32.30"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 25,
+          "timeMs": 1195280,
+          "timeDisplay": "19:55.28"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 30520,
+          "timeDisplay": "30.52"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 64800,
+          "timeDisplay": "1:04.80"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 145270,
+          "timeDisplay": "2:25.27"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 174560,
+          "timeDisplay": "2:54.56"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 32530,
+          "timeDisplay": "32.53"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 70920,
+          "timeDisplay": "1:10.92"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 160730,
+          "timeDisplay": "2:40.73"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 68110,
+          "timeDisplay": "1:08.11"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 148110,
+          "timeDisplay": "2:28.11"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 324580,
+          "timeDisplay": "5:24.58"
+        }
+      ],
+      "id": "5338998",
+      "lastUpdated": "2026-02-18T07:01:13.415912Z",
+      "lastName": "GUEGUEN",
+      "firstName": "Eloa"
+    },
+    "5316657": {
+      "fullName": "PENNEL, Alice Mei",
+      "club": "Lausanne Aquatique - Switzerland",
+      "nation": "GBR",
+      "yearOfBirth": 2010,
+      "gender": "Female",
+      "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64680,
+          "timeDisplay": "1:04.68"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 142950,
+          "timeDisplay": "2:22.95"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 133750,
+          "timeDisplay": "2:13.75"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 299250,
+          "timeDisplay": "4:59.25"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 281950,
+          "timeDisplay": "4:41.95"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 594000,
+          "timeDisplay": "9:54.00"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 35130,
+          "timeDisplay": "35.13"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 166230,
+          "timeDisplay": "2:46.23"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 29560,
+          "timeDisplay": "29.56"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 29410,
+          "timeDisplay": "29.41"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 65800,
+          "timeDisplay": "1:05.80"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 63850,
+          "timeDisplay": "1:03.85"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 142740,
+          "timeDisplay": "2:22.74"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 70130,
+          "timeDisplay": "1:10.13"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 148860,
+          "timeDisplay": "2:28.86"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 321200,
+          "timeDisplay": "5:21.20"
+        }
+      ],
+      "id": "5316657",
+      "lastUpdated": "2026-02-18T07:01:13.852354Z",
+      "lastName": "PENNEL",
+      "firstName": "Alice Mei"
+    },
+    "5316667": {
+      "fullName": "PENNEL, Jamie Alexander",
+      "club": "Lausanne Aquatique - Switzerland",
+      "nation": "GBR",
+      "yearOfBirth": 2008,
+      "gender": "Male",
+      "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 57640,
+          "timeDisplay": "57.64"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 56140,
+          "timeDisplay": "56.14"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 128130,
+          "timeDisplay": "2:08.13"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 118620,
+          "timeDisplay": "1:58.62"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 288100,
+          "timeDisplay": "4:48.10"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 249420,
+          "timeDisplay": "4:09.42"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 50,
+          "timeMs": 580590,
+          "timeDisplay": "9:40.59"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 800,
+          "poolLength": 25,
+          "timeMs": 549160,
+          "timeDisplay": "9:09.16"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 50,
+          "timeMs": 1082260,
+          "timeDisplay": "18:02.26"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 1500,
+          "poolLength": 25,
+          "timeMs": 996790,
+          "timeDisplay": "16:36.79"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 31360,
+          "timeDisplay": "31.36"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 152230,
+          "timeDisplay": "2:32.23"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 36190,
+          "timeDisplay": "36.19"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 76910,
+          "timeDisplay": "1:16.91"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 139860,
+          "timeDisplay": "2:19.86"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 64180,
+          "timeDisplay": "1:04.18"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 25,
+          "timeMs": 290900,
+          "timeDisplay": "4:50.90"
+        }
+      ],
+      "id": "5316667",
+      "lastUpdated": "2026-02-18T07:01:14.294752Z",
+      "lastName": "PENNEL",
+      "firstName": "Jamie Alexander"
+    },
+    "4901328": {
+      "fullName": "GOBET, Malika",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
+      "yearOfBirth": 2004,
+      "gender": "Female",
+      "seasonBests": [
+        {
+          "stroke": "Freestyle",
+          "distance": 25,
+          "poolLength": 25,
+          "timeMs": 12190,
+          "timeDisplay": "12.19"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 26870,
+          "timeDisplay": "26.87"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 25960,
+          "timeDisplay": "25.96"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 60920,
+          "timeDisplay": "1:00.92"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 58710,
+          "timeDisplay": "58.71"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 29470,
+          "timeDisplay": "29.47"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 27470,
+          "timeDisplay": "27.47"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64900,
+          "timeDisplay": "1:04.90"
+        },
+        {
+          "stroke": "Backstroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 60590,
+          "timeDisplay": "1:00.59"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 35210,
+          "timeDisplay": "35.21"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 34040,
+          "timeDisplay": "34.04"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 27650,
+          "timeDisplay": "27.65"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 26930,
+          "timeDisplay": "26.93"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 65070,
+          "timeDisplay": "1:05.07"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 65440,
+          "timeDisplay": "1:05.44"
+        }
+      ],
+      "id": "4901328",
+      "lastUpdated": "2026-02-18T07:01:14.575950Z",
+      "lastName": "GOBET",
+      "firstName": "Malika"
+    },
+    "4874783": {
+      "fullName": "DROUPY, Louis",
+      "club": "Lausanne Aquatique",
+      "nation": "SUI",
+      "yearOfBirth": 2001,
+      "gender": "Male",
+      "seasonBests": [
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 50,
+          "timeMs": 28810,
+          "timeDisplay": "28.81"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 27850,
+          "timeDisplay": "27.85"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 64330,
+          "timeDisplay": "1:04.33"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 61950,
+          "timeDisplay": "1:01.95"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 151710,
+          "timeDisplay": "2:31.71"
+        },
+        {
+          "stroke": "Breaststroke",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 140830,
+          "timeDisplay": "2:20.83"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 26020,
+          "timeDisplay": "26.02"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 100,
+          "poolLength": 50,
+          "timeMs": 60610,
+          "timeDisplay": "1:00.61"
+        },
+        {
+          "stroke": "Butterfly",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 143590,
+          "timeDisplay": "2:23.59"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 100,
+          "poolLength": 25,
+          "timeMs": 59860,
+          "timeDisplay": "59.86"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 50,
+          "timeMs": 135950,
+          "timeDisplay": "2:15.95"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 131640,
+          "timeDisplay": "2:11.64"
+        },
+        {
+          "stroke": "Medley",
+          "distance": 400,
+          "poolLength": 50,
+          "timeMs": 298420,
+          "timeDisplay": "4:58.42"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 50,
+          "poolLength": 25,
+          "timeMs": 23320,
+          "timeDisplay": "23.32"
+        },
+        {
+          "stroke": "Freestyle",
+          "distance": 200,
+          "poolLength": 25,
+          "timeMs": 118510,
+          "timeDisplay": "1:58.51"
+        }
+      ],
+      "id": "4874783",
+      "lastUpdated": "2026-02-18T07:01:14.860963Z",
+      "lastName": "DROUPY",
+      "firstName": "Louis"
+    }
+  }
 }
