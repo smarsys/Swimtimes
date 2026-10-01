@@ -32,9 +32,7 @@
 
 ## 💡 Conseils
 
-- **Première utilisation** : Sélectionne ton profil dans l'onglet "Profil"
-- **Hors connexion** : L'app fonctionne même sans internet (données en cache)
-- **Mise à jour** : Les données sont synchronisées automatiquement chaque jour
+- **Première utilisation** : indique ton nom, ton ID SwimRankings et ton genre (l'app explique où trouver l'ID). Tu peux modifier ou supprimer ton profil dans ⚙️ Paramètres
 
 ---
 
