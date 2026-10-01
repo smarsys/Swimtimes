@@ -118,6 +118,9 @@ source ~/swimscraper/bin/activate
 python fetch_swimmers.py
 python fetch_swimmers_season.py
 
+# Lancer les tests (Node + Python avec Playwright, voir tests/README.md)
+PYTHON=~/swimscraper/bin/python tests/run_all.sh
+
 # Déployer sur Jelastic
 # Via File Manager ou git push (si configuré)
 ```
