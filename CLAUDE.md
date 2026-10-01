@@ -123,6 +123,8 @@ PYTHON=~/swimscraper/bin/python tests/run_all.sh
 
 # Déployer sur Jelastic
 # Via File Manager ou git push (si configuré)
+# Avant chaque déploiement qui modifie app.js : changer la version dans index.html
+# (<script src="app.js?v=AAAAMMJJ">), sinon les navigateurs peuvent garder l'ancien app.js en cache
 ```
 
 ## Contacts / Contexte
