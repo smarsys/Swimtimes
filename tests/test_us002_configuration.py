@@ -1,0 +1,132 @@
+"""US-002 : écran de configuration (validation, enregistrement, clavier, stockage plein)."""
+import json, sys, threading, http.server, functools, os
+from playwright.sync_api import sync_playwright
+
+from helpers import ROOT, OUT, TESTS_DIR, start_server
+srv, URL = start_server()
+ok = 0
+def check(cond, label):
+    global ok
+    if not cond: raise AssertionError(label)
+    ok += 1; print('  ✓', label)
+
+def route_data(page):
+    # Sert les JSON locaux à la place de GitHub (résultat déterministe)
+    for name in ('swimmers-data.json', 'swimmers-season.json'):
+        page.route(f'**/raw.githubusercontent.com/**/{name}', lambda r, req, n=name: r.fulfill(path=os.path.join(ROOT, n)))
+
+def stored(page): return page.evaluate("JSON.parse(localStorage.getItem('swimtimes_profile'))")
+def err(page, key): return page.locator(f'#profile-{key}-error')
+
+with sync_playwright() as p:
+    b = p.chromium.launch()
+    ctx = b.new_context(viewport={'width': 375, 'height': 812})
+    page = ctx.new_page(); route_data(page)
+    errors = []; page.on('pageerror', lambda e: errors.append(str(e)))
+
+    print('Premier lancement')
+    page.goto(URL); page.wait_for_selector('#profile-form')
+    check(page.locator('h1', has_text='Configuration du profil').is_visible(), 'écran de configuration affiché')
+    check(not page.locator('.nav').is_visible() and not page.locator('#tab-times').is_visible(), 'onglets bloqués')
+    check(page.locator('#profile-club').input_value() == 'Lausanne Aquatique', 'club pré-rempli')
+    check(page.evaluate("document.querySelector('input[name=gender]:checked')") is None, 'aucun genre par défaut')
+    page.screenshot(path=f'{OUT}/01-vide.png', full_page=True)
+
+    print('Validation')
+    page.click('#profile-submit')
+    check(all(err(page, k).is_visible() for k in ('name', 'swimrankingsId', 'gender')), 'erreurs sur les 3 champs requis')
+    check(not err(page, 'birthYear').is_visible(), 'pas d\'erreur sur l\'année vide')
+    check(page.evaluate('document.activeElement.id') == 'profile-name', 'focus sur le premier champ en erreur')
+    check(stored(page) is None, 'rien n\'est enregistré')
+    page.screenshot(path=f'{OUT}/02-erreurs.png', full_page=True)
+    page.fill('#profile-name', '   '); page.click('#profile-submit')
+    check(err(page, 'name').is_visible(), 'nom avec espaces seulement refusé')
+    page.fill('#profile-swimrankingsId', '53a2'); page.locator('#profile-swimrankingsId').blur()
+    check('que des chiffres' in err(page, 'swimrankingsId').inner_text(), 'ID non numérique refusé')
+    page.fill('#profile-birthYear', '1800'); page.locator('#profile-birthYear').blur()
+    check(err(page, 'birthYear').is_visible(), 'année 1800 refusée')
+    page.fill('#profile-birthYear', '2010'); page.locator('#profile-birthYear').blur()
+    check(not err(page, 'birthYear').is_visible(), 'erreur effacée une fois corrigé')
+
+    print('Enregistrement (ID connu)')
+    name = 'Zoé <img src=x onerror=alert(1)> Müller'
+    page.fill('#profile-name', name); page.fill('#profile-swimrankingsId', ' 5332548 ')
+    page.click('.segmented__option:has-text("Femme")')
+    check(page.locator('input[value=F]').is_checked(), 'clic sur Femme pris en compte juste après correction de l\'ID')
+    check(not err(page, 'gender').is_visible(), 'erreur genre effacée au choix')
+    page.dblclick('#profile-submit')
+    page.wait_for_selector('.nav', state='visible')
+    prof = stored(page)
+    check(prof['name'] == name and prof['swimrankingsId'] == '5332548' and prof['gender'] == 'F', 'profil stocké (accents, trim)')
+    check(prof['birthYear'] == '2010' and prof['club'] == 'Lausanne Aquatique' and prof['createdAt'], 'champs optionnels et createdAt')
+    check(page.locator('.nav-tab.active').get_attribute('data-tab') == 'times', 'onglet Temps affiché')
+    check(page.locator('#select-gender').input_value() == 'Female', 'genre appliqué au sélecteur')
+    page.wait_for_function("!document.querySelector('#pb-time').textContent.includes('Aucune donnée')")
+    page.screenshot(path=f'{OUT}/03-temps.png', full_page=True)
+    page.click('#header-settings')
+    check(page.locator('#settings-screen img').count() == 0 and 'onerror' in page.locator('#settings-screen').inner_text(), 'nom échappé (pas d\'injection HTML)')
+    check(page.locator('#settings-screen .profile-avatar-small').inner_text() == 'ZM', 'initiales ZM')
+    page.click('.btn-back')
+    check(page.locator('#header-avatar').inner_text() == 'ZM', 'avatar du header ZM')
+
+    print('Rechargement')
+    page.reload(); page.wait_for_selector('.nav', state='visible')
+    check(page.locator('#profile-form').count() == 0, 'pas de formulaire au rechargement')
+
+    print('Modification')
+    page.click('#header-settings'); page.click('text=Modifier le profil')
+    check(page.locator('#profile-name').input_value() == name and page.locator('input[value=F]').is_checked(), 'formulaire pré-rempli')
+    page.fill('#profile-club', 'Autre'); page.click('#profile-cancel'); page.wait_for_selector('#confirm-dialog[open]'); page.wait_for_selector('#confirm-ok:enabled'); page.click('#confirm-ok')
+    check(stored(page)['club'] == 'Lausanne Aquatique', 'Annuler ne modifie rien')
+    page.click('text=Modifier le profil'); page.fill('#profile-club', ''); page.fill('#profile-swimrankingsId', '999')
+    page.click('#profile-submit'); page.wait_for_selector('#settings-screen .btn-back', state='visible')
+    p2 = stored(page)
+    check(p2['createdAt'] == prof['createdAt'] and p2['updatedAt'] != prof['updatedAt'], 'createdAt conservé, updatedAt changé')
+    check('club' not in p2, 'club vidé non stocké')
+
+    print('ID inconnu → aucune donnée')
+    check('Aucune donnée' in page.locator('#settings-screen').inner_text(), 'aucune donnée (Paramètres)')
+    page.click('.btn-back')
+    page.click('.nav-tab[data-tab=times]')
+    check('Aucune donnée' in page.locator('#pb-time').inner_text(), 'message 6.2 (Temps)')
+    page.click('.nav-tab[data-tab=progress]')
+    check('Aucune donnée' in page.locator('#progress-content').inner_text(), 'message 6.2 (Progression)')
+    page.screenshot(path=f'{OUT}/04-sans-donnees.png', full_page=True)
+
+    print('localStorage plein')
+    page2 = ctx.new_page(); route_data(page2)
+    page2.add_init_script("localStorage.clear(); Storage.prototype.setItem = function(){ throw new DOMException('quota', 'QuotaExceededError') }")
+    page2.goto(URL); page2.wait_for_selector('#profile-form')
+    page2.fill('#profile-name', 'Ava Hehlen'); page2.fill('#profile-swimrankingsId', '5332548'); page2.click('text=Femme')
+    page2.click('#profile-submit')
+    check("Impossible d'enregistrer" in page2.locator('#profile-form-error').inner_text(), 'message d\'erreur de stockage')
+    check(page2.locator('#profile-submit').is_enabled() and page2.locator('#profile-name').input_value() == 'Ava Hehlen', 'bouton réactivé, valeurs conservées')
+    page2.screenshot(path=f'{OUT}/05-stockage.png', full_page=True)
+
+    print('Clavier')
+    page3 = ctx.new_page(); route_data(page3)
+    page3.add_init_script("localStorage.clear()"); page3.goto(URL); page3.wait_for_selector('#profile-form')
+    page3.focus('#profile-name'); page3.keyboard.type('Léa Dupont'); page3.keyboard.press('Tab')
+    page3.keyboard.type('5284006'); page3.keyboard.press('Tab')
+    check(page3.evaluate('document.activeElement.id') == 'profile-id-help-toggle', 'Tab : ID → aide (ordre UX)')
+    page3.keyboard.press('Tab'); page3.keyboard.press('Space')
+    page3.keyboard.press('ArrowRight')
+    check(page3.locator('input[value=M]').is_checked(), 'genre au clavier (espace + flèches)')
+    page3.keyboard.press('Enter'); page3.wait_for_selector('.nav', state='visible')
+    check(stored(page3)['gender'] == 'M', 'envoi au clavier')
+
+    print('Clic pendant l\'apparition d\'une erreur')
+    page4 = ctx.new_page(); route_data(page4)
+    page4.add_init_script("localStorage.clear()"); page4.goto(URL); page4.wait_for_selector('#profile-form')
+    page4.fill('#profile-name', 'Léa'); page4.fill('#profile-swimrankingsId', 'abc')
+    page4.click('.segmented__option:has-text("Homme")')
+    check(page4.locator('input[value=M]').is_checked(), 'clic sur Homme pris en compte')
+    page4.wait_for_function("!document.getElementById('profile-swimrankingsId-error').hidden")
+    check(True, 'erreur ID affichée après le clic')
+    page4.fill('#profile-swimrankingsId', '12')
+    check(not err(page4, 'swimrankingsId').is_visible(), 'erreur effacée pendant la frappe')
+
+    check(not errors, f'aucune erreur JS {errors}')
+    b.close()
+srv.shutdown()
+print(f'\n✅ {ok} vérifications OK')
