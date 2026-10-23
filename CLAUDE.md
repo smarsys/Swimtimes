@@ -66,7 +66,7 @@ Swimtimes/
 - Sans profil : écran de configuration, onglets bloqués
 - ⚙️ → écran Paramètres (profil, records, données) ; plus d'onglet Profil ni de sélecteur de nageur
 - Modifier le profil (Paramètres), supprimer ses données (confirmation `<dialog>`), reprise automatique du profil v1 (`swimmer_profile`)
-- Temps lus depuis `swimmers-data.json` via l'ID du profil jusqu'à la Phase 3 (`TODO Phase 3`)
+- Temps importés par le nageur (🔄 : copier-coller du code HTML de sa page SwimRankings, connecté et en anglais), stockés dans `swimtimes_pb` / `swimtimes_season`. Plus aucun chargement de `swimmers-*.json` depuis GitHub
 
 ## Conventions de code
 
@@ -85,7 +85,7 @@ Swimtimes/
 ### Données
 - JSON avec structure : `{ swimmers: [...], _metadata: { updated: "ISO date" } }`
 - Temps au format "MM:SS.cc" ou "SS.cc"
-- Points FINA en entier
+- Points FINA en entier, arrondis vers le bas comme SwimRankings (bases World Aquatics 2026 dans `FINA_BASE_TIMES`)
 
 ## Saison de natation
 

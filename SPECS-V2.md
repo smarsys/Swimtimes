@@ -49,57 +49,25 @@ localStorage.setItem('swimtimes_profile', JSON.stringify(profile));
 ### 2.1 Bouton de sync
 - Icône 🔄 dans le header
 - Tooltip : "Synchroniser mes temps"
-- État : normal / en cours (spinner) / succès (✓ vert 2s) / erreur (✗ rouge 2s)
+- État : normal / succès (✓ pendant 2 s à la fermeture de la fenêtre, si une page a été importée) / badge si la dernière synchronisation date de plus de 7 jours. Pas d'état « erreur » sur 🔄 : les erreurs s'affichent dans la fenêtre (décision US-015)
 
-### 2.2 Flux de synchronisation
+### 2.2 Contraintes constatées (2026-10-01)
 
-```
-[User clique 🔄]
-       ↓
-[Popup SwimRankings s'ouvre]
-       ↓
-[User passe Cloudflare + se connecte si besoin]
-       ↓
-[User clique "J'ai passé Cloudflare" dans l'app]
-       ↓
-[App ouvre la page athlete dans la popup]
-       ↓
-[App extrait le HTML via postMessage ou fetch]
-       ↓
-[App parse les données et stocke en localStorage]
-       ↓
-[Popup se ferme, UI se rafraîchit]
-```
+- SwimRankings est protégé par Cloudflare : une requête automatique reçoit un **403 « challenge »**, et sans connexion au compte SwimRankings le défi tourne en boucle. **Avec login, les pages sont accessibles** (validé avec Playwright).
+- SwimRankings n'envoie pas d'en-tête CORS : l'app **ne peut pas lire** la page d'un autre site, même si l'utilisateur a passé Cloudflare dans un autre onglet. Le fetch direct, l'iframe et le proxy Cloudflare Worker sont donc écartés.
 
-### 2.3 Alternative technique : iframe sandboxé
-⚠️ Probablement bloqué par X-Frame-Options de SwimRankings
+### 2.3 Solution retenue : copier-coller du code HTML
 
-### 2.4 Alternative technique : Extension Chrome
-- Plus fiable mais plus complexe à installer
-- À considérer si l'approche popup ne fonctionne pas
+1. L'utilisateur clique 🔄 (ou « Synchroniser maintenant » dans Paramètres)
+2. Une fenêtre s'ouvre avec les instructions et les liens vers ses pages SwimRankings :
+   - meilleurs temps : `https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={ID}`
+   - temps de la saison : même adresse + `&pbest={année de fin de saison}` (ex. `pbest=2027` pour 2026-2027)
+3. Il ouvre le lien, passe Cloudflare et se connecte si besoin
+4. Il affiche le code source (Cmd+U / Ctrl+U) et copie tout le HTML
+5. Il colle le HTML dans la zone de texte de l'app
+6. L'app analyse le HTML (section 4) et stocke les temps en localStorage (section 3)
 
-### 2.5 Solution retenue : Scraping assisté
-
-1. User clique 🔄
-2. App affiche un modal avec instructions :
-   ```
-   1. Cliquez sur "Ouvrir SwimRankings"
-   2. Passez la vérification Cloudflare
-   3. Connectez-vous si nécessaire
-   4. Revenez ici et cliquez "Synchroniser"
-   ```
-3. Bouton "Ouvrir SwimRankings" → `window.open(swimrankingsUrl, '_blank')`
-4. Bouton "Synchroniser" → tente un fetch de la page athlete
-5. Si fetch réussit (cookies partagés) → parse et stocke
-6. Si fetch échoue (CORS) → demande à l'utilisateur de copier-coller le HTML
-
-### 2.6 Solution fallback : Copier-coller HTML
-Si CORS bloque :
-1. Demander à l'utilisateur d'aller sur sa page SwimRankings
-2. Clic droit → "Afficher le code source"
-3. Copier tout le HTML
-4. Coller dans un textarea de l'app
-5. L'app parse le HTML collé
+Limite connue : Safari sur iPhone/iPad n'affiche pas le code source ; la synchronisation se fait alors depuis un ordinateur.
 
 ---
 
@@ -114,6 +82,8 @@ swimtimes_profile: { name, swimrankingsId, gender, ... }
 // Personal Bests (all-time)
 swimtimes_pb: {
   updated: "2026-10-01T12:00:00Z",
+  athleteId: "5332548",     // ID du nageur de la page importée (temps ignorés s'il diffère du profil)
+  nation: "SUI",            // lue sur la page SwimRankings (affichée dans Paramètres et la popup)
   data: [
     {
       event: "100m Freestyle",
@@ -303,8 +273,7 @@ Accessible via ⚙️, contient :
 ### Phase 2 : Synchronisation
 1. Créer le modal de sync avec instructions
 2. Implémenter le parsing HTML côté client
-3. Tester avec copier-coller HTML
-4. Tenter fetch direct (si CORS ok)
+3. Tester avec copier-coller HTML (le fetch direct est écarté, voir 2.2)
 
 ### Phase 3 : Adaptation des onglets
 1. Modifier le chargement des données (localStorage au lieu de JSON)
