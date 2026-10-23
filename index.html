@@ -26,10 +26,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .header-logo img{height:28px;display:block}
 .header-title{font-weight:700;font-size:18px;white-space:nowrap}
 .header-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.header-btn{width:44px;height:44px;border-radius:50%;border:none;background:none;color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.header-btn{position:relative;width:44px;height:44px;border-radius:50%;border:none;background:none;color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .header-btn:hover{background:rgba(255,255,255,.15)}
-.header-btn[aria-disabled=true]{opacity:.5;cursor:not-allowed}
-.header-btn[aria-disabled=true]:hover{background:none}
 .header-btn:focus-visible,.header-avatar:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .header-avatar{width:44px;height:44px;background:var(--surface-strong);border:2px solid rgba(255,255,255,.6);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;cursor:pointer;margin-left:4px}
 .header-avatar:empty{display:none}
@@ -46,7 +44,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .swimmer-popup-close{position:absolute;top:4px;right:4px;width:44px;height:44px;background:none;border:none;color:#fff;opacity:.6;cursor:pointer;font-size:18px}
 .swimmer-popup-close:hover{opacity:1}
 .nav{display:flex;border-bottom:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.1)}
-.nav-tab{flex:1;padding:14px 8px;text-align:center;background:0 0;border:none;color:#fff;font-size:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.85}
+.nav-tab{flex:1;padding:14px 8px;text-align:center;background:0 0;border:none;color:#fff;font-size:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.9}
 .nav-tab:hover{background:rgba(255,255,255,.1)}
 .nav-tab.active{background:rgba(255,255,255,.15);opacity:1;border-bottom:2px solid #fff}
 .nav-tab svg{width:18px;height:18px}
@@ -125,8 +123,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .empty-state{text-align:center;padding:40px 20px}
 .empty-icon{width:64px;height:64px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
 .footer{text-align:center;font-size:11px;opacity:.9;padding:20px}
-.loading{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 /* Configuration du profil (US-002) */
 .setup-screen{display:none}
 .setup-active .setup-screen{display:block;animation:fadeIn .3s ease}
@@ -207,6 +203,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
 .dialog .btn-danger{transition:opacity .2s}
 .btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:480px){.dialog{margin:auto 0 0;width:100%;max-width:none;border-radius:16px 16px 0 0;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
+/* Synchronisation (US-012) */
+.dialog--wide{max-width:560px}
+.dialog__header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.dialog__header h2{margin-top:10px}
+.dialog__close{flex-shrink:0;width:44px;height:44px;margin:-6px -10px 0 0;border:none;border-radius:50%;background:none;color:#fff;font-size:18px;cursor:pointer}
+.dialog__close:hover{background:rgba(255,255,255,.1)}
+.dialog__close:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.sync-intro{font-size:14px}
+.dialog p.sync-intro{margin-bottom:12px}
+.sync-steps{padding-left:20px;font-size:14px;line-height:1.5;margin-bottom:12px}
+.sync-steps li{margin-bottom:8px}
+.sync-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.sync-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border-radius:10px;background:var(--primary);color:#fff;text-decoration:none;font-weight:600;font-size:14px}
+.sync-link:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.sync-checklist{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;margin-bottom:12px}
+.sync-check__icon{font-weight:700}
+.sync-check--done{color:#86efac}
+.sync-textarea{width:100%;min-height:120px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:#111;color:#fff;font-family:"SF Mono",Monaco,monospace;font-size:13px;padding:12px;resize:vertical}
+.sync-textarea:focus{outline:2px solid #fff;outline-offset:2px}
+.sync-textarea::placeholder{color:rgba(255,255,255,.75)}
+.sync-message{font-size:14px;margin:12px 0 16px}
+.sync-message:empty{margin:0 0 16px}
+.sync-message--error{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.4);border-radius:10px;padding:10px 12px}
+.sync-message--success{color:#86efac;font-weight:600}
+.header-btn--success{background:var(--surface-strong);color:#86efac;font-weight:700}
+.header-btn--stale::after{content:"";position:absolute;top:8px;right:8px;width:10px;height:10px;border-radius:50%;background:var(--yellow-400);box-shadow:0 0 0 2px #B01519}
+.sync-other-device{display:block;padding:4px 0;min-height:44px}
+.sync-other-devices{padding-left:18px;margin-top:4px;font-size:13px}
+.sync-other-devices li{margin-bottom:6px}
+.dialog .notice.sync-ios{background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.5)}
+.sync-note{font-size:13px;text-align:center}
+.dialog p.sync-note{margin:12px 0 0}
+@media(max-width:480px){.dialog.dialog--wide{width:100%;height:100%;max-height:none;max-width:none;margin:0;border-radius:0;padding-top:calc(24px + env(safe-area-inset-top,0px))}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:400px){.nav-tab span{display:none}.pb-time{font-size:28px}}
     </style>
@@ -218,9 +247,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
             <div class="header-title">SwimTimes</div>
         </div>
         <div class="header-actions">
-            <button type="button" id="header-sync" class="header-btn" onclick="handleSyncClick()"
-                aria-disabled="true" aria-label="Synchroniser mes temps (disponible prochainement)"
-                title="Synchronisation disponible prochainement">🔄</button>
+            <button type="button" id="header-sync" class="header-btn" onclick="openSyncDialog()"
+                aria-label="Synchroniser mes temps" aria-haspopup="dialog" title="Synchroniser mes temps">🔄</button>
             <button type="button" id="header-settings" class="header-btn" onclick="openSettings()"
                 aria-label="Paramètres" aria-pressed="false" title="Paramètres">⚙️</button>
             <button type="button" id="header-avatar" class="header-avatar" onclick="toggleSwimmerPopup()"
@@ -266,7 +294,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
     </main>
     <footer class="footer">Lausanne Aquatique • Données SwimRankings.net • Temps limites Swiss Swimming 2025-2028</footer>
     <dialog id="confirm-dialog" class="dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text"
-        onkeydown="trapConfirmDialogFocus(event)">
+        onkeydown="trapDialogFocus(event)">
         <h2 id="confirm-title"></h2>
         <p id="confirm-text"></p>
         <div id="confirm-error" role="alert"></div>
@@ -276,8 +304,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-s
             <button type="button" class="btn btn-secondary" id="confirm-cancel" onclick="handleConfirmDialogCancel()"></button>
         </div>
     </dialog>
+    <dialog id="sync-dialog" class="dialog dialog--wide" aria-labelledby="sync-title" onkeydown="trapDialogFocus(event)">
+        <div id="sync-dialog-content"></div>
+    </dialog>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <!-- Version dans l'URL : à changer à chaque déploiement pour que les navigateurs ne gardent pas un ancien app.js en cache -->
-    <script src="app.js?v=20261001"></script>
+    <script src="app.js?v=20261023"></script>
 </body>
 </html>

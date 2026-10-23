@@ -1,7 +1,7 @@
 """US-003, 006, 007, 008, 009 : aide ID, modification, suppression, reprise v1, temps du club."""
 import sys, threading, http.server, functools, os, json
 from playwright.sync_api import sync_playwright
-from helpers import ROOT, OUT, TESTS_DIR, start_server
+from helpers import ROOT, OUT, TESTS_DIR, start_server, imported_storage
 srv, URL = start_server()
 ok = 0
 def check(cond, label):
@@ -13,8 +13,6 @@ V1 = {'id': 5332548, 'fullName': 'Ava Hehlen', 'firstName': 'Ava', 'lastName': '
 all_errors = []
 def new_page(ctx, storage=None, width=375, extra=''):
     page = ctx.new_page(); page.set_viewport_size({'width': width, 'height': 812})
-    for n in ('swimmers-data.json', 'swimmers-season.json'):
-        page.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT, n)))
     init = 'localStorage.clear();' + ''.join(f'localStorage.setItem({json.dumps(k)}, {json.dumps(v if isinstance(v, str) else json.dumps(v))});' for k, v in (storage or {}).items())
     page.add_init_script(f"if (!sessionStorage.getItem('init')) {{ sessionStorage.setItem('init', '1'); {init} }}" + extra)
     page.on('pageerror', lambda e: all_errors.append(str(e)))
@@ -27,8 +25,8 @@ with sync_playwright() as p:
     b = p.chromium.launch(); ctx = b.new_context()
 
     print('US-006 : modification du profil')
-    page = new_page(ctx, {'swimtimes_profile': P, 'swimtimes_pb': '{"data":[]}', 'swimtimes_season': '{"data":[]}'})
-    page.wait_for_function("swimmerDataStatus === 'loaded'")
+    page = new_page(ctx, {'swimtimes_profile': P, **imported_storage()})
+    page.wait_for_selector('.nav', state='visible')
     page.click('#header-settings'); page.click('text=Modifier le profil')
     check(page.locator('#profile-back').is_visible() and page.locator('.setup-title').inner_text() == 'Modifier le profil', 'titre « Modifier le profil » et bouton ←')
     check(page.locator('#profile-cancel').is_visible() and active(page) == 'setup-title', 'bouton Annuler, focus sur le titre')
@@ -153,16 +151,16 @@ with sync_playwright() as p:
     page.fill('#profile-swimrankingsId', '12345678901'); page.locator('#profile-swimrankingsId').blur()
     check('10 au maximum' in page.locator('#profile-swimrankingsId-error').inner_text(), 'ID de plus de 10 chiffres refusé')
 
-    print('US-009 : temps pendant la transition')
-    page = new_page(ctx, {'swimtimes_profile': {**P, 'name': 'Nom Du Profil', 'club': 'Club Du Profil'}})
-    page.wait_for_function("swimmerDataStatus === 'loaded'")
-    check('PB:' in page.locator('#pb-time').inner_text(), 'PB affichés depuis swimmers-data.json')
+    print('US-009 (remplacée par US-017) : temps importés affichés')
+    page = new_page(ctx, {'swimtimes_profile': {**P, 'name': 'Nom Du Profil', 'club': 'Club Du Profil'}, **imported_storage()})
+    page.wait_for_selector('.nav', state='visible')
+    check('PB:' in page.locator('#pb-time').inner_text(), 'PB affichés depuis les temps importés')
     page.click('.nav-tab[data-tab=progress]'); check(page.locator('.progress-card').count() == 3, 'Progression affichée')
     page.click('#header-avatar'); t = page.locator('#swimmer-popup').inner_text()
-    check('Nom Du Profil' in t and 'Club Du Profil' in t, 'nom et club issus du profil, pas du JSON')
-    page = new_page(ctx, {'swimtimes_profile': {**P, 'swimrankingsId': '999'}})
-    page.wait_for_function("swimmerDataStatus === 'not-found'")
-    check('Aucune donnée' in page.locator('#pb-time').inner_text(), 'ID absent : message 6.2')
+    check('Nom Du Profil' in t and 'Club Du Profil' in t, 'nom et club issus du profil, pas de la page SwimRankings')
+    page = new_page(ctx, {'swimtimes_profile': P})
+    page.wait_for_selector('.nav', state='visible')
+    check('Aucune donnée' in page.locator('#pb-time').inner_text(), 'sans import : message 6.2')
 
     check(not all_errors, f'aucune erreur JS {all_errors}')
     b.close()

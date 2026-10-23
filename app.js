@@ -5,16 +5,17 @@
 
 let profile = null;          // Profil v2 (localStorage)
 let swimmer = null;          // Temps du nageur du profil
-let swimmerDataStatus = 'loading'; // 'loading' | 'loaded' | 'not-found' | 'error'
 let appReady = null;         // Promesse : temps limites chargés et sélecteurs initialisés
-let swimmersSeasonData = null;
 let TIME_STANDARDS = null;
 let CATEGORIES = null;
 let STROKES = null;
 let DISTANCES = null;
 
 // =============================================================================
-// FINA 2025 BASE TIMES (from official World Aquatics table)
+// FINA 2026 BASE TIMES (from official World Aquatics - September 2026)
+// LCM: valid 01.01.2026 – 31.12.2026
+// SCM: valid 01.09.2026 – 31.08.2027
+// Source: https://www.worldaquatics.com/swimming/points
 // Format: seconds (converted from mm:ss.cc)
 // =============================================================================
 const FINA_BASE_TIMES = {
@@ -27,13 +28,13 @@ const FINA_BASE_TIMES = {
             "800_Freestyle": 440.46,
             "1500_Freestyle": 846.88,
             "50_Backstroke": 22.11,
-            "100_Backstroke": 48.33,
-            "200_Backstroke": 105.63,
+            "100_Backstroke": 48.16,      // Updated from 48.33
+            "200_Backstroke": 105.12,     // Updated from 105.63
             "50_Breaststroke": 24.95,
             "100_Breaststroke": 55.28,
-            "200_Breaststroke": 120.16,
+            "200_Breaststroke": 119.52,   // Updated from 120.16
             "50_Butterfly": 21.32,
-            "100_Butterfly": 47.71,
+            "100_Butterfly": 47.68,       // Updated from 47.71
             "200_Butterfly": 106.85,
             "100_Medley": 49.28,
             "200_Medley": 108.88,
@@ -43,7 +44,7 @@ const FINA_BASE_TIMES = {
             "50_Freestyle": 20.91,
             "100_Freestyle": 46.40,
             "200_Freestyle": 102.00,
-            "400_Freestyle": 220.07,
+            "400_Freestyle": 219.96,      // Updated from 220.07
             "800_Freestyle": 452.12,
             "1500_Freestyle": 870.67,
             "50_Backstroke": 23.55,
@@ -55,25 +56,25 @@ const FINA_BASE_TIMES = {
             "50_Butterfly": 22.27,
             "100_Butterfly": 49.45,
             "200_Butterfly": 110.34,
-            "200_Medley": 114.00,
+            "200_Medley": 112.69,         // Updated from 114.00
             "400_Medley": 242.50
         }
     },
     Female: {
         "25m": {
             "50_Freestyle": 22.83,
-            "100_Freestyle": 50.25,
-            "200_Freestyle": 110.31,
+            "100_Freestyle": 49.93,       // Updated from 50.25
+            "200_Freestyle": 109.36,      // Updated from 110.31
             "400_Freestyle": 230.25,
-            "800_Freestyle": 477.42,
+            "800_Freestyle": 474.00,      // Updated from 477.42
             "1500_Freestyle": 908.24,
             "50_Backstroke": 25.23,
             "100_Backstroke": 54.02,
-            "200_Backstroke": 118.04,
+            "200_Backstroke": 117.33,     // Updated from 118.04
             "50_Breaststroke": 28.37,
             "100_Breaststroke": 62.36,
             "200_Breaststroke": 132.50,
-            "50_Butterfly": 23.94,
+            "50_Butterfly": 23.72,        // Updated from 23.94
             "100_Butterfly": 52.71,
             "200_Butterfly": 119.32,
             "100_Medley": 55.11,
@@ -84,8 +85,8 @@ const FINA_BASE_TIMES = {
             "50_Freestyle": 23.61,
             "100_Freestyle": 51.71,
             "200_Freestyle": 112.23,
-            "400_Freestyle": 235.38,
-            "800_Freestyle": 484.79,
+            "400_Freestyle": 234.18,      // Updated from 235.38
+            "800_Freestyle": 484.12,      // Updated from 484.79
             "1500_Freestyle": 920.48,
             "50_Backstroke": 26.86,
             "100_Backstroke": 57.13,
@@ -94,10 +95,10 @@ const FINA_BASE_TIMES = {
             "100_Breaststroke": 64.13,
             "200_Breaststroke": 137.55,
             "50_Butterfly": 24.43,
-            "100_Butterfly": 55.18,
+            "100_Butterfly": 54.60,       // Updated from 55.18
             "200_Butterfly": 121.81,
-            "200_Medley": 126.12,
-            "400_Medley": 264.38
+            "200_Medley": 125.70,         // Updated from 126.12
+            "400_Medley": 263.65          // Updated from 264.38
         }
     }
 };
@@ -189,7 +190,9 @@ function calculateFinaPoints(timeMs, gender, poolLength, stroke, distance) {
     
     const timeSec = timeMs / 1000;
     // FINA Points formula: Points = 1000 × (BaseTime / SwimmerTime)³
-    const points = Math.round(1000 * Math.pow(baseTime / timeSec, 3));
+    // Arrondi vers le bas, comme SwimRankings ; la marge évite qu'une imprécision de calcul
+    // (612.9999999 au lieu de 613) fasse perdre un point
+    const points = Math.floor(1000 * Math.pow(baseTime / timeSec, 3) + 1e-9);
     return points;
 }
 
@@ -316,9 +319,14 @@ function getLegacyName(legacy) {
     const lastName = toTitleCaseIfUpper(toText(legacy.lastName));
     if (firstName || lastName) return [firstName, lastName].filter(Boolean).join(' ');
 
-    const fullName = toText(legacy.fullName);
-    const [last, first] = fullName.split(',').map(part => part.trim());
-    return first ? `${first} ${toTitleCaseIfUpper(last)}` : fullName;
+    return toFirstLastName(toText(legacy.fullName));
+}
+
+// « HEHLEN, Ava » → « Ava Hehlen » (format des noms SwimRankings) ; autre format inchangé
+function toFirstLastName(fullName) {
+    const text = String(fullName || '').replace(/\s+/g, ' ').trim();
+    const [last, first] = text.split(',').map(part => part.trim());
+    return first ? `${first} ${toTitleCaseIfUpper(last)}` : text;
 }
 
 // Profil SwimTimes v1 converti au format v2, pour pré-remplir le formulaire (US-008).
@@ -338,6 +346,18 @@ function getLegacyProfileDraft() {
     return draft.name || draft.swimrankingsId ? draft : null;
 }
 
+const STORAGE_WRITE_ERROR = "Impossible d'enregistrer sur cet appareil. Vérifie que tu n'es pas en navigation privée et qu'il reste de l'espace.";
+
+// Écrit une valeur JSON ; lève une erreur au message affichable si localStorage est bloqué ou plein
+function writeStorage(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+        console.error(`❌ Erreur d'écriture de ${key}:`, err);
+        throw new Error(STORAGE_WRITE_ERROR);
+    }
+}
+
 // Sauvegarde le profil : createdAt est figé à la création, updatedAt change à chaque sauvegarde.
 // createdAt est relu dans le stockage, y compris depuis un profil invalide en cours de correction.
 // Lève une erreur au message affichable si localStorage est bloqué ou plein.
@@ -349,13 +369,29 @@ function saveProfile(newProfile) {
         updatedAt: now
     };
 
-    try {
-        localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(stored));
-    } catch (err) {
-        console.error('❌ Erreur sauvegarde profil:', err);
-        throw new Error("Impossible d'enregistrer sur cet appareil. Vérifie que tu n'es pas en navigation privée et qu'il reste de l'espace.");
-    }
+    writeStorage(STORAGE_KEYS.profile, stored);
     return stored;
+}
+
+// Temps importés depuis SwimRankings (format de la spec §3.1). Un import remplace le précédent.
+// athleteId : ID du nageur de la page importée (les temps d'un autre ID ne sont jamais affichés)
+function savePBs(times, { nation = null, athleteId = null } = {}) {
+    writeStorage(STORAGE_KEYS.pb, { updated: new Date().toISOString(), athleteId, nation, data: times });
+}
+
+function saveSeasonTimes(times, season, { athleteId = null } = {}) {
+    writeStorage(STORAGE_KEYS.season, { season, updated: new Date().toISOString(), athleteId, data: times });
+}
+
+// Retournent { updated, data } (et season), ou null si rien n'a été importé ou si le contenu est illisible
+function getPBs() {
+    const stored = readStorage(STORAGE_KEYS.pb);
+    return stored && Array.isArray(stored.data) ? stored : null;
+}
+
+function getSeasonTimes() {
+    const stored = readStorage(STORAGE_KEYS.season);
+    return stored && Array.isArray(stored.data) ? stored : null;
 }
 
 // Supprime les clés v1 une fois le profil repris ou remplacé ; retourne false si le stockage refuse
@@ -392,66 +428,181 @@ function clearAllData() {
 }
 
 // =============================================================================
-// SWIMMERS DATA (fichiers du club sur GitHub)
-// TODO Phase 3 : pont temporaire (US-009), remplacé par les temps synchronisés en localStorage
+// TEMPS AFFICHÉS (US-017) : temps importés depuis SwimRankings, au format des onglets
 // =============================================================================
-const SWIMMERS_DATA_URL = 'https://raw.githubusercontent.com/smarsys/Swimtimes/main/swimmers-data.json';
-const SWIMMERS_SEASON_URL = 'https://raw.githubusercontent.com/smarsys/Swimtimes/main/swimmers-season.json';
-const FETCH_TIMEOUT_MS = 8000; // Au-delà, le chargement est abandonné et une erreur s'affiche
-
-// Charge un JSON avec un délai maximal ; lève une erreur en cas d'échec
-async function fetchJson(url) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-    try {
-        const response = await fetch(url, { signal: controller.signal });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-    } finally {
-        clearTimeout(timer);
-    }
-}
-
-// Chargeur mis en cache : une seule requête à la fois, nouvel essai possible après un échec.
-// La promesse retournée donne null si le fichier est indisponible.
-function createJsonLoader(url) {
-    const fileName = url.split('/').pop();
-    let request = null;
-    return () => {
-        if (!request) {
-            request = fetchJson(url)
-                .then(data => {
-                    console.log(`✅ ${fileName} chargé`);
-                    return data;
-                })
-                .catch(err => {
-                    console.log(`ℹ️ ${fileName} non disponible :`, err.message);
-                    request = null;
-                    return null;
-                });
-        }
-        return request;
+// Temps stocké (spec §3.1 : course « 25m », time « 1:04.85 ») → format des onglets
+// ({ stroke, distance, poolLength, timeMs, timeDisplay }) ; null si le temps est illisible
+function toDisplayTime(stored) {
+    // Données lues dans localStorage : tout champ inattendu rend le temps illisible, sans erreur
+    if (!stored || typeof stored.time !== 'string' || typeof stored.stroke !== 'string' || !Number.isInteger(stored.distance)) return null;
+    const timeMs = timeToMs(stored.time);
+    if (!timeMs) return null;
+    return {
+        stroke: stored.stroke,
+        distance: stored.distance,
+        poolLength: stored.course === '25m' ? 25 : 50,
+        timeMs,
+        timeDisplay: stored.time,
+        date: stored.date,
+        city: stored.city,
+        meet: stored.meet
     };
 }
 
-const loadSwimmersData = createJsonLoader(SWIMMERS_DATA_URL);
-const loadSwimmersSeasonData = createJsonLoader(SWIMMERS_SEASON_URL);
-
-function getSeasonLabel() {
-    return swimmersSeasonData?._metadata?.season?.label || 'Saison courante';
+// « 2026-2027 » en octobre 2026
+function getCurrentSeasonLabel() {
+    return getSeasonLabelFromEndYear(getCurrentSeasonEndYear());
 }
 
-// TODO Phase 3 : remplacer par getPBs() / getSeasonTimes()
-// Temps d'un nageur. Retourne une copie : les données en cache ne sont jamais modifiées.
-// Lève l'erreur 'network' si les données sont indisponibles, 'not-found' si l'ID est absent.
-async function fetchSwimmerData(athleteId) {
-    const [data, seasonData] = await Promise.all([loadSwimmersData(), loadSwimmersSeasonData()]);
-    if (seasonData) swimmersSeasonData = seasonData;
-    if (!data) throw new Error('network');
+// Construit les temps du nageur à partir des imports ; null si rien n'a été importé
+// Temps importés pour un autre ID (changement d'ID dont la suppression aurait échoué) : ignorés partout
+function forCurrentProfile(stored) {
+    return stored && (!stored.athleteId || Number(stored.athleteId) === Number(profile?.swimrankingsId)) ? stored : null;
+}
 
-    const swimmerData = data.swimmers?.[athleteId];
-    if (!swimmerData) throw new Error('not-found');
-    return { ...swimmerData, seasonBests: seasonData?.swimmers?.[athleteId]?.seasonBests || [] };
+function loadSwimmerFromStorage() {
+    const pbs = forCurrentProfile(getPBs());
+    const season = forCurrentProfile(getSeasonTimes());
+    // Les temps d'une saison passée ne sont jamais présentés comme ceux de la saison en cours
+    const seasonTimes = season?.season === getCurrentSeasonLabel() ? season.data : [];
+    swimmer = pbs || season ? {
+        nation: pbs?.nation || null,
+        personalBests: (pbs?.data || []).map(toDisplayTime).filter(Boolean),
+        seasonBests: seasonTimes.map(toDisplayTime).filter(Boolean)
+    } : null;
+}
+
+// Date de l'import le plus récent, ou null
+function getLastSyncDate() {
+    const dates = [forCurrentProfile(getPBs())?.updated, forCurrentProfile(getSeasonTimes())?.updated]
+        .filter(value => typeof value === 'string')
+        .map(value => new Date(value))
+        .filter(date => !isNaN(date));
+    return dates.length ? new Date(Math.max(...dates)) : null;
+}
+
+// =============================================================================
+// ANALYSE DES PAGES SWIMRANKINGS (US-011)
+// Fonction pure : aucun accès au DOM de l'app ni à localStorage.
+// =============================================================================
+const SWIMRANKINGS_STROKES = ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Medley'];
+const SWIMRANKINGS_COURSES = ['25m', '50m'];
+const SWIMRANKINGS_TIME = /^(?:\d{1,2}:)?\d{1,2}\.\d{2}$/; // « 27.91 », « 1:04.85 », « 16:12.34 »
+
+// Analyse le code HTML d'une page SwimRankings collé par l'utilisateur.
+// Retourne { ok: true, page } ou { ok: false, error } avec error parmi :
+// 'empty', 'not-html', 'multiple-pages', 'cloudflare', 'login', 'truncated', 'not-athlete', 'language',
+// 'unrecognized' (le tableau contient des lignes de temps, mais aucune n'a pu être lue).
+// page = { athleteId, name, nation, kind: 'pb' | 'season', seasonYear, times: [...], ignored, ignoredEvents } ;
+// ignored = nombre de lignes de temps non reconnues (relais, DQ, NT, temps manuel…), ignoredEvents = leurs
+// épreuves, à annoncer à l'utilisateur.
+// chaque temps suit le format de stockage de la spec §3.1.
+function parseSwimRankingsPage(html) {
+    const source = String(html ?? '');
+    if (!source.trim()) return { ok: false, error: 'empty' };
+    // Texte de la page copié au lieu du code source : aucune balise
+    if (!/<[a-z!][^>]*>/i.test(source)) return { ok: false, error: 'not-html' };
+    // Collage par-dessus un collage précédent : deux pages mélangées
+    if ((source.match(/<\/html>/gi) || []).length > 1 || (source.match(/<!doctype/gi) || []).length > 1) {
+        return { ok: false, error: 'multiple-pages' };
+    }
+
+    // DOMParser n'exécute ni les scripts ni les gestionnaires d'événements du HTML collé
+    const doc = new DOMParser().parseFromString(source, 'text/html');
+    const title = doc.title || '';
+    const table = doc.querySelector('table.athleteBest');
+
+    // Pages sans tableau de temps : vérification Cloudflare ou connexion
+    if (!table && (/just a moment/i.test(title) || /_cf_chl_opt|challenges\.cloudflare\.com|cf-turnstile/i.test(source))) {
+        return { ok: false, error: 'cloudflare' };
+    }
+    if (!table && (doc.querySelector('#loginForm, input[type="password"]') || /page=login/i.test(source))) {
+        return { ok: false, error: 'login' };
+    }
+    // Copie incomplète d'une page SwimRankings (début ou fin manquant) : jamais d'import partiel
+    if ((table || /swimrankings/i.test(source)) && !(/<html[\s>]/i.test(source) && /<\/html>/i.test(source))) {
+        return { ok: false, error: 'truncated' };
+    }
+
+    const athleteId = findAthleteId(doc);
+    if (!table || !athleteId) return { ok: false, error: 'not-athlete' };
+
+    // Le type de page n'est lisible que sur la version anglaise du site
+    const heading = [...doc.querySelectorAll('b')]
+        .map(b => b.textContent.trim())
+        .find(text => /^Personal bests, (Alltime|Season \d{4})$/.test(text));
+    if (!heading) return { ok: false, error: 'language' };
+    const season = heading.match(/Season (\d{4})/);
+
+    // Aucune ligne lue alors que le tableau en contient (format de SwimRankings changé) : refus,
+    // pour ne jamais remplacer des temps par une liste vide
+    const { times, ignored, ignoredEvents } = parseSwimRankingsTimes(table);
+    if (ignored > 0 && times.length === 0) return { ok: false, error: 'unrecognized', count: ignored };
+
+    return {
+        ok: true,
+        page: {
+            athleteId,
+            name: toFirstLastName(doc.querySelector('#name')?.firstChild?.textContent || title.replace(/^Swimrankings\s*-\s*/i, '')),
+            nation: doc.querySelector('#nationclub')?.textContent.match(/\b([A-Z]{3})\s*-/)?.[1] || null,
+            kind: season ? 'season' : 'pb',
+            seasonYear: season ? Number(season[1]) : null,
+            times,
+            ignored,
+            ignoredEvents
+        }
+    };
+}
+
+// ID du nageur : celui qui revient le plus souvent dans les liens « athleteId= » de la page
+function findAthleteId(doc) {
+    const counts = {};
+    doc.querySelectorAll('a[href*="athleteId="]').forEach(link => {
+        const id = link.getAttribute('href').match(/athleteId=(\d+)/)?.[1];
+        if (id) counts[id] = (counts[id] || 0) + 1;
+    });
+    const ids = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+    return ids[0] || null;
+}
+
+// Lignes de temps : 7 cellules (épreuve, bassin, temps, points, date, lieu, compétition), quelle que soit
+// leur classe (une ligne dont SwimRankings changerait la classe reste comptée). Les temps de passage
+// (« Lap »), leurs lignes de détail et l'en-tête (cellules <th>) ne sont pas des temps. Toute autre ligne qui n'est pas lue
+// (relais, DQ, NT, temps manuel, colonne manquante…) est comptée dans « ignored » et nommée dans
+// « ignoredEvents », pour être annoncée : jamais de temps écarté en silence.
+function parseSwimRankingsTimes(table) {
+    const clean = text => (text || '').replace(/\s+/g, ' ').trim();
+    const times = [];
+    const ignoredEvents = [];
+    table.querySelectorAll('tr').forEach(row => {
+        const cells = [...row.querySelectorAll(':scope > td')].map(cell => clean(cell.textContent));
+        if (cells.length === 0 || cells[0].includes('Lap')) return;
+        const [event, course, time, points, date, city, meet] = cells;
+        // Lignes de détail des temps de passage (« 100m | 1:07.56 | 35.63 », séparateurs vides) : le HTML
+        // de SwimRankings les place parmi les lignes du tableau. Une ligne courte n'est une ligne de temps
+        // (à compter si elle n'est pas lue) que si elle commence par une épreuve (« 50m Freestyle »).
+        if (cells.length < 7 && !/^\d+m\s+\S/.test(event)) return;
+
+        const eventMatch = event.match(/^(\d+)m (.+)$/);
+        if (cells.length < 7 || !eventMatch || !SWIMRANKINGS_STROKES.includes(eventMatch[2])
+            || !SWIMRANKINGS_COURSES.includes(course) || !SWIMRANKINGS_TIME.test(time)) {
+            ignoredEvents.push([event, course].filter(Boolean).join(' ') || 'ligne sans épreuve');
+            return;
+        }
+
+        times.push({
+            event,
+            distance: parseInt(eventMatch[1], 10),
+            stroke: eventMatch[2],
+            course,
+            time,
+            finaPoints: parseInt(points, 10) || 0,
+            date,
+            city,
+            meet
+        });
+    });
+    return { times, ignored: ignoredEvents.length, ignoredEvents };
 }
 
 // =============================================================================
@@ -506,10 +657,8 @@ function renderSettingsScreen() {
 
         <section class="card" aria-labelledby="settings-data-title">
             <h2 class="card-title" id="settings-data-title">Mes données</h2>
-            <div class="settings-row"><span>Dernière synchronisation</span><span>Jamais synchronisé</span></div>
-            <!-- TODO Phase 3 : ligne liée au pont temporaire swimmers-data.json (US-009) -->
-            <div class="settings-row"><span>Temps affichés</span><span id="settings-source"></span></div>
-            ${renderSoonButton('🔄 Synchroniser maintenant')}
+            <div class="settings-row"><span>Dernière synchronisation</span><span id="settings-last-sync"></span></div>
+            <button type="button" class="btn btn-secondary" id="settings-sync" onclick="openSyncDialog()">🔄 Synchroniser maintenant</button>
             ${renderSoonButton('⬇️ Exporter mes données')}
         </section>
 
@@ -520,7 +669,7 @@ function renderSettingsScreen() {
     updateSettingsData();
 }
 
-// Parties des Paramètres qui dépendent des temps (mises à jour à la fin d'un chargement)
+// Parties des Paramètres qui dépendent des temps (mises à jour après chaque import)
 function updateSettingsData() {
     const details = [
         `ID ${escapeHtml(profile.swimrankingsId)}`,
@@ -529,10 +678,12 @@ function updateSettingsData() {
     ].filter(Boolean).join(' • ');
     document.getElementById('settings-details').innerHTML = details;
 
-    // TODO Phase 2 : date de la dernière synchronisation de l'utilisateur
-    document.getElementById('settings-source').textContent = swimmer?.lastUpdated
-        ? `Données du club du ${new Date(swimmer.lastUpdated).toLocaleDateString('fr-CH')}`
-        : getDataStateMessage().split('.')[0];
+    const lastSync = getLastSyncDate();
+    const days = getDaysSinceLastSync();
+    document.getElementById('settings-last-sync').textContent = lastSync
+        ? lastSync.toLocaleString('fr-CH', { dateStyle: 'medium', timeStyle: 'short' })
+            + (days > STALE_SYNC_DAYS ? ` · il y a ${days} jours` : '')
+        : 'Jamais synchronisé';
 
     // Conserve l'état déplié des records
     const records = document.getElementById('settings-records');
@@ -572,8 +723,8 @@ function closeSettings() {
 }
 
 function closeSettingsOnEscape(e) {
-    // Échap ferme d'abord la popup de l'avatar ou la confirmation si elles sont ouvertes
-    if (!isEscapeKey(e) || isConfirmDialogOpen()) return;
+    // Échap ferme d'abord la popup de l'avatar ou la fenêtre modale ouverte
+    if (!isEscapeKey(e) || isAnyDialogOpen()) return;
     if (document.getElementById('swimmer-popup').style.display !== 'none') return;
     closeSettings();
 }
@@ -625,8 +776,28 @@ function showConfirmDialog({ title, text, confirmLabel, cancelLabel = 'Annuler',
     document.getElementById('confirm-cancel').focus(); // Choix par défaut : le plus sûr
 }
 
-function isConfirmDialogOpen() {
-    return document.getElementById('confirm-dialog').open;
+// Une fenêtre modale (confirmation, synchronisation) est ouverte : elle gère seule Échap
+function isAnyDialogOpen() {
+    return Boolean(document.querySelector('dialog[open]'));
+}
+
+// Garde le focus clavier dans une fenêtre modale : Tab et Maj+Tab bouclent sur ses éléments actifs
+function trapDialogFocus(e) {
+    if (e.key !== 'Tab') return;
+    const dialog = e.currentTarget;
+    const focusable = [...dialog.querySelectorAll('a[href], button:not([disabled]), textarea, input, select')]
+        .filter(el => el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const inside = focusable.includes(document.activeElement);
+    if (e.shiftKey && (!inside || document.activeElement === first)) {
+        e.preventDefault();
+        last.focus();
+    } else if (!e.shiftKey && (!inside || document.activeElement === last)) {
+        e.preventDefault();
+        first.focus();
+    }
 }
 
 function closeConfirmDialog() {
@@ -653,24 +824,6 @@ function handleConfirmDialogOk(e) {
     focusTarget?.focus(); // …sauf si l'action en désigne un autre
 }
 
-// Garde le focus clavier dans la confirmation : Tab et Maj+Tab bouclent sur ses boutons,
-// y compris quand le focus est sur le dialog lui-même (après un clic sur son texte)
-function trapConfirmDialogFocus(e) {
-    if (e.key !== 'Tab') return;
-    // Seuls les boutons actifs : « Supprimer » est inactif pendant la première seconde
-    const buttons = [...document.querySelectorAll('#confirm-dialog button')].filter(button => !button.disabled);
-    const first = buttons[0];
-    const last = buttons[buttons.length - 1];
-    const inside = buttons.includes(document.activeElement);
-    if (e.shiftKey && (!inside || document.activeElement === first)) {
-        e.preventDefault();
-        last.focus();
-    } else if (!e.shiftKey && (!inside || document.activeElement === last)) {
-        e.preventDefault();
-        first.focus();
-    }
-}
-
 // =============================================================================
 // SUPPRESSION DES DONNÉES (US-007)
 // =============================================================================
@@ -692,21 +845,285 @@ function deleteAllData() {
 
 // Retour à l'état « premier lancement » : plus aucune donnée de l'ancien profil dans la page
 function resetToFirstLaunch() {
-    swimmerLoadId++; // Ignore un chargement encore en cours
     profile = null;
     swimmer = null;
-    swimmerDataStatus = 'loading';
 
     hideSwimmerPopup();
     document.body.classList.remove('settings-active');
     document.removeEventListener('keydown', closeSettingsOnEscape);
     document.getElementById('settings-screen').innerHTML = '';
     document.getElementById('swimmer-popup-content').innerHTML = '';
+    document.getElementById('sync-dialog-content').innerHTML = ''; // Code collé et liens de l'ancien ID
     document.getElementById('pb-time').textContent = '—';
     document.getElementById('times-table').innerHTML = '';
     document.getElementById('progress-content').innerHTML = '';
     updateHeaderAvatar();
     renderProfileForm('create');
+}
+
+// =============================================================================
+// SYNCHRONISATION (US-012, US-013, US-014)
+// Copier-coller du code HTML des pages SwimRankings (spec §2.3)
+// =============================================================================
+const SWIMRANKINGS_ATHLETE_URL = 'https://www.swimrankings.net/index.php?page=athleteDetail&athleteId=';
+const SYNC_SUCCESS_FLASH_MS = 2000; // ✓ sur 🔄 après une synchronisation (spec §2.1)
+const STALE_SYNC_DAYS = 7;          // Au-delà, les temps sont signalés comme anciens (spec §6.4)
+let syncFlashTimer = null;
+
+// Pages importées depuis l'ouverture de la fenêtre (liste « Meilleurs temps ✓ / Saison ✓ »)
+let syncImportedPages = { pb: false, season: false };
+// Vrai juste après un import réussi, jusqu'à la prochaine saisie : un second clic sur « Importer »
+// (double-clic) ne doit pas remplacer le message de succès par « Colle d'abord… »
+let syncJustImported = false;
+
+// Messages d'erreur de l'import, selon l'erreur renvoyée par l'analyse (US-014)
+const SYNC_ERROR_MESSAGES = {
+    empty: "Colle d'abord le code de ta page SwimRankings.",
+    'not-html': "Ce texte n'est pas le code de la page. Affiche le code source (Cmd+U ou Ctrl+U), puis copie tout.",
+    cloudflare: "Cette page est la vérification Cloudflare. Attends qu'elle se termine (connecte-toi si elle tourne en boucle), puis copie le code de ta page nageur.",
+    login: 'Connecte-toi à SwimRankings, puis recopie le code de ta page.',
+    'not-athlete': "Ce code n'est pas celui d'une page nageur SwimRankings. Ouvre l'un des liens ci-dessus.",
+    language: 'Passe SwimRankings en anglais (sélecteur en haut à droite), puis recopie le code de ta page.',
+    truncated: 'Le code collé est incomplet : sélectionne tout (Cmd+A ou Ctrl+A) avant de copier.',
+    'multiple-pages': 'Le code collé contient plusieurs pages : colle une seule page à la fois.',
+    unrecognized: () => "Aucun temps de cette page n'a pu être lu : rien n'a été importé. Le format de SwimRankings a peut-être changé ; signale-le aux responsables de SwimTimes.",
+    'no-times': "Cette page ne contient aucun temps : rien n'a été modifié.",
+    'wrong-athlete': name => `Cette page est celle de ${name}, pas la tienne : rien n'a été importé.`,
+    'old-season': season => `Cette page montre la saison ${season}. Ouvre le lien « Mes temps de la saison ${getCurrentSeasonLabel()} ».`
+};
+
+// Année de fin de la saison en cours (1er septembre → 31 août) : octobre 2026 → 2027
+function getCurrentSeasonEndYear(date = new Date()) {
+    return date.getMonth() >= 8 ? date.getFullYear() + 1 : date.getFullYear();
+}
+
+// 2027 → « 2026-2027 »
+function getSeasonLabelFromEndYear(endYear) {
+    return `${endYear - 1}-${endYear}`;
+}
+
+// Liens vers les pages SwimRankings du nageur du profil
+function getSwimRankingsUrls() {
+    const base = SWIMRANKINGS_ATHLETE_URL + encodeURIComponent(profile.swimrankingsId);
+    return { pb: base, season: `${base}&pbest=${getCurrentSeasonEndYear()}` };
+}
+
+// Instructions pour afficher et copier le code source, selon l'appareil (US-016)
+const VIEW_SOURCE_INSTRUCTIONS = {
+    mac: {
+        label: 'Mac',
+        text: "Affiche le code source : Option+Cmd+U dans Chrome, Edge et Safari (dans Safari, active d'abord « Afficher les fonctionnalités pour les développeurs web » dans Réglages › Avancées), Cmd+U dans Firefox. Puis sélectionne tout (Cmd+A) et copie (Cmd+C)."
+    },
+    computer: {
+        label: 'Ordinateur Windows ou Linux',
+        text: 'Affiche le code source avec Ctrl+U, puis sélectionne tout (Ctrl+A) et copie (Ctrl+C).'
+    },
+    android: {
+        label: 'Android',
+        text: "Dans Chrome, ajoute « view-source: » devant l'adresse de ta page (view-source:https://www.swimrankings.net/…), puis appui long › Tout sélectionner › Copier."
+    },
+    ios: {
+        label: 'iPhone et iPad',
+        text: "Safari ne permet pas d'afficher le code source : fais la synchronisation depuis un ordinateur. Tes temps seront alors visibles dans SwimTimes sur cet ordinateur."
+    }
+};
+
+// Appareil probable (en cas de doute : ordinateur, et toutes les instructions restent accessibles)
+function detectDevice(userAgent = navigator.userAgent, maxTouchPoints = navigator.maxTouchPoints || 0) {
+    if (/iPhone|iPad|iPod/.test(userAgent)) return 'ios';
+    if (/Macintosh/.test(userAgent) && maxTouchPoints > 1) return 'ios'; // iPadOS se présente comme un Mac
+    if (/Android/.test(userAgent)) return 'android';
+    if (/Macintosh/.test(userAgent)) return 'mac';
+    return 'computer';
+}
+
+function renderViewSourceHelp(device) {
+    const others = Object.keys(VIEW_SOURCE_INSTRUCTIONS).filter(key => key !== device);
+    // Sur iPhone et iPad, le bandeau explique déjà la limite : l'étape renvoie vers l'ordinateur, instructions dépliées
+    const isIos = device === 'ios';
+    const text = isIos
+        ? 'Sur ton ordinateur, affiche le code source de la page et copie-le (instructions ci-dessous).'
+        : VIEW_SOURCE_INSTRUCTIONS[device].text;
+    return `
+        <span id="sync-view-source">${text}</span>
+        <button type="button" class="btn-link sync-other-device" aria-expanded="${isIos}" aria-controls="sync-other-devices"
+            onclick="toggleOtherDevices(this)">Autre appareil</button>
+        <ul id="sync-other-devices" class="sync-other-devices"${isIos ? '' : ' hidden'}>
+            ${others.map(key => `<li><strong>${VIEW_SOURCE_INSTRUCTIONS[key].label} :</strong> ${VIEW_SOURCE_INSTRUCTIONS[key].text}</li>`).join('')}
+        </ul>
+    `;
+}
+
+function toggleOtherDevices(button) {
+    const list = document.getElementById(button.getAttribute('aria-controls'));
+    list.hidden = !list.hidden;
+    button.setAttribute('aria-expanded', !list.hidden);
+}
+
+function openSyncDialog() {
+    if (!profile) return;
+    hideSwimmerPopup();
+    syncImportedPages = { pb: false, season: false };
+
+    const urls = getSwimRankingsUrls();
+    const seasonLabel = getCurrentSeasonLabel();
+    // Le texte déjà collé est conservé d'une ouverture à l'autre (fermeture par erreur)
+    const pasted = document.getElementById('sync-html')?.value || '';
+    const device = detectDevice();
+
+    document.getElementById('sync-dialog-content').innerHTML = `
+        <div class="dialog__header">
+            <h2 id="sync-title" tabindex="-1">Synchroniser mes temps</h2>
+            <button type="button" class="dialog__close" onclick="closeSyncDialog()" aria-label="Fermer">✕</button>
+        </div>
+        <p class="sync-intro">Importe tes temps depuis SwimRankings : une fois pour tes meilleurs temps, une fois pour la saison.</p>
+        ${device === 'ios' ? `<p class="notice sync-ios">📱 ${VIEW_SOURCE_INSTRUCTIONS.ios.text}</p>` : ''}
+        <ol class="sync-steps">
+            <li>Ouvre ta page :
+                <div class="sync-links">
+                    <a class="sync-link" href="${urls.pb}" target="_blank" rel="noopener">Mes meilleurs temps ↗<span class="sr-only"> (nouvel onglet)</span></a>
+                    <a class="sync-link" href="${urls.season}" target="_blank" rel="noopener">Mes temps de la saison ${seasonLabel} ↗<span class="sr-only"> (nouvel onglet)</span></a>
+                </div>
+            </li>
+            <li>Passe la vérification Cloudflare et connecte-toi à SwimRankings si besoin. Assure-toi que SwimRankings est en anglais (sélecteur en haut à droite).</li>
+            <li>${renderViewSourceHelp(device)}</li>
+            <li>Colle le code ci-dessous, puis clique « Importer ».</li>
+        </ol>
+        <ul class="sync-checklist" aria-label="Pages importées">
+            <li id="sync-check-pb"><span class="sync-check__icon" aria-hidden="true"></span>Meilleurs temps<span class="sr-only sync-check__state"></span></li>
+            <li id="sync-check-season"><span class="sync-check__icon" aria-hidden="true"></span>Saison ${seasonLabel}<span class="sr-only sync-check__state"></span></li>
+        </ul>
+        <label class="form-label" for="sync-html">Code source de la page</label>
+        <textarea id="sync-html" class="sync-textarea" rows="6" spellcheck="false" autocomplete="off"
+            autocapitalize="off" placeholder="<!DOCTYPE html>…" aria-describedby="sync-message"></textarea>
+        <div id="sync-message" class="sync-message" aria-live="polite"></div>
+        <div class="dialog__actions">
+            <button type="button" class="btn btn-primary" id="sync-import" onclick="importSwimRankingsHtml()">Importer</button>
+            <button type="button" class="btn btn-secondary" onclick="closeSyncDialog()">Terminer</button>
+        </div>
+        <p class="sync-note">🔒 Tes données sont stockées sur cet appareil uniquement.</p>
+    `;
+    document.getElementById('sync-html').value = pasted;
+    document.getElementById('sync-html').addEventListener('input', () => { syncJustImported = false; });
+    syncJustImported = false;
+    updateSyncChecklist();
+    const dialog = document.getElementById('sync-dialog');
+    dialog.showModal();
+    dialog.scrollTop = 0;
+    document.getElementById('sync-title').focus();
+}
+
+function closeSyncDialog() {
+    document.getElementById('sync-dialog').close();
+}
+
+
+// Fermeture de la fenêtre (Terminer, ✕ ou Échap) : ✓ sur 🔄 si au moins une page a été importée
+function handleSyncDialogClose() {
+    if (!syncImportedPages.pb && !syncImportedPages.season) return;
+    const button = document.getElementById('header-sync');
+    button.textContent = '✓';
+    button.classList.add('header-btn--success');
+    clearTimeout(syncFlashTimer);
+    syncFlashTimer = setTimeout(() => {
+        button.textContent = '🔄';
+        button.classList.remove('header-btn--success');
+    }, SYNC_SUCCESS_FLASH_MS);
+}
+
+// Nombre de jours entiers depuis la dernière synchronisation, ou null si jamais synchronisé
+function getDaysSinceLastSync(now = new Date()) {
+    const lastSync = getLastSyncDate();
+    return lastSync ? Math.floor((now - lastSync) / 86400000) : null;
+}
+
+// Badge sur 🔄 quand la dernière synchronisation date de plus de 7 jours
+function updateSyncBadge() {
+    const days = getDaysSinceLastSync();
+    const stale = days !== null && days > STALE_SYNC_DAYS;
+    const button = document.getElementById('header-sync');
+    button.classList.toggle('header-btn--stale', stale);
+    button.setAttribute('aria-label', stale
+        ? `Synchroniser mes temps (dernière synchronisation il y a ${days} jours)`
+        : 'Synchroniser mes temps');
+}
+
+function updateSyncChecklist() {
+    [['pb', 'sync-check-pb'], ['season', 'sync-check-season']].forEach(([kind, id]) => {
+        const item = document.getElementById(id);
+        const done = syncImportedPages[kind];
+        item.classList.toggle('sync-check--done', done);
+        item.dataset.state = done ? '✓' : '○';
+        item.querySelector('.sync-check__icon').textContent = `${item.dataset.state} `;
+        item.querySelector('.sync-check__state').textContent = done ? ' : importé' : ' : à importer';
+    });
+}
+
+// Le message est vidé puis réécrit : un lecteur d'écran l'annonce même s'il est identique au précédent
+function showSyncMessage(type, text) {
+    const message = document.getElementById('sync-message');
+    message.className = `sync-message sync-message--${type}`;
+    message.textContent = '';
+    setTimeout(() => { message.textContent = `${type === 'error' ? '⚠️' : '✓'} ${text}`; }, LIVE_REGION_DELAY_MS);
+}
+
+// Import du code collé : analyse, contrôles, stockage (US-013, US-014)
+function importSwimRankingsHtml() {
+    const textarea = document.getElementById('sync-html');
+    const fail = text => {
+        showSyncMessage('error', text);
+        // Le texte reste visible pour comprendre l'erreur, mais sélectionné : le prochain collage le remplace
+        textarea.focus();
+        textarea.select();
+    };
+
+    if (syncJustImported && !textarea.value.trim()) return;
+
+    const result = parseSwimRankingsPage(textarea.value);
+    if (!result.ok) {
+        const message = SYNC_ERROR_MESSAGES[result.error];
+        return fail(typeof message === 'function' ? message(result.count) : message);
+    }
+
+    const page = result.page;
+    if (Number(page.athleteId) !== Number(profile.swimrankingsId)) {
+        return fail(SYNC_ERROR_MESSAGES['wrong-athlete'](page.name || `l'ID ${page.athleteId}`));
+    }
+    if (page.kind === 'season' && page.seasonYear !== getCurrentSeasonEndYear()) {
+        return fail(SYNC_ERROR_MESSAGES['old-season'](getSeasonLabelFromEndYear(page.seasonYear)));
+    }
+    // Une page de meilleurs temps vide est anormale ; une saison vide est normale en début de saison
+    if (page.kind === 'pb' && page.times.length === 0) return fail(SYNC_ERROR_MESSAGES['no-times']);
+
+    const seasonLabel = page.kind === 'season' ? getSeasonLabelFromEndYear(page.seasonYear) : null;
+    try {
+        if (page.kind === 'pb') savePBs(page.times, { nation: page.nation, athleteId: page.athleteId });
+        else saveSeasonTimes(page.times, seasonLabel, { athleteId: page.athleteId });
+    } catch (err) {
+        return fail(err.message);
+    }
+
+    loadSwimmerFromStorage();
+    refreshDataViews();
+
+    textarea.value = ''; // Le HTML collé n'est jamais conservé
+    syncImportedPages[page.kind] = true;
+    updateSyncChecklist();
+    const count = page.times.length;
+    // Lignes ignorées nommées (3 au plus) : le nageur sait quel temps n'a pas été repris
+    const SHOWN_IGNORED = 3;
+    const ignoredNames = page.ignoredEvents.slice(0, SHOWN_IGNORED).join(', ')
+        + (page.ignored > SHOWN_IGNORED ? `, +${page.ignored - SHOWN_IGNORED}` : '');
+    const ignored = page.ignored
+        ? ` · ${page.ignored} ligne${page.ignored > 1 ? 's' : ''} ignorée${page.ignored > 1 ? 's' : ''}, non reconnue${page.ignored > 1 ? 's' : ''} (${ignoredNames})`
+        : '';
+    showSyncMessage('success', (page.kind === 'pb'
+        ? `${count} meilleur${count > 1 ? 's' : ''} temps importé${count > 1 ? 's' : ''}`
+        : count
+            ? `${count} temps de la saison ${seasonLabel} importé${count > 1 ? 's' : ''}`
+            : `Aucun temps sur la saison ${seasonLabel} pour l'instant : c'est enregistré`) + ignored + '.');
+    syncJustImported = true;
+    textarea.focus();
 }
 
 function renderPBsByPool(poolLength, title) {
@@ -767,13 +1184,13 @@ function showSwimmerPopup() {
     content.querySelector('.swimmer-popup-close').focus();
 }
 
-// Contenu de la popup ; appelé aussi à la fin d'un chargement si la popup est ouverte
+// Contenu de la popup ; appelé aussi après un import si la popup est ouverte
 function renderSwimmerPopupContent() {
     const content = document.getElementById('swimmer-popup-content');
     const age = profile.birthYear ? (new Date().getFullYear() - Number(profile.birthYear)) : null;
     const meta = [profile.club, swimmer?.nation].filter(Boolean).join(' • ');
-    // Sans temps chargés : « … » pendant le chargement, « — » sinon (pas de faux zéro)
-    const count = list => swimmer ? (list?.length || 0) : (swimmerDataStatus === 'loading' ? '…' : '—');
+    // Sans temps importés : « — » plutôt qu'un faux zéro
+    const count = list => swimmer ? (list?.length || 0) : '—';
     const hadFocus = content.contains(document.activeElement);
     
     content.innerHTML = `
@@ -791,10 +1208,10 @@ function renderSwimmerPopupContent() {
             </div>
             <div>
                 <div class="swimmer-popup-stat-value">${count(swimmer?.seasonBests)}</div>
-                <div class="swimmer-popup-stat-label">${escapeHtml(getSeasonLabel())}</div>
+                <div class="swimmer-popup-stat-label">${getCurrentSeasonLabel()}</div>
             </div>
         </div>
-        ${swimmer ? '' : `<div class="swimmer-popup-id" role="status">${getDataStateMessage().split('.')[0]}</div>`}
+        ${swimmer ? '' : '<div class="swimmer-popup-id">Aucun temps importé</div>'}
         <div class="swimmer-popup-id">ID: ${escapeHtml(profile.swimrankingsId)}</div>
     `;
     if (hadFocus) content.querySelector('.swimmer-popup-close').focus();
@@ -847,10 +1264,6 @@ function showToast(message, duration = 2000) {
     toastTimer = setTimeout(() => toast.classList.remove('toast--visible'), duration);
 }
 
-// Bouton 🔄 : inactif jusqu'à la Phase 2 (synchronisation)
-function handleSyncClick() {
-    showToast('🔄 Synchronisation disponible prochainement');
-}
 
 function updateTimesDisplay() {
     if (!TIME_STANDARDS) return;
@@ -902,8 +1315,7 @@ function updateTimesDisplay() {
             pbHtml += `<div>PB: ${escapeHtml(pb.timeDisplay)}</div>`;
         }
         if (seasonBest) {
-            const seasonLabel = getSeasonLabel();
-            pbHtml += `<div style="font-size:14px;opacity:.8">${escapeHtml(seasonLabel)}: ${escapeHtml(seasonBest.timeDisplay)}</div>`;
+            pbHtml += `<div style="font-size:14px;opacity:.8">${getCurrentSeasonLabel()}: ${escapeHtml(seasonBest.timeDisplay)}</div>`;
         } else if (pb) {
             pbHtml += `<div style="font-size:12px;opacity:.9">Pas encore nagé cette saison</div>`;
         }
@@ -915,7 +1327,7 @@ function updateTimesDisplay() {
         pbDisplay.classList.add('empty');
         pbTime.innerHTML = swimmer
             ? '<span class="pb-time__state">Pas encore de temps</span>'
-            : `<span class="pb-time__state" role="status">${getDataStateMessage()}</span>`;
+            : `<span class="pb-time__state" role="status">${NO_DATA_MESSAGE}</span>`;
     }
     
     // Get standards from JSON
@@ -1041,7 +1453,10 @@ function updateProgressDisplay() {
     const poolLengthNum = selectedPool === '50m' ? 50 : 25;
     
     if (!swimmer || !swimmer.personalBests?.length || !TIME_STANDARDS) {
-        container.innerHTML = renderDataState('📈');
+        // Saison importée sans les meilleurs temps : la progression se calcule sur les meilleurs temps
+        container.innerHTML = swimmer && !swimmer.personalBests?.length
+            ? renderDataState('📈', 'Importe aussi tes meilleurs temps (🔄) pour voir ta progression.')
+            : renderDataState('📈');
         return;
     }
     
@@ -1360,23 +1775,14 @@ const CREATE_SUCCESS_DELAY_MS = 600;  // Durée du « ✓ C'est parti ! » avant
 const STATUS_MESSAGE_MS = 3000;       // Durée du message « ID extrait de l'adresse »
 const LIVE_REGION_DELAY_MS = 100;     // Texte inséré après le rendu pour qu'une région live l'annonce
 
-// Messages affichés à la place des temps, selon l'état du chargement
-const DATA_STATE_MESSAGES = {
-    loading: 'Chargement des temps…',
-    'not-found': 'Aucune donnée. Clique sur 🔄 pour synchroniser.',
-    error: 'Impossible de charger les temps. Vérifie ta connexion puis recharge la page.'
-};
+// Message affiché à la place des temps tant que rien n'a été importé
+const NO_DATA_MESSAGE = 'Aucune donnée. Clique sur 🔄 pour synchroniser.';
 
-function getDataStateMessage() {
-    return DATA_STATE_MESSAGES[swimmerDataStatus] || DATA_STATE_MESSAGES['not-found'];
-}
-
-function renderDataState(icon) {
-    const isLoading = swimmerDataStatus === 'loading';
+function renderDataState(icon, text = NO_DATA_MESSAGE) {
     return `
         <div class="empty-state" role="status">
-            <div class="empty-icon">${isLoading ? '<span class="loading" aria-hidden="true"></span>' : icon}</div>
-            <p class="empty-state__text">${getDataStateMessage()}</p>
+            <div class="empty-icon">${icon}</div>
+            <p class="empty-state__text">${text}</p>
         </div>
     `;
 }
@@ -1672,7 +2078,7 @@ function leaveProfileEdit() {
 }
 
 function cancelProfileEditOnEscape(e) {
-    if (!isEscapeKey(e) || isConfirmDialogOpen()) return;
+    if (!isEscapeKey(e) || isAnyDialogOpen()) return;
     // Sans preventDefault, le navigateur traiterait ce même Échap comme une demande de fermeture
     // de la confirmation qui vient de s'ouvrir, et la refermerait aussitôt
     e.preventDefault();
@@ -1769,12 +2175,12 @@ async function handleProfileSubmit(e) {
     }
 
     if (isCreate) clearLegacyData(); // Profil v1 repris ou remplacé
-    if (!isCreate && profile.swimrankingsId !== previousId) clearSyncedTimes();
-
-    // Les temps se chargent en arrière-plan : l'app s'affiche sans les attendre
-    if (profile.swimrankingsId !== previousId) {
-        loadSwimmerForProfile();
+    if (!isCreate && profile.swimrankingsId !== previousId) {
+        clearSyncedTimes();
+        document.getElementById('sync-dialog-content').innerHTML = ''; // Code collé pour l'ancien ID
     }
+
+    loadSwimmerFromStorage(); // Après un changement d'ID, les temps de l'ancien ID viennent d'être supprimés
 
     if (isCreate) {
         setProfileSubmitState("✓ C'est parti !", true);
@@ -1796,35 +2202,10 @@ function showSetupScreen() {
     window.scrollTo(0, 0);
 }
 
-// Charge les temps du nageur depuis swimmers-data.json.
-// Seul le chargement le plus récent est pris en compte (changement d'ID pendant un chargement).
-// TODO Phase 3 : remplacer par getPBs() / getSeasonTimes()
-let swimmerLoadId = 0;
-async function loadSwimmerForProfile() {
-    const loadId = ++swimmerLoadId;
-    const { swimrankingsId } = profile;
-    swimmer = null;
-    swimmerDataStatus = 'loading';
-    refreshDataViews();
-
-    let result = null;
-    let status = 'loaded';
-    try {
-        result = await fetchSwimmerData(swimrankingsId);
-    } catch (err) {
-        status = err.message === 'not-found' ? 'not-found' : 'error';
-        console.log(`ℹ️ Pas de temps pour l'ID ${swimrankingsId} (${status})`);
-    }
-
-    if (loadId !== swimmerLoadId) return; // Un chargement plus récent a été lancé
-    swimmer = result;
-    swimmerDataStatus = status;
-    refreshDataViews();
-}
-
 // Met à jour tout ce qui dépend des temps, sans changer d'écran
 function refreshDataViews() {
     if (!profile) return;
+    updateSyncBadge();
     updateTimesDisplay();
     updateProgressDisplay();
     if (document.body.classList.contains('settings-active')) updateSettingsData();
@@ -1850,12 +2231,12 @@ function showApp(tabId) {
 document.addEventListener('DOMContentLoaded', async () => {
     profile = getProfile();
     appReady = loadTimeStandards().then(initializePoolSelectors);
+    document.getElementById('sync-dialog').addEventListener('close', handleSyncDialogClose);
 
     if (profile) {
         clearLegacyData(); // Un profil v2 valide remplace définitivement le profil v1
-        // L'app s'affiche tout de suite (genre, avatar) ; les temps arrivent ensuite
+        loadSwimmerFromStorage();
         showApp();
-        loadSwimmerForProfile();
     } else {
         // Sans profil valide, le formulaire s'affiche et les onglets restent bloqués
         renderProfileForm('create');

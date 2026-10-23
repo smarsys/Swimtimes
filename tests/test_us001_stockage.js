@@ -12,7 +12,8 @@ console.warn = console.error = () => {};
 // Section « STOCKAGE LOCAL » d'app.js, exécutée seule avec un faux localStorage
 const appJs = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
 const start = appJs.indexOf('// STOCKAGE LOCAL');
-const end = appJs.indexOf('// SWIMMERS DATA');
+// Fin de la section : bannière de la section suivante (la 1re bannière après le titre est celle qui ferme l'en-tête)
+const end = appJs.indexOf('\n// ====', appJs.indexOf('\n// ====', start) + 1);
 if (start < 0 || end < start) throw new Error("Section STOCKAGE LOCAL introuvable dans app.js");
 const api = new Function(appJs.slice(start, end) + '\nreturn {getProfile,saveProfile,clearAllData};')();
 const { getProfile, saveProfile, clearAllData } = api;

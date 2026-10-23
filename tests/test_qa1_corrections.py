@@ -1,7 +1,9 @@
-"""Corrections de la 1re passe QA / review (BUG-01 à BUG-12) : chargement, profil invalide, initiales, focus, fuites."""
+"""Corrections de la 1re passe QA / review (BUG-01 à BUG-12) : profil invalide, initiales, focus, fuites, données piégées.
+
+Les tests de chargement réseau (BUG-01, BUG-02) sont devenus sans objet avec US-018 : plus aucune donnée n'est chargée depuis GitHub."""
 import sys, threading, http.server, functools, os, json, time
 from playwright.sync_api import sync_playwright
-from helpers import ROOT, OUT, TESTS_DIR, start_server
+from helpers import ROOT, OUT, TESTS_DIR, start_server, imported_storage, storage_script
 srv, URL = start_server()
 ok = 0
 def check(cond, label):
@@ -9,7 +11,6 @@ def check(cond, label):
     if not cond: raise AssertionError(label)
     ok += 1; print('  ✓', label)
 P = {'name': 'Ava Hehlen', 'swimrankingsId': '5332548', 'gender': 'F', 'birthYear': '2010', 'club': 'Lausanne Aquatique', 'createdAt': '2026-01-01T00:00:00Z'}
-DATA = {n: open(os.path.join(ROOT, n)).read() for n in ('swimmers-data.json', 'swimmers-season.json')}
 
 # Compte les écouteurs actifs sur document (détection de fuites)
 COUNT_LISTENERS = """
@@ -28,27 +29,14 @@ COUNT_LISTENERS = """
 })();
 """
 
-def new_page(ctx, profile=P, delay=0, hang=False, data=None, raw_profile=None):
+def new_page(ctx, profile=P, raw_profile=None, times=None):
+    """Page avec ce profil ; times = entrées localStorage des temps importés (par défaut : celles de l'échantillon nageur 1)."""
     page = ctx.new_page()
-    def handler(route, request, name):
-        route.fulfill(body=(data or DATA)[name], content_type='application/json')
-    # Lenteur ou absence de réponse simulées dans la page (respecte l'annulation par AbortController)
-    slow = f"""
-    (() => {{
-      const realFetch = window.fetch, delay = {int(delay * 1000)}, hang = {str(hang).lower()};
-      window.fetch = (url, opts = {{}}) => {{
-        if (!/githubusercontent/.test(url)) return realFetch(url, opts);
-        return new Promise((resolve, reject) => {{
-          opts.signal?.addEventListener('abort', () => reject(new DOMException('Délai dépassé', 'AbortError')));
-          if (!hang) setTimeout(() => realFetch(url, opts).then(resolve, reject), delay);
-        }});
-      }};
-    }})();
-    """
-    for n in DATA:
-        page.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: handler(r, req, n))
     stored = raw_profile if raw_profile is not None else (json.dumps(profile) if profile else None)
-    page.add_init_script(COUNT_LISTENERS + slow + "localStorage.clear();" + (f"localStorage.setItem('swimtimes_profile', {json.dumps(stored)});" if stored else ''))
+    imported = imported_storage() if times is None else times
+    page.add_init_script(COUNT_LISTENERS + "localStorage.clear();"
+                         + (f"localStorage.setItem('swimtimes_profile', {json.dumps(stored)});" if stored else '')
+                         + storage_script(imported))
     errors = []; page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto(URL)
     return page, errors
@@ -57,51 +45,14 @@ all_errors = []
 with sync_playwright() as p:
     b = p.chromium.launch(); ctx = b.new_context(viewport={'width': 375, 'height': 812})
 
-    print('BUG-01 : chargement lent qui écrasait l\'écran ouvert')
-    page, e = new_page(ctx, delay=3); all_errors += e
-    page.wait_for_selector('.nav', state='visible')
-    check('Chargement des temps' in page.locator('#pb-time').inner_text(), 'indicateur de chargement (onglet Temps)')
-    check(page.locator('#header-avatar').inner_text() == 'AH', 'avatar affiché avant la fin du chargement')
-    page.click('#header-settings')
-    check('Chargement' in page.locator('#settings-source').inner_text(), 'Paramètres : « Chargement… »')
-    page.click('text=Modifier le profil'); page.fill('#profile-name', 'Ava Modifiée')
-    page.wait_for_timeout(4500)
-    check(page.locator('#profile-form').is_visible() and page.locator('#profile-name').input_value() == 'Ava Modifiée', 'formulaire et saisie conservés après le chargement')
-    page.click('#profile-cancel'); page.wait_for_selector('#confirm-dialog[open]'); page.wait_for_selector('#confirm-ok:enabled'); page.click('#confirm-ok')
-    check('Données du club' in page.locator('#settings-source').inner_text() and page.locator('details.records-details').count() == 1, 'Paramètres à jour (date + records)')
-
-    page, e = new_page(ctx, delay=3); all_errors += e
-    page.wait_for_selector('.nav', state='visible'); page.click('#header-settings')
-    page.wait_for_function("document.getElementById('settings-source').textContent.includes('Données du club')", timeout=8000)
-    check(page.locator('details.records-details').count() == 1 and page.locator('#settings-screen').is_visible(), 'Paramètres ouverts pendant le chargement : mis à jour sans fermeture')
-
-    print('Changement d\'ID pendant un chargement')
-    page, e = new_page(ctx, delay=3); all_errors += e
-    page.wait_for_selector('.nav', state='visible')
-    page.click('#header-settings'); page.click('text=Modifier le profil')
-    page.fill('#profile-swimrankingsId', '999'); page.click('#profile-submit')
-    page.wait_for_timeout(4500)
-    check(page.evaluate('swimmerDataStatus') == 'not-found' and page.evaluate('swimmer') is None, 'le chargement de l\'ancien ID est ignoré')
-    check(page.locator('details.records-details').count() == 0, 'pas de records de l\'ancien ID')
-
-    print('BUG-02 : GitHub ne répond pas')
-    page, e = new_page(ctx, profile=None, hang=True); all_errors += e
-    page.wait_for_selector('#profile-form')
-    page.fill('#profile-name', 'Léo Martin'); page.fill('#profile-swimrankingsId', '5332548'); page.click('text=Homme')
-    t0 = time.time(); page.click('#profile-submit'); page.wait_for_selector('.nav', state='visible', timeout=3000)
-    check(time.time() - t0 < 2.5, f'l\'app s\'affiche sans attendre le réseau ({time.time() - t0:.1f}s)')
-    check(page.locator('#select-gender').input_value() == 'Male', 'genre Homme appliqué tout de suite')
-    check('Chargement' in page.locator('#pb-time').inner_text(), 'chargement affiché')
-    page.wait_for_function("document.getElementById('pb-time').textContent.includes('Impossible de charger')", timeout=12000)
-    check(True, 'après le délai maximal : « Impossible de charger les temps »')
-    page.screenshot(path=f'{OUT}/fix-erreur-reseau.png')
-
-    print('Chargement en parallèle')
-    page, e = new_page(ctx, delay=2); all_errors += e
-    t0 = time.time(); page.wait_for_function("swimmerDataStatus === 'loaded'", timeout=8000)
-    check(time.time() - t0 < 3.5, f'2 fichiers de 2 s chargés en {time.time() - t0:.1f}s (et non 4 s)')
-    cache = page.evaluate("loadSwimmersData().then(d => d.swimmers['5332548'])")
-    check('seasonBests' not in cache and cache.get('gender') != 'Female' or 'seasonBests' not in cache, 'cache non modifié (pas de seasonBests ajouté)')
+    print('BUG-01 / BUG-02 : plus de chargement réseau (US-018)')
+    page = ctx.new_page()
+    requests = []; page.on('request', lambda r: requests.append(r.url))
+    page.add_init_script("localStorage.clear(); localStorage.setItem('swimtimes_profile', " + json.dumps(json.dumps(P)) + ");" + storage_script(imported_storage()))
+    page.goto(URL); page.wait_for_selector('.nav', state='visible')
+    check('PB:' in page.locator('#pb-time').inner_text(), 'temps importés affichés dès l\'ouverture, sans attente réseau')
+    page.wait_for_timeout(500)
+    check(not [u for u in requests if 'githubusercontent' in u or 'swimmers-' in u], 'aucune requête vers GitHub ni vers swimmers-*.json')
 
     print('BUG-03 : profil enregistré invalide')
     cases = [
@@ -168,41 +119,39 @@ with sync_playwright() as p:
     page.wait_for_timeout(100)
     check(page.evaluate("(window.__listeners.pointerup || 0) + (window.__listeners.pointercancel || 0)") == 0, 'aucun écouteur pointerup/pointercancel restant')
 
-    print('Données JSON piégées')
-    data = json.loads(DATA['swimmers-data.json'])
-    pbs = data['swimmers']['5332548']['personalBests']
-    pbs[0]['timeDisplay'] = '<img src=x onerror="window.__xss=1">'
-    season = json.loads(DATA['swimmers-season.json']); season['_metadata']['season']['label'] = '<img src=x onerror="window.__xss=2">'
-    page, e = new_page(ctx, data={'swimmers-data.json': json.dumps(data), 'swimmers-season.json': json.dumps(season)}); all_errors += e
-    page.wait_for_function("swimmerDataStatus === 'loaded'")
+    print('Temps importés piégés')
+    trapped = {'swimtimes_pb': json.dumps({'updated': '2026-10-15T08:00:00.000Z', 'nation': '<img src=x onerror="window.__xss=1">',
+                                           'data': [{'event': '50m Freestyle', 'distance': 50, 'stroke': '<img src=x onerror="window.__xss=2">',
+                                                     'course': '50m', 'time': '27.80', 'finaPoints': 612, 'date': '1 Jan 2026',
+                                                     'city': '<img src=x onerror="window.__xss=3">', 'meet': '<script>window.__xss=4</script>'}]})}
+    page, e = new_page(ctx, times=trapped); all_errors += e
+    page.wait_for_selector('.nav', state='visible')
     page.click('#header-settings'); page.click('summary'); page.click('.btn-back'); page.click('#header-avatar')
     for tab in ('times', 'progress'):
         page.keyboard.press('Escape'); page.click(f'.nav-tab[data-tab={tab}]')
     page.wait_for_timeout(300)
-    check(page.evaluate('window.__xss') is None and page.locator('main img, #swimmer-popup img').count() == 0, 'aucun HTML injecté depuis le JSON')
+    check(page.evaluate('window.__xss') is None and page.locator('main img, #swimmer-popup img').count() == 0, 'aucun HTML injecté depuis les temps importés')
 
-    print('BUG-08 : changement de genre pendant le chargement')
+    print('BUG-08 : genre modifié après import')
     ref, e = new_page(ctx, profile={**P, 'gender': 'M'}); all_errors += e
-    ref.wait_for_function("swimmerDataStatus === 'loaded'"); ref.click('.nav-tab[data-tab=progress]')
+    ref.wait_for_selector('.nav', state='visible'); ref.click('.nav-tab[data-tab=progress]')
     expected = ref.locator('.progress-card').all_inner_texts()
-    page, e = new_page(ctx, delay=3); all_errors += e
+    page, e = new_page(ctx); all_errors += e
     page.wait_for_selector('.nav', state='visible'); page.click('#header-settings'); page.click('text=Modifier le profil')
     page.click('text=Homme'); page.click('#profile-submit')
-    page.wait_for_function("swimmerDataStatus === 'loaded'", timeout=8000)
+    page.wait_for_selector('#settings-screen .btn-back', state='visible')
     page.click('.btn-back'); page.click('.nav-tab[data-tab=progress]')
     check(page.locator('.progress-card').all_inner_texts() == expected, f'Progression calculée en Homme {expected}')
 
-    print('BUG-09 : popup pendant le chargement et en erreur')
-    page, e = new_page(ctx, delay=3); all_errors += e
+    print('BUG-09 : popup avec et sans temps importés')
+    page, e = new_page(ctx); all_errors += e
     page.wait_for_selector('.nav', state='visible'); page.click('#header-avatar')
     stats = page.locator('.swimmer-popup-stat-value').all_inner_texts()
-    check(stats[1:] == ['…', '…'] and 'Chargement' in page.locator('#swimmer-popup').inner_text(), f'chargement : {stats}')
-    page.wait_for_function("swimmerDataStatus === 'loaded'", timeout=8000)
-    check(page.locator('#swimmer-popup').is_visible() and page.locator('.swimmer-popup-stat-value').nth(1).inner_text() == str(len(json.loads(DATA['swimmers-data.json'])['swimmers']['5332548']['personalBests'])), 'popup mise à jour à la fin du chargement')
-    check(page.evaluate('document.activeElement.className') == 'swimmer-popup-close', 'focus conservé pendant la mise à jour')
-    page, e = new_page(ctx, hang=True); all_errors += e
-    page.wait_for_function("swimmerDataStatus === 'error'", timeout=12000); page.click('#header-avatar')
-    check(page.locator('.swimmer-popup-stat-value').all_inner_texts()[1:] == ['—', '—'] and 'Impossible de charger' in page.locator('#swimmer-popup').inner_text(), 'erreur : « — » et message, pas de faux zéro')
+    check(stats[1:] == ['39', '11'], f'avec import : 39 PB, 11 temps de saison ({stats})')
+    page, e = new_page(ctx, times={}); all_errors += e
+    page.wait_for_selector('.nav', state='visible'); page.click('#header-avatar')
+    check(page.locator('.swimmer-popup-stat-value').all_inner_texts()[1:] == ['—', '—'] and 'Aucun temps importé' in page.locator('#swimmer-popup').inner_text(),
+          'sans import : « — » et message, pas de faux zéro')
 
     print('BUG-10 : bandeau sans champ en erreur')
     page, e = new_page(ctx, profile={**P, 'gender': 'Female'}); all_errors += e
