@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Python (scripts de scraping et tests)
+__pycache__/
+*.pyc
