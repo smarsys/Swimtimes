@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SwimRankings.net - Login</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<div id="header">
+<img src="swimrankings-logo.png" alt="SwimRankings.net">
+</div>
+<div id="content">
+<h1>Login Required</h1>
+<p>Please login to access this page.</p>
+
+<form action="index.php" method="post" id="loginForm">
+<input type="hidden" name="page" value="login">
+
+<table class="loginTable">
+<tr>
+<td>Email:</td>
+<td><input type="text" name="email" id="email" size="30"></td>
+</tr>
+<tr>
+<td>Password:</td>
+<td><input type="password" name="password" id="password" size="30"></td>
+</tr>
+<tr>
+<td></td>
+<td>
+<input type="checkbox" name="remember" id="remember">
+<label for="remember">Remember me</label>
+</td>
+</tr>
+<tr>
+<td></td>
+<td><input type="submit" value="Login" class="button"></td>
+</tr>
+</table>
+
+<p><a href="index.php?page=forgotPassword">Forgot password?</a></p>
+<p><a href="index.php?page=register">Create new account</a></p>
+
+</form>
+</div>
+<div id="footer">
+<p>&copy; SwimRankings.net</p>
+</div>
+</body>
+</html>

@@ -10,10 +10,6 @@ def check(cond, label):
     if not cond: raise AssertionError(label)
     ok += 1; print('  ✓', label)
 
-def route_data(page):
-    # Sert les JSON locaux à la place de GitHub (résultat déterministe)
-    for name in ('swimmers-data.json', 'swimmers-season.json'):
-        page.route(f'**/raw.githubusercontent.com/**/{name}', lambda r, req, n=name: r.fulfill(path=os.path.join(ROOT, n)))
 
 def stored(page): return page.evaluate("JSON.parse(localStorage.getItem('swimtimes_profile'))")
 def err(page, key): return page.locator(f'#profile-{key}-error')
@@ -21,7 +17,7 @@ def err(page, key): return page.locator(f'#profile-{key}-error')
 with sync_playwright() as p:
     b = p.chromium.launch()
     ctx = b.new_context(viewport={'width': 375, 'height': 812})
-    page = ctx.new_page(); route_data(page)
+    page = ctx.new_page()
     errors = []; page.on('pageerror', lambda e: errors.append(str(e)))
 
     print('Premier lancement')
@@ -61,7 +57,7 @@ with sync_playwright() as p:
     check(prof['birthYear'] == '2010' and prof['club'] == 'Lausanne Aquatique' and prof['createdAt'], 'champs optionnels et createdAt')
     check(page.locator('.nav-tab.active').get_attribute('data-tab') == 'times', 'onglet Temps affiché')
     check(page.locator('#select-gender').input_value() == 'Female', 'genre appliqué au sélecteur')
-    page.wait_for_function("!document.querySelector('#pb-time').textContent.includes('Aucune donnée')")
+    check('Aucune donnée' in page.locator('#pb-time').inner_text(), 'nouveau profil sans import : message 6.2')
     page.screenshot(path=f'{OUT}/03-temps.png', full_page=True)
     page.click('#header-settings')
     check(page.locator('#settings-screen img').count() == 0 and 'onerror' in page.locator('#settings-screen').inner_text(), 'nom échappé (pas d\'injection HTML)')
@@ -84,8 +80,8 @@ with sync_playwright() as p:
     check(p2['createdAt'] == prof['createdAt'] and p2['updatedAt'] != prof['updatedAt'], 'createdAt conservé, updatedAt changé')
     check('club' not in p2, 'club vidé non stocké')
 
-    print('ID inconnu → aucune donnée')
-    check('Aucune donnée' in page.locator('#settings-screen').inner_text(), 'aucune donnée (Paramètres)')
+    print('Sans temps importés → aucune donnée')
+    check('Jamais synchronisé' in page.locator('#settings-screen').inner_text(), 'Paramètres : « Jamais synchronisé »')
     page.click('.btn-back')
     page.click('.nav-tab[data-tab=times]')
     check('Aucune donnée' in page.locator('#pb-time').inner_text(), 'message 6.2 (Temps)')
@@ -94,7 +90,7 @@ with sync_playwright() as p:
     page.screenshot(path=f'{OUT}/04-sans-donnees.png', full_page=True)
 
     print('localStorage plein')
-    page2 = ctx.new_page(); route_data(page2)
+    page2 = ctx.new_page()
     page2.add_init_script("localStorage.clear(); Storage.prototype.setItem = function(){ throw new DOMException('quota', 'QuotaExceededError') }")
     page2.goto(URL); page2.wait_for_selector('#profile-form')
     page2.fill('#profile-name', 'Ava Hehlen'); page2.fill('#profile-swimrankingsId', '5332548'); page2.click('text=Femme')
@@ -104,7 +100,7 @@ with sync_playwright() as p:
     page2.screenshot(path=f'{OUT}/05-stockage.png', full_page=True)
 
     print('Clavier')
-    page3 = ctx.new_page(); route_data(page3)
+    page3 = ctx.new_page()
     page3.add_init_script("localStorage.clear()"); page3.goto(URL); page3.wait_for_selector('#profile-form')
     page3.focus('#profile-name'); page3.keyboard.type('Léa Dupont'); page3.keyboard.press('Tab')
     page3.keyboard.type('5284006'); page3.keyboard.press('Tab')
@@ -116,7 +112,7 @@ with sync_playwright() as p:
     check(stored(page3)['gender'] == 'M', 'envoi au clavier')
 
     print('Clic pendant l\'apparition d\'une erreur')
-    page4 = ctx.new_page(); route_data(page4)
+    page4 = ctx.new_page()
     page4.add_init_script("localStorage.clear()"); page4.goto(URL); page4.wait_for_selector('#profile-form')
     page4.fill('#profile-name', 'Léa'); page4.fill('#profile-swimrankingsId', 'abc')
     page4.click('.segmented__option:has-text("Homme")')

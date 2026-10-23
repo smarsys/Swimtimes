@@ -1,7 +1,7 @@
 """Corrections de la 2e passe QA / review (BUG-13 à BUG-18) : double tap, nom v1, avertissement d'ID, abandon des modifications."""
 import sys, threading, http.server, functools, os, json
 from playwright.sync_api import sync_playwright
-from helpers import ROOT, OUT, TESTS_DIR, start_server
+from helpers import ROOT, OUT, TESTS_DIR, start_server, imported_storage
 srv, URL = start_server()
 ok = 0
 def check(cond, label):
@@ -13,8 +13,6 @@ REAL_V1 = json.load(open(os.path.join(ROOT, 'swimmers-data.json')))['swimmers'][
 all_errors = []
 def new_page(ctx, storage=None, width=375, height=812, extra='', touch=False):
     page = ctx.new_page(); page.set_viewport_size({'width': width, 'height': height})
-    for n in ('swimmers-data.json', 'swimmers-season.json'):
-        page.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT, n)))
     init = 'localStorage.clear();' + ''.join(f'localStorage.setItem({json.dumps(k)}, {json.dumps(v if isinstance(v, str) else json.dumps(v))});' for k, v in (storage or {}).items())
     page.add_init_script(f"if (!sessionStorage.getItem('init')) {{ sessionStorage.setItem('init', '1'); {init} }}" + extra)
     page.on('pageerror', lambda e: all_errors.append(str(e)))
@@ -186,8 +184,8 @@ with sync_playwright() as p:
     check(page.locator('#profile-form fieldset').count() == 0 and page.locator('#profile-gender').get_attribute('aria-labelledby') == 'profile-gender-label', 'radiogroup étiqueté, sans fieldset')
 
     print('Suppression : plus aucune donnée de l\'ancien profil dans la page')
-    page = new_page(ctx, {'swimtimes_profile': {**P, 'name': 'Nom Très Unique'}})
-    page.wait_for_function("swimmerDataStatus === 'loaded'"); page.click('.nav-tab[data-tab=progress]')
+    page = new_page(ctx, {'swimtimes_profile': {**P, 'name': 'Nom Très Unique'}, **imported_storage()})
+    page.wait_for_selector('.nav', state='visible'); page.click('.nav-tab[data-tab=progress]')
     page.click('#header-avatar'); page.keyboard.press('Escape')
     page.click('#header-settings'); page.click('summary'); page.click('#settings-delete'); confirm(page)
     page.wait_for_selector('#profile-form')
@@ -195,6 +193,7 @@ with sync_playwright() as p:
     page.evaluate("1")
     check('Nom Très Unique' not in html and '5332548' not in html.replace('placeholder="ex. 5332548"', '').replace('<mark>5332548</mark>', ''), 'nom, ID et temps retirés du DOM')
     check(page.locator('#pb-time').inner_text() == '—', 'bloc PB réinitialisé')
+    check(all(t not in html for t in ('2:09.54', '9:34.86', '1:24.73')), 'temps importés retirés du DOM')
 
     print('R-23 : clés v1 retirées quand un profil v2 valide existe')
     page = new_page(ctx, {'swimtimes_profile': P, 'swimmer_profile': REAL_V1, 'athlete_id': '5332548'})

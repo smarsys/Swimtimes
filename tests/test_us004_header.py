@@ -12,8 +12,6 @@ PROFILE = {'name': 'Zoé <b>Müller</b> Dupont', 'swimrankingsId': '5332548', 'g
 
 def new_page(ctx, profile=PROFILE):
     page = ctx.new_page()
-    for n in ('swimmers-data.json', 'swimmers-season.json'):
-        page.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT, n)))
     init = "localStorage.clear();" + (f"localStorage.setItem('swimtimes_profile', {json.dumps(json.dumps(profile))});" if profile else '')
     page.add_init_script(init)
     errors = []; page.on('pageerror', lambda e: errors.append(str(e)))
@@ -41,14 +39,12 @@ with sync_playwright() as p:
     check(page.locator('#swimmer-selector').count() == 0, 'plus de sélecteur de nageur')
     page.screenshot(path=f'{OUT}/us004-header.png')
 
-    print('🔄 désactivé')
+    print('🔄 (actif depuis US-012)')
     sync = page.locator('#header-sync')
-    check(sync.get_attribute('aria-disabled') == 'true' and sync.get_attribute('title') == 'Synchronisation disponible prochainement', 'aria-disabled + tooltip')
-    sync.click(force=True)
-    page.wait_for_selector('.toast--visible')
-    check('disponible prochainement' in page.locator('#toast').inner_text(), 'toast au clic (mobile sans survol)')
-    page.wait_for_selector('.toast--visible', state='detached', timeout=4000)
-    check(True, 'toast disparaît')
+    check(sync.get_attribute('aria-disabled') is None and sync.get_attribute('title') == 'Synchroniser mes temps', 'actif, tooltip « Synchroniser mes temps »')
+    sync.click()
+    check(page.locator('#sync-dialog').is_visible(), 'ouvre la fenêtre de synchronisation')
+    page.keyboard.press('Escape')
 
     print('⚙️')
     page.click('.nav-tab[data-tab=times]'); page.click('#header-settings')
@@ -84,8 +80,6 @@ with sync_playwright() as p:
     print('Largeurs')
     for w in (320, 375, 768):
         pg = ctx.new_page(); pg.set_viewport_size({'width': w, 'height': 700})
-        for n in ('swimmers-data.json', 'swimmers-season.json'):
-            pg.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT, n)))
         pg.add_init_script(f"localStorage.setItem('swimtimes_profile', {json.dumps(json.dumps(PROFILE))})")
         pg.goto(URL); pg.wait_for_selector('.nav', state='visible')
         check(pg.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), f'{w}px : pas de débordement horizontal')

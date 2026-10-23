@@ -1,7 +1,7 @@
 """US-005 : écran Paramètres, suppression de l'onglet Profil."""
 import sys, threading, http.server, functools, os, json
 from playwright.sync_api import sync_playwright
-from helpers import ROOT, OUT, TESTS_DIR, start_server
+from helpers import ROOT, OUT, TESTS_DIR, start_server, imported_storage, storage_script
 srv, URL = start_server()
 ok = 0
 def check(cond, label):
@@ -9,11 +9,10 @@ def check(cond, label):
     if not cond: raise AssertionError(label)
     ok += 1; print('  ✓', label)
 PROFILE = {'name': 'Ava Hehlen', 'swimrankingsId': '5332548', 'gender': 'F', 'birthYear': '2010', 'club': 'Lausanne Aquatique', 'createdAt': '2026-10-01T12:00:00Z'}
-def new_page(ctx, profile=PROFILE, width=375):
+def new_page(ctx, profile=PROFILE, width=375, imported=True):
     page = ctx.new_page(); page.set_viewport_size({'width': width, 'height': 812})
-    for n in ('swimmers-data.json', 'swimmers-season.json'):
-        page.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT, n)))
-    page.add_init_script(f"localStorage.clear(); localStorage.setItem('swimtimes_profile', {json.dumps(json.dumps(profile))});")
+    page.add_init_script(f"localStorage.clear(); localStorage.setItem('swimtimes_profile', {json.dumps(json.dumps(profile))});"
+                         + (storage_script(imported_storage()) if imported else ''))
     errors = []; page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto(URL); page.wait_for_selector('.nav', state='visible')
     return page, errors
@@ -40,9 +39,10 @@ with sync_playwright() as p:
     order = ['Mon profil', 'Ava Hehlen', 'Modifier le profil', 'Dernière synchronisation', 'Synchroniser maintenant', 'Exporter mes données', 'Supprimer mes données']
     idx = [t.find(x) for x in order]
     check(all(i >= 0 for i in idx) and idx == sorted(idx), 'sections dans l\'ordre de la US')
-    check('Jamais synchronisé' in t and 'Données du club du' in t, 'dernière synchro + source des temps')
+    check('Jamais synchronisé' not in t and '2026' in page.locator('#settings-last-sync').inner_text(), 'dernière synchronisation : date du dernier import')
     check('ID 5332548' in t and '2010' in t and 'SUI' in t, 'ID, année, nation')
-    for label in ('Synchroniser maintenant', 'Exporter mes données'):
+    check(settings.locator('#settings-sync').get_attribute('aria-disabled') is None, '« Synchroniser maintenant » actif (US-012)')
+    for label in ('Exporter mes données',):
         btn = settings.locator('button', has_text=label)
         check(btn.get_attribute('aria-disabled') == 'true' and 'Bientôt' in btn.inner_text(), f'« {label} » marqué Bientôt')
     check(settings.locator('button', has_text='Supprimer mes données').get_attribute('aria-disabled') is None, '« Supprimer mes données » actif (US-007)')
@@ -80,9 +80,9 @@ with sync_playwright() as p:
     check(active_tab(page) == 'times', 'puis retour à l\'onglet d\'origine')
 
     print('Sans données')
-    page2, errors2 = new_page(ctx, {**PROFILE, 'swimrankingsId': '999', 'birthYear': ''})
+    page2, errors2 = new_page(ctx, {**PROFILE, 'birthYear': ''}, imported=False)
     page2.click('#header-settings'); t2 = page2.locator('#settings-screen').inner_text()
-    check('Aucune donnée' in t2 and page2.locator('details.records-details').count() == 0, 'pas de records, « Aucune donnée »')
+    check('Jamais synchronisé' in t2 and page2.locator('details.records-details').count() == 0, 'sans import : pas de records, « Jamais synchronisé »')
 
     print('Mobile')
     page3, errors3 = new_page(ctx, width=320)

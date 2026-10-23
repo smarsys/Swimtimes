@@ -1,17 +1,16 @@
 """Audit de contraste des lignes JO du tableau Temps, pour toutes les épreuves."""
 import threading, http.server, functools, os, sys, json
 from playwright.sync_api import sync_playwright
-from helpers import ROOT, OUT, TESTS_DIR, start_server
+from helpers import ROOT, OUT, TESTS_DIR, start_server, imported_storage, storage_script
 srv, URL = start_server()
 JS = open(os.path.join(TESTS_DIR, 'contrast.js')).read()
 with sync_playwright() as p:
     b = p.chromium.launch(); fails = 0; rows = 0
     for w in (375, 1200):
         pg = b.new_page(viewport={'width': w, 'height': 900}); pg.emulate_media(reduced_motion='reduce')
-        for n in ('swimmers-data.json','swimmers-season.json'):
-            pg.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT,n)))
-        pg.add_init_script("localStorage.setItem('swimtimes_profile', JSON.stringify({name:'Ava Hehlen',swimrankingsId:'5332548',gender:'F'}))")
-        pg.goto(URL); pg.wait_for_function("swimmerDataStatus === 'loaded'")
+        pg.add_init_script("localStorage.setItem('swimtimes_profile', JSON.stringify({name:'Ava Hehlen',swimrankingsId:'5332548',gender:'F'}));"
+                           + storage_script(imported_storage()))
+        pg.goto(URL); pg.wait_for_selector('.nav', state='visible')
         for gender in ('Female', 'Male'):
             for pool in ('50m', '25m'):
                 for stroke in ('Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Medley'):

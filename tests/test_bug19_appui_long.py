@@ -14,8 +14,6 @@ errors = []
 def open_dialog(b, touch=False, w=414, h=896):
     ctx = b.new_context(has_touch=touch, is_mobile=touch, viewport={'width': w, 'height': h})
     pg = ctx.new_page()
-    for n in ('swimmers-data.json', 'swimmers-season.json'):
-        pg.route(f'**/raw.githubusercontent.com/**/{n}', lambda r, req, n=n: r.fulfill(path=os.path.join(ROOT, n)))
     pg.add_init_script(f"if (!sessionStorage.getItem('i')) {{ sessionStorage.setItem('i', '1'); localStorage.setItem('swimtimes_profile', {json.dumps(json.dumps(P))}); }}")
     pg.on('pageerror', lambda e: errors.append(str(e)))
     pg.goto(URL); pg.wait_for_selector('.nav', state='visible'); pg.click('#header-settings')

@@ -16,6 +16,7 @@ run() {
 }
 
 run test_us001_stockage.js node test_us001_stockage.js
+run check_anonymisation.py "$PYTHON" fixtures/check_anonymisation.py
 for test in test_*.py audit_*.py; do
     run "$test" "$PYTHON" "$test"
 done
